@@ -1,0 +1,30 @@
+name: FrontPage
+
+on:
+  push:
+    branches:
+      - front
+
+jobs:
+  deploy:
+    name: Deploy front page
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@main
+      - uses: actions/setup-node@master
+        with:
+          node-version: '22.x'
+      - name: Install
+        run: yarn
+      - name: Prestart
+        run: NEXT_PUBLIC_SERVER_MODE=frontpage yarn prestart
+      - name: Export
+        run: NEXT_PUBLIC_SERVER_MODE=frontpage yarn build
+      - name: Sitemap
+        run: yarn sitemap
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: renderer

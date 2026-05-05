@@ -1,0 +1,54 @@
+{
+  "exclude": ["__tests__", "config/jest", "config/depcheck"],
+  "minify": true,
+  "jsc": {
+    "experimental": {
+      "keepImportAssertions": true
+    },
+    "parser": {
+      "syntax": "typescript",
+      "tsx": true,
+      "dynamicImport": true
+    },
+    "target": "es2020",
+    "baseUrl": "./",
+    "paths": {
+      "@/config": ["config"],
+      "@/config/*": ["config/*"],
+      "@/models": ["models"],
+      "@/models/*": ["models/*"],
+      "@/templates": ["templates"],
+      "@/templates/*": ["templates/*"],
+      "@/plugins": ["plugins"],
+      "@/plugins/*": ["plugins/*"],
+      "@/postprocessing": ["postprocessing"],
+      "@/postprocessing/*": ["postprocessing/*"],
+      "@/api": ["src/api"],
+      "@/api/*": ["src/api/*"],
+      "@/auth": ["src/auth"],
+      "@/auth/*": ["src/auth/*"],
+      "@/components": ["src/components"],
+      "@/components/*": ["src/components/*"],
+      "@/context": ["src/context"],
+      "@/context/*": ["src/context/*"],
+      "@/database": ["src/database"],
+      "@/database/*": ["src/database/*"],
+      "@/lib": ["src/lib"],
+      "@/lib/*": ["src/lib/*"],
+      "@/pages": ["src/pages"],
+      "@/pages/*": ["src/pages/*"],
+      "@/route": ["src/route"],
+      "@/route/*": ["src/route/*"],
+      "@/server": ["src/server"],
+      "@/server/*": ["src/server/*"],
+      "@/services": ["src/services"],
+      "@/services/*": ["src/services/*"],
+      "@/styles": ["src/styles"],
+      "@/styles/*": ["src/styles/*"]
+    }
+  },
+  "module": {
+    "type": "es6"
+  },
+  "sourceMaps": true
+}

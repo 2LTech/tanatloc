@@ -1,0 +1,56 @@
+<%
+	const setSensors = (sensors) => {
+		const lines = sensors.map((sensor, index) => {
+			const x = 'x = ' + sensor.point.x + ';'
+			const y = 'y = ' + sensor.point.y + ';'
+			const z = 'z = ' + sensor.point.z + ';'
+			const value = 'real sensor' + index + ' = ' + sensor.formula + ';'
+			return '\t' + x + '\n' +
+				'\t' + y + '\n' +
+				'\t' + z + '\n' +
+				'\t' + value + '\n'
+		})
+		return lines.join('\n')
+	}
+
+	const getSensors = (sensors, x) => {
+		const output = ['"{"']
+		output.push(('"\\\"names\\\": "'))
+		output.push(JSON.stringify(JSON.stringify(sensors.map(sensor => sensor.name))))
+		output.push('", "')
+		output.push('"\\\"x\\\": \\\"" + ' + x + ' + "\\\", "')
+		output.push('"\\\"ys\\\": ["')
+		sensors.forEach((_sensor, index) => {
+			output.push('"\\\"" + sensor' + index + ' + "\\\""')
+			if (index !== sensors.length - 1)
+				output.push('", "')
+		})
+		output.push('"]"')
+		output.push('"}"')
+
+		return output.join('\n\t\t\t<< ')
+	}
+
+	const getOutput = (x) => {
+		const output = ['"{"']
+		output.push('"\\\"type\\\": \\\"DATA\\\", "')
+		output.push('"\\\"name\\\": \\\"sensors_" + ' + x + ' + ".dat\\\""')
+		output.push('"}"')
+		return output.join('\n\t\t\t<< ')
+	}
+-%>
+// Sensors
+<% if (locals.sensors) { -%>
+{
+<%- setSensors(locals.sensors) -%>
+
+	if (mpirank == 0) {
+		ofstream data("<%- locals.path %>/sensors_" + <%- locals.x -%> + ".dat");
+		data << <%- getSensors(locals.sensors, locals.x) -%> << endl;
+
+		ofstream processOut("process_data.log", append);
+		processOut << <%- getOutput(locals.x) -%> << endl;
+	}
+}
+<% } -%>
+// End Sensors

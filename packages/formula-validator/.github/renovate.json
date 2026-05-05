@@ -1,0 +1,21 @@
+{
+  "extends": ["config:recommended"],
+  "timezone": "Europe/Paris",
+  "schedule": ["before 7am on Monday"],
+  "baseBranches": ["hotfix"],
+  "groupName": "all dependencies",
+  "separateMajorMinor": false,
+  "groupSlug": "all",
+  "packageRules": [
+    {
+      "groupName": "all dependencies",
+      "groupSlug": "all",
+      "matchPackageNames": ["*"]
+    }
+  ],
+  "ignoreDeps": [],
+  "lockFileMaintenance": {
+    "enabled": false
+  },
+  "forkProcessing": "enabled"
+}

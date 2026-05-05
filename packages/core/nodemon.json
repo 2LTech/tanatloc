@@ -1,0 +1,5 @@
+{
+  "watch": ["src", "config", "models", "plugins", "templates"],
+  "exec": "yarn build:server && node --import tsx dist/src/server/index.js",
+  "ext": "js ts"
+}

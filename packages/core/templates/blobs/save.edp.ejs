@@ -1,0 +1,121 @@
+<%
+	const getDataname = (results) => {
+		dataNames = results.map(result => {
+			let dataName = result.name
+			return dataName
+		})
+		return dataNames.join(' ')
+	}
+
+	const getOrder = (results) => {
+		return results.map(() => 1).join(', ')
+	}
+
+	const setPVData = (results, dimension) => {
+		const lines = results.map(result => {
+			let line = '\t'
+
+			let data
+			if (dimension === 2) data = result.data2D ?? result.data
+			else data = result.data
+
+			if (Array.isArray(data)) {
+				data.forEach((d, index) => {
+					if (d === '0') return
+					line += 'PV ' + d + d + ' = ' + d + ';'
+					if (index < data.length -1 ) line += '\n\t'
+				})
+			} else {
+				line += 'PV ' + data + data + ' = ' + data + ';'
+			}
+
+			return line
+		})
+		return lines.join('\n')
+	}
+
+	const getPVData = () => {
+		const items = results.map(result => {
+			let item = '\t\t'
+
+			let data
+			if (dimension === 2) data = result.data2D ?? result.data
+			else data = result.data
+
+			if (Array.isArray(data)) {
+				item += '['
+				data.forEach((d, index) => {
+					if (d === '0')
+						item += d
+					else
+						item += d + d
+					if (index < data.length -1 ) item += ','
+					else item += ']'
+				})
+			} else {
+				item += data + data
+			}
+
+			return item
+		})
+
+		return items.join(',\n')
+	}
+	
+	const getOutput = (name, geometry, results) => {
+		const output = ['"{"']
+		output.push('"\\\"type\\\": \\\"VTU\\\", "')
+		output.push('"\\\"name\\\": \\\"\" + ' + name + ' + \".vtu\\\", "')
+		output.push('"\\\"geometry\\\": \\\"' + geometry.value + '\\\", "')
+		output.push('"\\\"extra\\\": ["')
+		results.forEach((result, index) => {
+			const extraOutput = JSON.stringify(JSON.stringify({
+				name: result.name,
+				units: result.units,
+				unit: result.unit
+			})).split(',') // FreeFEM string 256 limit!
+			
+			if (extraOutput.length === 1) {
+				output.push(extraOutput)
+			} else {
+				extraOutput.forEach((extra, index) => {
+					if (index === 0)
+						output.push(extra + ',"')
+					else if (index === extraOutput.length -1 )
+						output.push('"' + extra)
+					else
+						output.push('"' + extra + ',"')
+				})
+			}
+			
+			if (index !== results.length -1)
+				output.push('", "')
+		})
+		output.push('"]"')
+		output.push('"}"')
+		
+		return output.join('\n\t\t<< ')
+	}
+-%>
+//Save
+appendLog("Save result...");
+
+load "iovtk"
+if (mpirank == 0) {
+	fespace PV(<%- locals.mesh -%>, P1);
+<%- setPVData(locals.results, locals.dimension) %>
+	string dataName = "<%- getDataname(locals.results) -%>";
+	int[int] order = [<%- getOrder(locals.results) -%>];
+
+	savevtk(
+		"<%- locals.path -%>/" + <%- locals.name -%> + ".vtu",
+		<%- locals.mesh -%>,
+<%- getPVData(locals.results, locals.dimension) -%>,
+		dataname=dataName,
+		order=order,
+		bin=false);
+
+	ofstream processOut("process_data.log", append);
+	processOut << <%- getOutput(locals.name, locals.geometry, locals.results) -%> << endl;
+}
+// End Save

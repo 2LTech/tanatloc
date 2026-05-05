@@ -1,0 +1,37 @@
+<%
+	const getData = (title, dataNames, x, ys) => {
+		const output = ['"{"']
+		output.push('"\\\"title\\\": \\\"' + title + '\\\", "')
+		output.push('"\\\"names\\\": "')
+		output.push(JSON.stringify(JSON.stringify(dataNames)))
+		output.push('", "')
+		output.push('"\\\"x\\\": \\\"" + ' + x + ' + "\\\", "')
+		output.push('"\\\"ys\\\": ["')
+		ys.forEach((y, index) => {
+			output.push('"\\\"" + ' + y + ' + "\\\""')
+			if (index !== ys.length -1)
+				output.push('", "')
+		})
+		output.push('"]"')
+		output.push('"}"')
+		
+		return output.join('\n\t\t<< ')
+	}
+	const getOutput = (fileName) => {
+		const output = ['"{"']
+		output.push('"\\\"type\\\": \\\"DATA\\\", "')
+		output.push('"\\\"name\\\": \\\"\" + ' + fileName + ' + \".dat\\\""')
+		output.push('"}"')
+		
+		return output.join('\n\t\t<< ')
+	}
+-%>
+// Data
+if (mpirank == 0) {
+	ofstream data("<%- locals.path %>/" + <%- locals.fileName %> + ".dat");
+	data << <%- getData(locals.title, locals.dataNames, locals.x, locals.ys) -%> << endl;
+	
+	ofstream processOut("process_data.log", append);
+	processOut << <%- getOutput(locals.fileName) -%> << endl;
+}
+// End Data

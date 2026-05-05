@@ -1,0 +1,34 @@
+{
+  "$schema": "https://swc.rs/schema.json",
+  "minify": true,
+  "exclude": [".*\\.test.tsx"],
+  "jsc": {
+    "parser": {
+      "syntax": "typescript",
+      "tsx": true,
+      "dynamicImport": true
+    },
+    "baseUrl": "../",
+    "paths": {
+      "@extra/*": ["./src/extra/*"],
+      "@index": ["./index.d.ts"],
+      "@header": ["./src/header/index.js"],
+      "@helpers/*": ["./src/helpers/*"],
+      "@loader": ["./src/loader/index.js"],
+      "@loader/*": ["./src/loader/*"],
+      "@tools/*": ["./src/tools/*"],
+      "@store": ["./src/store/index.js"],
+      "@store/*": ["./src/store/*"],
+      "@style/*": ["./src/style/*"]
+    },
+    "transform": {
+      "react": {
+        "runtime": "automatic"
+      }
+    },
+    "target": "esnext"
+  },
+  "module": {
+    "type": "es6"
+  }
+}

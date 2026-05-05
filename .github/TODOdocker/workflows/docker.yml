@@ -1,0 +1,144 @@
+name: Build and release docker
+
+on:
+  workflow_run:
+    workflows: ['Submodule update']
+    types:
+      - completed
+
+jobs:
+  create-release:
+    name: Create release
+    runs-on: ubuntu-latest
+
+    outputs:
+      version: ${{ steps.package_version.outputs.version }}
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@main
+        with:
+          token: ${{ secrets.TANATLOC_AS_SUBMODULE }}
+          submodules: true
+
+      - name: Version
+        id: package_version
+        run: |
+          VERSION=`cat tanatloc/package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g' | tr -d '[[:space:]]'`
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Create release
+        continue-on-error: true
+        id: create_release
+        uses: softprops/action-gh-release@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.package_version.outputs.version }}
+          body: |
+            Deployment docker available in [Docker Hub](https://hub.docker.com/repository/docker/tanatloc/tanatloc/tags)
+            - Minimal: without Tanatloc plugins (only "Local")
+            - Full: with all Tanatloc plugins
+          draft: false
+          prerelease: false
+
+  docker-minimal:
+    needs: create-release
+    name: Minimal docker
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@main
+        with:
+          token: ${{ secrets.TANATLOC_AS_SUBMODULE }}
+          submodules: true
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@master
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@master
+
+      - name: Login to DockerHub
+        uses: docker/login-action@master
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@master
+        with:
+          context: .
+          push: true
+          tags: |
+            tanatloc/tanatloc:${{ needs.create-release.outputs.version }}-minimal
+            tanatloc/tanatloc:minimal
+            tanatloc/tanatloc:latest
+
+  docker-denso:
+    needs: create-release
+    name: Denso docker
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@main
+        with:
+          token: ${{ secrets.TANATLOC_AS_SUBMODULE }}
+          submodules: recursive
+
+      - name: Remove Airthium
+        run: rm -rf tanatloc/plugins/airthium
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@master
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@master
+
+      - name: Login to DockerHub
+        uses: docker/login-action@master
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@master
+        with:
+          context: .
+          push: true
+          tags: |
+            tanatloc/tanatloc:denso
+
+  docker-full:
+    needs: create-release
+    name: Full docker
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@main
+        with:
+          token: ${{ secrets.TANATLOC_AS_SUBMODULE }}
+          submodules: recursive
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@master
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@master
+
+      - name: Login to DockerHub
+        uses: docker/login-action@master
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@master
+        with:
+          context: .
+          push: true
+          tags: |
+            tanatloc/tanatloc:${{ needs.create-release.outputs.version }}-full
+            tanatloc/tanatloc:full

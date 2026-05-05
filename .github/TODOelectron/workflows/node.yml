@@ -1,0 +1,41 @@
+name: Node
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@main
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.TANATLOC_AS_SUBMODULE }}
+          submodules: true
+
+      - uses: actions/setup-node@master
+        with:
+          node-version: '22.x'
+
+      - name: Corepack
+        run: corepack enable
+
+      - name: Install
+        run: YARN_CHECKSUM_BEHAVIOR=update yarn install
+
+      - name: Depcheck
+        run: yarn depcheck
+
+      - name: Lint
+        run: yarn prettier
+
+      - name: Tests
+        run: yarn test || true
+
+      - name: SonarCloud scan
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dproject.settings=config/sonar-project.properties

@@ -1,0 +1,116 @@
+name: Build and release electron
+
+on:
+  workflow_run:
+    workflows: ['Submodule update']
+    types:
+      - completed
+
+jobs:
+  create-release:
+    name: Create release
+    runs-on: ubuntu-latest
+
+    outputs:
+      version: ${{ steps.package_version.outputs.version }}
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@main
+        with:
+          token: ${{ secrets.TANATLOC_AS_SUBMODULE }}
+          submodules: true
+
+      - name: Version
+        id: package_version
+        run: |
+          VERSION=`cat tanatloc/package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g' | tr -d '[[:space:]]'`
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Create release
+        continue-on-error: true
+        id: create_release
+        uses: softprops/action-gh-release@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.package_version.outputs.version }}
+          body: |
+            Electron build for:
+            - Linux (AppImage)
+            - MacOS (dmg). For now there is no Apple validation, you will have a warning when you will launch the program
+            - Windows (exe)
+            The electron contains only the "Local" Tanatloc plugin
+          draft: false
+          prerelease: false
+
+  release:
+    needs: create-release
+    continue-on-error: true
+
+    strategy:
+      matrix:
+        os:
+          [
+            {
+              version: ubuntu-latest,
+              build: './dist/Tanatloc-${{ needs.create-release.outputs.version }}.AppImage'
+            },
+            {
+              version: macos-13,
+              build: './dist/Tanatloc-${{ needs.create-release.outputs.version }}.dmg'
+            },
+            {
+              version: windows-latest,
+              build: './dist/Tanatloc.Setup.${{ needs.create-release.outputs.version }}.exe'
+            }
+          ]
+
+    name: Build and release ${{ matrix.os.version }}
+    runs-on: ${{ matrix.os.version }}
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@main
+        with:
+          token: ${{ secrets.TANATLOC_AS_SUBMODULE }}
+          submodules: true
+
+      - name: Submodule update
+        run: |
+          git submodule update --remote
+
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@main
+        with:
+          node-version: '22.x'
+
+      - name: Corepack
+        run: corepack enable
+
+      - name: Install
+        run: yarn install
+        env:
+          YARN_CHECKSUM_BEHAVIOR: update
+
+      - name: Electron build
+        run: yarn dist
+        env:
+          BUILD_VERSION: ${{ needs.create-release.outputs.version }}
+          NEXT_PUBLIC_SOURCE_BRANCH: $(git submodule foreach --quiet 'git rev-parse --abbrev-ref HEAD')
+          NEXT_PUBLIC_SOURCE_COMMIT: $(git submodule foreach --quiet 'git rev-parse --short HEAD')
+          NEXT_PUBLIC_SERVER_MODE: frontpage
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+          WIN_CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
+          WIN_CSC_KEY_PASSWORD: ''
+
+      - name: Upload release
+        uses: AButler/upload-release-assets@v2.0.x
+        with:
+          files: ${{ matrix.os.build }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          release-tag: v${{ needs.create-release.outputs.version }}

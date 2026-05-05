@@ -1,0 +1,33 @@
+<%
+    const getMeshOutput = (name) => {
+        const output = ['"{"']
+        output.push('"\\\"type\\\": \\\"COUPLING\\\", "')
+        output.push('"\\\"name\\\": \\\"\" + ' + name + ' + \".mesh\\\""')
+        output.push('"}"')
+
+        return output.join('\n\t\t<< ')
+    }
+
+    const getDataOutput = (name) => {
+        const output = ['"{"']
+        output.push('"\\\"type\\\": \\\"COUPLING\\\", "')
+        output.push('"\\\"name\\\": \\\"\" + ' + name + ' + \".dat\\\""')
+        output.push('"}"')
+
+        return output.join('\n\t\t<< ')
+    }
+-%>
+// Data for coupling
+appendLog("Save coupling data...");
+
+savemesh(<%- locals.mesh -%>, "<%- locals.path -%>/" + <%- locals.name -%> + ".mesh");
+{
+    ofstream coupling("<%- locals.path -%>/" + <%- locals.name -%> + ".dat");
+    coupling << <%- locals.data.join('[] << ') -%>[];
+}
+
+if (mpirank == 0) {
+    ofstream processOut("process_data.log", append);
+    processOut << <%- getMeshOutput(locals.name) -%> << endl;
+    processOut << <%- getDataOutput(locals.name) -%> << endl;
+}

@@ -1,0 +1,51 @@
+name: Node
+on: [push]
+
+jobs:
+  build:
+    name: Node
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@main
+
+      - uses: actions/setup-node@master
+        with:
+          node-version: '22.x'
+
+      - name: Install
+        run: yarn install
+        env:
+          YARN_CHECKSUM_BEHAVIOR: update
+
+      - name: Depcheck
+        run: yarn run depcheck
+
+      - name: Lint
+        run: yarn run prettier
+
+      - name: Next lint
+        run: yarn run next lint
+
+      - name: Doc
+        run: yarn run doc
+
+      - name: Tests
+        continue-on-error: true
+        run: yarn run test
+
+      - name: Unsubscribe
+        run: yarn run next telemetry disable
+
+      - name: Build
+        run: yarn run build
+
+      - name: SonarCloud scan
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dproject.settings=config/sonar/sonar-project.properties

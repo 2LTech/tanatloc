@@ -1,0 +1,176 @@
+try {
+<%# Headers -%>
+<%- helpers.indent(include('/blobs/headers.edp.ejs'), 1) -%>
+    
+<%# Dimension -%>
+<%- helpers.indent(include('/blobs/dimensioning.edp.ejs', {
+    dimension
+}), 1) -%>
+    
+<%# Mesh -%>
+<%
+    const mesh = geometry.children[0].mesh
+    mesh.name = variables[0].value
+-%>
+<%- helpers.indent(include('/blobs/mesh.edp.ejs', {
+    dimension,
+    mesh
+}), 1) -%>
+    
+<%# Material -%>
+<%- helpers.indent(include('/blobs/materials.edp.ejs', {
+    materials
+}), 1) -%>
+    
+<%# Finite element space -%>
+<%
+    const finiteElementSpace = parameters.finiteElementSpace.children[0]
+    finiteElementSpace.name = 'Uh'
+-%>
+<%- helpers.indent(include('/blobs/fespace.edp.ejs', {
+    mesh,
+    dimension,
+    finiteElementSpace
+}), 1) -%>
+    
+<%# Finite element function -%>
+<%
+    const unknownFunctionX = variables[1].value
+    const unknownFunctionY = variables[2].value
+    const unknownFunctionZ = variables[3].value
+    const unknownFunction =
+        dimension === 2
+            ? '[' + unknownFunctionX + ', ' + unknownFunctionY + ']'
+            : '[' + unknownFunctionX + ', ' + unknownFunctionY + ', ' + unknownFunctionZ + ']'
+    const testFunctionX = unknownFunctionX + 'h'
+    const testFunctionY = unknownFunctionY + 'h'
+    const testFunctionZ = unknownFunctionZ + 'h'
+    const testFunction =
+        dimension === 2
+            ? '[' + testFunctionX + ',' + testFunctionY + ']'
+            : '[' + testFunctionX + ', ' + testFunctionY + ', ' + testFunctionZ + ']'
+-%>
+<%- helpers.indent(include('/blobs/fespaceFunction.edp.ejs', {
+    finiteElementSpace,
+    finiteElementFunction:
+        dimension === 2
+            ? [unknownFunctionX, unknownFunctionY]
+            : [unknownFunctionX, unknownFunctionY, unknownFunctionZ]
+}), 1) -%>
+
+<%# Parameters -%>
+    int numberOfEigenVectors = <%- parameters.modalparameters.children[1].value ?? parameters.modalparameters.children[1].default -%>; // Eigenvectors number
+    real[int] eigenVectors(numberOfEigenVectors);
+    real[int] frequencies(numberOfEigenVectors);
+
+<%# Macro -%>
+<%- helpers.indent(include('/blobs/macro.edp.ejs', {
+    dimension,
+    type: ['Divergence', 'Epsilon']
+}), 1) -%>
+    
+    // Variables
+    real Mu = E / (2. * (1. + Nu));
+    real Lambda = E * Nu / ((1. + Nu) * (1. - 2. * Nu));
+    
+    appendPercent(10);
+
+<%# Problem -%>
+<%
+    const fixed = boundaryConditions.fixed.values ?? []
+    const displacement = boundaryConditions.displacement.values ?? []
+-%>
+    // Problem
+    real sigma = <%- parameters.modalparameters.children[0].value ?? parameters.modalparameters.children[0].default -%>;
+    
+    // Rigidity matrix
+    appendLog("Rigidity matrix...");
+    varf vLinearElasticity(<%- unknownFunction -%>, <%- testFunction -%>)
+        = intN(<%- mesh.name -%>)(
+            Lambda * Div(<%- unknownFunction -%>) * Div(<%- testFunction -%>)
+            + 2. * Mu * (
+                Epsilon(<%- unknownFunction -%>)' * Epsilon(<%- testFunction -%>)
+            )
+        ) + intN(<%- mesh.name -%>)(
+            - sigma * Rho * <%- unknownFunction -%>' * <%- testFunction %>
+        )
+<% for (const d of displacement){ -%>
+<% if (d.values[0].checked || d.values[1].checked || (dimension !== 2 && d.values[2].checked)){ -%>
+        + on(<%- d.labels -%>
+<% if (d.values[0].checked){ -%>, <%- unknownFunctionX -%> = <%- d.values[0].value ?? d.values[0].default -%><% } -%>
+<% if (d.values[1].checked){ -%>, <%- unknownFunctionY -%> = <%- d.values[1].value ?? d.values[1].default -%><% } -%>
+<% if (dimension !== 2 && d.values[2].checked){ -%>, <%- unknownFunctionZ -%> = <%- d.values[2].value ?? d.values[2].default -%><% } -%>)
+<% } -%>
+<% } -%>
+<% for (const f of fixed){ -%>
+        + on(<%- f.labels -%>, <%- unknownFunctionX -%> = 0, <%- unknownFunctionY -%> = 0<% if (dimension !== 2){ -%>, <%- unknownFunctionZ -%> = 0<% } -%>)
+<% } -%>
+        ;
+    
+    // Mass matrix
+    // No boundary conditions, penalisation term already in KRIG matrix
+    appendLog("Mass matrix...");
+    varf massmatrix(<%- unknownFunction -%>, <%- testFunction -%>)
+        = intN(<%- mesh.name -%>)(
+            Rho * <%- unknownFunction -%>' * <%- testFunction %>
+        )
+        ;
+    
+<%# Solver -%>
+<% const solver = parameters.solver.children[0].value ?? parameters.solver.children[0].default -%>
+<%- helpers.indent(include('/blobs/solver.edp.ejs', {
+    solver
+}), 1) -%>
+    
+<%# Solve -%>
+    // Solve
+    appendLog("Solve the problem...");
+    matrix OP = vLinearElasticity(<%- finiteElementSpace.name -%>, <%- finiteElementSpace.name -%>, solver = solver, factorize = 1);
+    matrix MASS = massmatrix(<%- finiteElementSpace.name -%>, <%- finiteElementSpace.name -%>, solver = solver, factorize = 1);
+    
+    int numberOfDof = <%- unknownFunctionX -%>[].n;
+    real[int, int] EIGVEC(numberOfDof, numberOfEigenVectors);
+
+    EigenValue(OP, MASS, sym = true, sigma = sigma, value = eigenVectors, rawvector = EIGVEC, tol = 1e - 10);
+    
+    // Frequency
+    for (int i = 0; i < numberOfEigenVectors; i++) {
+        frequencies[i] = (1./ (2 * pi)) * sqrt(abs(eigenVectors[i]));
+    }
+    
+    // Eigenvectors
+    for (int i = 0; i < numberOfEigenVectors; i++) {
+        <%- unknownFunctionX -%>[] = EIGVEC(0 : numberOfDof, i);
+        
+<%- helpers.indent(include('/blobs/data.edp.ejs', {
+    title: 'Mode number',
+    path: run.dataPath,
+    fileName: '"iter_"+i',
+    dataNames: ['Frequencies(Hz)'],
+    x: 'i',
+    ys: ['frequencies[i]']
+}), 2) -%>
+        
+<%# Sensors -%>
+<%- helpers.indent(include('/blobs/sensors.edp.ejs', {
+    path: run.dataPath,
+    x: 'i',
+    sensors: run.sensors
+}), 2) -%>
+        
+<%- helpers.indent(include('/blobs/save.edp.ejs', {
+    dimension,
+    path: run.resultPath,
+    name: '"Result_"+i',
+    mesh: mesh.name,
+    geometry,
+    results: run.results[0]
+}), 2) -%>
+    }
+    
+    appendPercent(100);
+    appendLog("End");
+} catch (...) {
+    appendError("An internal error occurs");
+    exit(- 1);
+}

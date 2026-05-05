@@ -1,0 +1,136 @@
+try {
+<%# Headers -%>
+<%- helpers.indent(include('/blobs/headers.edp.ejs'), 1) -%>
+    
+<%# Dimension -%>
+<%- helpers.indent(include('/blobs/dimensioning.edp.ejs', {
+    dimension
+}), 1) -%>
+    
+<%# Mesh -%>
+<%
+    const mesh = geometry.children[0].mesh
+    mesh.name = variables[0].value
+-%>
+<%- helpers.indent(include('/blobs/mesh.edp.ejs', {
+    dimension,
+    mesh
+}), 1) -%>
+    
+    // Variables
+    real t = 0.;
+    real T = <%- parameters.time.children[0].value ?? parameters.time.children[0].default -%>;
+    real dt = <%- parameters.time.children[1].value ?? parameters.time.children[1].default -%>;
+    
+<%# Material -%>
+<%- helpers.indent(include('/blobs/materials.edp.ejs', {
+    materials
+}), 1) -%>
+    
+<%# Finite element space -%>
+<%
+    const finiteElementSpace = parameters.finiteElementSpace.children[0]
+    finiteElementSpace.name = 'Uh'
+-%>
+<%- helpers.indent(include('/blobs/fespace.edp.ejs', {
+    mesh,
+    dimension,
+    finiteElementSpace
+}), 1) -%>
+    
+<%# Finite element function -%>
+<%
+    const unknownFunction = variables[1].value
+    const testFunction = unknownFunction + 'h'
+    const freeFunction = unknownFunction + 'f'
+-%>
+<%- helpers.indent(include('/blobs/fespaceFunction.edp.ejs', {
+    finiteElementSpace,
+    finiteElementFunction: [unknownFunction]
+}), 1) -%>
+    
+<%# Macro -%>
+<%- helpers.indent(include('/blobs/macro.edp.ejs', {
+    dimension,
+    type: ['scalarGradient']
+}), 1) -%>
+
+    appendPercent(10);
+    
+<%# Problem -%>
+<%
+    const temperature = boundaryConditions.temperature.values ?? []
+-%>
+    // Problem
+    appendLog("Define the problem...");
+    
+    varf vThermalDiffusion(<%- unknownFunction -%>, <%- testFunction -%>)
+        = intN(<%- mesh.name -%>)(
+            (Rho * Cp / dt) * <%- unknownFunction -%> * <%- testFunction %>
+            + Lambda * grad(<%- unknownFunction -%>)' * grad(<%- testFunction -%>)
+        )
+<% for (const t of temperature){ -%>
+        + on(<%- t.labels -%>, <%- unknownFunction -%> = 0)
+<% } -%>
+        ;
+    
+    varf vThermalDiffusionRHS(<%- freeFunction -%>, <%- testFunction -%>)
+        = intN(<%- mesh.name -%>)(
+            (Rho * Cp / dt) * <%- unknownFunction -%> * <%- testFunction %>
+        )
+<% for (const t of temperature){ -%>
+        + on(<%- t.labels -%>, <%- freeFunction -%> = <%- t.values[0].value ?? t.values[0].default -%>)
+<% } -%>
+        ;
+    
+<%# Solver -%>
+<% const solver = parameters.solver.children[0].value ?? parameters.solver.children[0].default -%>
+<%- helpers.indent(include('/blobs/solver.edp.ejs', {
+    solver
+}), 1) -%>
+    
+<%# Matrix -%>
+    appendLog("Build matrix...");
+    matrix ThermalDiffusion = vThermalDiffusion(<%- finiteElementSpace.name -%>, <%- finiteElementSpace.name -%>);
+    
+<%# Time loop -%>
+    // Time loop
+    appendLog("Time loop...");
+    
+    int nbIter = T / dt;
+    for (int timeIter = 0; timeIter < nbIter; ++timeIter) {
+        // Update
+        int percent = 10 + 90 * t / T;
+        appendPercent(percent);
+        t += dt;
+        appendLog("Time: " + t);
+        
+        real[int] ThermalDiffusionRHS = vThermalDiffusionRHS(0, <%- finiteElementSpace.name -%>);
+        
+        // Solve
+        <%- unknownFunction -%>[] = ThermalDiffusion^-1 * ThermalDiffusionRHS;
+        
+<%# Sensors -%>
+<%- helpers.indent(include('/blobs/sensors.edp.ejs', {
+    path: run.dataPath,
+    x: 'timeIter',
+    sensors: run.sensors
+}), 2) -%>
+        
+<%- helpers.indent(include('/blobs/save.edp.ejs', {
+    dimension,
+    path: run.resultPath,
+    name: '"Result_"+timeIter',
+    mesh: mesh.name,
+    geometry,
+    results: run.results[0]
+}), 2) -%>
+    }
+    
+    appendPercent(100);
+    appendLog("End");
+} catch (...) {
+    appendError("An internal error occurs");
+    exit(- 1);
+}
+

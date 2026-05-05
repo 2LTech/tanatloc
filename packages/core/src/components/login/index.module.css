@@ -1,0 +1,14 @@
+.login {
+  z-index: 1;
+  background-color: rgba(255, 255, 255, 0.8);
+  margin: auto !important;
+  width: 350px;
+}
+
+.submit {
+  margin-top: 32px;
+}
+
+.submit button {
+  width: 100%;
+}

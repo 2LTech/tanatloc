@@ -1,0 +1,10 @@
+{
+  "name": "@tanatloc/converters",
+  "version": "2.0.0",
+  "scripts": {
+    "create-path": "mkdir -p build && cd build",
+    "build": "yarn create-path && cmake .. && make -j8",
+    "test": "yarn create-path && cmake && make -j8 && make test",
+    "coverage": "yarn create-path && cmake -DCOVERAGE=ON && make -j8 && make test"
+  }
+}

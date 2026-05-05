@@ -1,0 +1,11 @@
+/node_modules
+
+/doc
+
+/coverage
+/public
+
+/dist
+/dist-install
+/dist-server
+/main

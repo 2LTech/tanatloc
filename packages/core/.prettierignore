@@ -1,0 +1,19 @@
+# Coverage
+/coverage/
+
+# Doc
+/doc/
+
+# Build
+/.next
+/renderer
+/dist
+
+# Dist
+/dist-install/
+
+# Public
+/public/
+
+# Templates
+*.ejs

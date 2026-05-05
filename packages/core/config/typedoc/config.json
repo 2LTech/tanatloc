@@ -1,0 +1,28 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "Tanatloc documentation",
+  "tsconfig": "../../tsconfig.json",
+  "entryPoints": ["../../"],
+  "exclude": [
+    "../../.next/**",
+    "../../.yarn/**",
+    "../../config/depcheck/**",
+    "../../config/jest/**",
+    "../../config/sitemap/**",
+    "../../config/eslint.config.mjs",
+    "../../coverage/**",
+    "../../dist/**",
+    "../../dist-install/**",
+    "../../doc/**",
+    "../../node_modules/**",
+    "../../renderer/**",
+    "../../public/**",
+    "../../*.d.ts",
+    "../../next.config.mjs",
+    "**/__tests__/**"
+  ],
+  "entryPointStrategy": "expand",
+  "out": "../../doc",
+  "readme": "../../README.md",
+  "includeVersion": true
+}

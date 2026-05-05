@@ -1,0 +1,14 @@
+{
+  "name": "Tanatloc-electron documentation",
+  "tsconfig": "./tsconfig.typedoc.json",
+  "entryPoints": [
+    "../electron-src",
+    "../esm_commonjs",
+    "../install",
+    "../server"
+  ],
+  "exclude": ["../../core", "**/__tests__/**"],
+  "entryPointStrategy": "expand",
+  "out": "../doc",
+  "readme": "../README.md"
+}

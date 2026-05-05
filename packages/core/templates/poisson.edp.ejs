@@ -1,0 +1,121 @@
+try {
+<%# Headers -%>
+<%- helpers.indent(include('/blobs/headers.edp.ejs'), 1) -%>
+    
+<%# Dimension -%>
+<%- helpers.indent(include('/blobs/dimensioning.edp.ejs', {
+    dimension
+}), 1) -%>
+    
+<%# Mesh -%>
+<%
+    const mesh = geometry.children[0].mesh
+    mesh.name = variables[0].value
+-%>
+<%- helpers.indent(include('/blobs/mesh.edp.ejs', {
+    dimension,
+    mesh
+}), 1) -%>
+    
+<%# Finite element space -%>
+<%
+    const finiteElementSpace = parameters.finiteElementSpace.children[0]
+    finiteElementSpace.name = 'Uh'
+-%>
+<%- helpers.indent(include('/blobs/fespace.edp.ejs', {
+    mesh,
+    dimension,
+    finiteElementSpace
+}), 1) -%>
+    
+<%# Finite element function -%>
+<%
+    const unknownFunction = variables[1].value
+    const testFunction = unknownFunction + 'h'
+    const freeFunction = unknownFunction + 'f'
+-%>
+<%- helpers.indent(include('/blobs/fespaceFunction.edp.ejs', {
+    finiteElementSpace,
+    finiteElementFunction: [unknownFunction]
+}), 1) -%>
+    
+<%# Macro -%>
+<%- helpers.indent(include('/blobs/macro.edp.ejs', {
+    dimension,
+    type: ['scalarGradient']
+}), 1) -%>
+
+    appendPercent(10);
+    
+<%# Problem -%>
+<%
+    const dirichlet = boundaryConditions.dirichlet.values ?? []
+    const neumann = boundaryConditions.neumann.values ?? []
+    const rhs = parameters.rightHandSide.children[0]
+    const rhsValue = rhs.value ?? rhs.default
+-%>
+    // Problem
+    appendLog("Define the problem...");
+    
+    varf vLaplacian(<%- unknownFunction -%>, <%- testFunction -%>)
+        = intN(<%- mesh.name -%>)(
+            grad(<%- unknownFunction -%>)' * grad(<%- testFunction -%>)
+        )
+<% for (const d of dirichlet){ -%>
+        + on(<%- d.labels -%>, <%- unknownFunction -%> = 0)
+<% } -%>
+        ;
+    
+    varf vLaplacianRHS(<%- freeFunction -%>, <%- testFunction -%>)
+        = intN(<%- mesh.name -%>)(
+            (<%- rhsValue -%>) * <%- testFunction %>
+        )
+<% for (const n of neumann){ -%>
+        - intN1(<%- mesh.name -%>, <%- n.labels -%>)(
+            (<%- n.values[0].value ?? n.values[0].default -%>) * <%- testFunction %>
+        )
+<% } -%>
+<% for (const d of dirichlet){ -%>
+        + on(<%- d.labels -%>, <%- freeFunction -%> = <%- d.values[0].value ?? d.values[0].default -%>)
+<% } -%>
+        ;
+    
+<%# Solver -%>
+<%
+    const solver = parameters.solver.children[0].value ?? parameters.solver.children[0].default
+-%>
+<%- helpers.indent(include('/blobs/solver.edp.ejs', {
+    solver
+}), 1) -%>
+    
+<%# Solve -%>
+    // Solve
+    appendLog("Solve the problem...");
+    
+    matrix Laplacian = vLaplacian(<%- finiteElementSpace.name -%>, <%- finiteElementSpace.name -%>, solver = solver);
+    real[int] LaplacianRHS = vLaplacianRHS(0, <%- finiteElementSpace.name -%>);
+    <%- unknownFunction -%>[] = Laplacian^-1 * LaplacianRHS;
+    
+<%# Sensors -%>
+<%- helpers.indent(include('/blobs/sensors.edp.ejs', {
+    path: run.dataPath,
+    x: 0,
+    sensors: run.sensors
+}), 1) -%>
+    
+<%# Save -%>
+<%- helpers.indent(include('/blobs/save.edp.ejs', {
+    dimension,
+    path: run.resultPath,
+    name: '"Result"',
+    mesh: mesh.name,
+    geometry,
+    results: run.results[0]
+}), 1) -%>
+    
+    appendPercent(100);
+    appendLog("End");
+} catch (...) {
+    appendError("An internal error occurs");
+    exit(- 1);
+}

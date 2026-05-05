@@ -1,0 +1,28 @@
+{
+  "presets": ["next/babel", "@babel/preset-typescript"],
+  "plugins": [
+    [
+      "module-resolver",
+      {
+        "root": ["."],
+        "alias": {
+          "@/config": "../core/config",
+          "@/models": "../core/models",
+          "@/templates": "../core/templates",
+          "@/plugins": "../core/plugins",
+          "@/api": "../core/src/api",
+          "@/auth": "../core/src/auth",
+          "@/components": "../core/src/components",
+          "@/database": "../core/src/database",
+          "@/lib": "../core/src/lib",
+          "@/pages": "../core/src/pages",
+          "@/route": "../core/src/route",
+          "@/server": "../core/src/server",
+          "@/services": "../core/src/services",
+          "@/store": "../core/src/store",
+          "@/styles": "../core/src/styles"
+        }
+      }
+    ]
+  ]
+}

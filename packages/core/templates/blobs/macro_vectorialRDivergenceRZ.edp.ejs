@@ -1,0 +1,5 @@
+<% if (locals.dimension === 2) { -%>
+macro rDiv(A) (dx(A#r) + (1./r)*dy(A#z) + dy(A#z)) //
+<% } else { -%>
+appendError("Axisymmetric divergence is not defined in 3D");
+<% } -%>

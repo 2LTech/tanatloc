@@ -1,0 +1,14 @@
+{
+  "name": "tanatloc",
+  "version": "2.0.0",
+  "description": "Tanatloc - An easy to use FEA software that allows you to implement your own physics models",
+  "repository": "https://github.com/2LTech/tanatloc",
+  "license": "AGPL-3.0-or-later",
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "typescript": "6.0.3"
+  },
+  "packageManager": "yarn@4.14.1"
+}

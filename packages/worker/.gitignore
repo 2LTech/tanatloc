@@ -1,0 +1,16 @@
+# Misc
+.vscode
+
+# Archives
+**/*.tar.gz
+**/*.tgz
+
+# Tests
+test/assets/Cube
+test/assets/*.glb
+
+# Coverage
+coverage
+
+# Dockerfile
+Dockerfile

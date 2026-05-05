@@ -1,0 +1,21 @@
+// Solver
+<% if (
+	locals.solver.value === "UMFPACK"
+	|| locals.solver.value === "CG"
+	|| locals.solver.value === "Cholesky"
+	|| locals.solver.value === "Crout"
+	|| locals.solver.value === "GMRES"
+	|| locals.solver.value === "LU"
+	|| locals.solver.value === "sparsesolver") { -%>
+func solver = <%- locals.solver.value -%>;
+<% } else if (locals.solver.value === "MUMPS") { -%>
+load "<%- locals.solver.value -%>"
+func solver = sparsesolver;
+<% } else if (locals.solver.value === "Crout") { -%>
+func solver = "<%- locals.solver.value -%>";
+<%# Default solver -%>
+<% } else { -%>
+load "MUMPS"
+func solver = sparsesolver;
+<% } -%>
+// End Solver

@@ -1,0 +1,56 @@
+.container {
+  display: grid;
+  grid-template-columns: auto 5px auto;
+}
+
+.divider {
+  position: relative;
+  flex: unset !important;
+  cursor: col-resize;
+  background: #555;
+  border: none;
+}
+
+.divider :global(.circle),
+.divider :global(.arrowLeft),
+.divider :global(.arrowRight) {
+  display: none;
+}
+
+.divider:hover :global(.circle) {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: -33px;
+  width: 70px;
+  height: 70px;
+  border-radius: 35px;
+  background-color: rgba(85, 85, 85, 0.5);
+  z-index: 9;
+}
+
+.divider:hover :global(.arrowLeft) {
+  display: block;
+  position: absolute;
+  top: 23px;
+  left: -25px;
+  z-index: 10;
+}
+
+.divider:hover :global(.arrowRight) {
+  display: block;
+  position: absolute;
+  top: 23px;
+  right: -25px;
+  z-index: 10;
+}
+
+.divider:hover::after {
+  position: absolute;
+  top: 0;
+  left: -25px;
+  width: 50px;
+  height: 100%;
+  content: '';
+  z-index: 8;
+}
