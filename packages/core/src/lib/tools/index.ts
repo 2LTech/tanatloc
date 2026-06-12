@@ -1,6 +1,6 @@
 /** @module Lib.Tools */
 
-import path from 'path'
+import path from 'node:path'
 import {
   Dirent,
   ReadStream,
@@ -8,9 +8,9 @@ import {
   createReadStream,
   createWriteStream,
   promises as fs
-} from 'fs'
+} from 'node:fs'
 import { create, extract } from 'tar'
-import crypto from 'crypto'
+import crypto from 'node:crypto'
 
 import SecurityDB from '@/database/security'
 
@@ -206,13 +206,13 @@ const convert = async (
 
   if (error) {
     const err = new Error('Conversion process failed.')
-    data && (err.message += '\nData: ' + data)
+    if (data) err.message += '\nData: ' + data
     err.message += '\nError: ' + error
     throw err
   }
   if (code !== 0) {
     const err = new Error('Conversion process failed. Code ' + code + '.')
-    data && (err.message += '\nData: ' + data)
+    if (data) err.message += '\nData: ' + data
     throw err
   }
 
@@ -297,7 +297,7 @@ const splitStep = async (
 
   if (code !== 0) {
     const err = new Error('Split STEP process failed. Code ' + code + '.')
-    data && (err.message += '\nData: ' + data)
+    if (data) err.message += '\nData: ' + data
     throw err
   }
 

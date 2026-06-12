@@ -1,7 +1,7 @@
 /** @module Components.Workspace.List */
 
 import { useCallback, useContext, useEffect, useRef, useState } from 'react'
-import { NextRouter, useRouter } from 'next/router'
+import { useRouter, useSearchParams } from 'next/navigation'
 import {
   Button,
   Empty,
@@ -76,27 +76,20 @@ export const errors = {
 
 /**
  * On confirm
- * @param router Router
  * @param values Values
  * @param swr SWR
  */
 export const _onOk = async (
-  router: NextRouter,
   values: Pick<IFrontWorkspacesItem, 'name'>,
   swr: { addOneWorkspace: (workspace: IFrontNewWorkspace) => Promise<void> }
-): Promise<void> => {
+): Promise<IFrontNewWorkspace> => {
   // Add
   const workspace = await WorkspaceAPI.add(values)
 
   // Mutate
   await swr.addOneWorkspace(workspace)
 
-  await router
-    .push({
-      pathname: '/dashboard',
-      query: { page: 'workspaces', workspaceId: workspace.id }
-    })
-    .catch()
+  return workspace
 }
 
 /**
@@ -123,8 +116,9 @@ const WorkspacesList: React.FunctionComponent<IProps> = ({
 
   // Router
   const router = useRouter()
-  const { page, workspaceId }: { page?: string; workspaceId?: string } =
-    router.query
+  const searchParams = useSearchParams()
+  const page = searchParams.get('page')
+  const workspaceId = searchParams.get('workspaceId')
 
   // Autofocus
   useEffect(() => {
@@ -155,14 +149,15 @@ const WorkspacesList: React.FunctionComponent<IProps> = ({
       asyncFunctionExec(async () => {
         if (activeKey === 'add') setVisible(true)
         else if (activeKey === 'sample') setSampleVisible(true)
-        else
-          await router.push({
-            pathname: '/dashboard',
-            query: { page: 'workspaces', workspaceId: activeKey }
-          })
+        else {
+          const params = new URLSearchParams(searchParams.toString())
+          params.set('page', 'workspaces')
+          params.set('workspaceId', activeKey)
+          router.push('/dashboard?' + params.toString())
+        }
       })
     },
-    [router]
+    [router, searchParams]
   )
 
   /**
@@ -173,7 +168,15 @@ const WorkspacesList: React.FunctionComponent<IProps> = ({
     async (values: Pick<IFrontWorkspacesItem, 'name'>): Promise<void> => {
       setLoading(true)
       try {
-        await _onOk(router, values, swr)
+        const newWorkspace = await _onOk(values, swr)
+
+        const params = new URLSearchParams([
+          ['page', 'workspaces'],
+          ['workspaceId', newWorkspace.id]
+        ])
+        router.push('/dashboard?' + params.toString())
+
+        // Router
 
         // Close
         setLoading(false)
@@ -281,7 +284,7 @@ const WorkspacesList: React.FunctionComponent<IProps> = ({
                 }
               ]}
               defaultActiveKey={'1'}
-              activeKey={workspaceId}
+              activeKey={workspaceId ?? undefined}
               onChange={onChange}
             />
           </>

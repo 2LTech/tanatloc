@@ -1,14 +1,7 @@
 /** @module Components.Blog */
 
-import {
-  ChangeEvent,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState
-} from 'react'
-import { useRouter } from 'next/router'
+import { ChangeEvent, useCallback, useMemo, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import {
   Button,
   Card,
@@ -117,7 +110,6 @@ const PostCard: React.FunctionComponent<IPostCardProps> = ({
  */
 const Blog: React.FunctionComponent = () => {
   // State
-  const [postRender, setPostRender] = useState<ReactNode>()
   const [sort, setSort] = useState<number>(1)
   const [tags, setTags] = useState<string[]>([])
   const [search, setSearch] = useState<string>()
@@ -126,12 +118,12 @@ const Blog: React.FunctionComponent = () => {
   const router = useRouter()
   const { post } = router.query
 
-  // Init
-  useEffect(() => {
+  // Post render
+  const postRender = useMemo(() => {
     if (post) {
       const Post = Posts.find((p) => p.key === post)
-      if (Post) setPostRender(Post.default)
-    } else setPostRender(undefined)
+      if (Post) return Post.default({}) as React.ReactNode
+    } else return
   }, [post])
 
   /**
@@ -200,9 +192,7 @@ const Blog: React.FunctionComponent = () => {
 
   // Tags
   const postsTags = useMemo(() => {
-    const keywords: string[] = Posts.map((Post) => Post.keywords).flatMap(
-      (k) => k
-    )
+    const keywords: string[] = Posts.flatMap((Post) => Post.keywords)
     const uniqueKeywords = keywords.filter((keyword, index) => {
       return keywords.indexOf(keyword) === index
     })

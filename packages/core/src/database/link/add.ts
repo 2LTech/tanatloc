@@ -29,9 +29,9 @@ export const add = async (link: {
   )
 
   const newLink = response.rows[0]
-  newLink && (newLink.type = link.type)
-  newLink && (newLink.email = link.email)
-  newLink && (newLink.userid = link.userid)
+  if (newLink) newLink.type = link.type
+  if (newLink) newLink.email = link.email
+  if (newLink) newLink.userid = link.userid
 
   return newLink
 }

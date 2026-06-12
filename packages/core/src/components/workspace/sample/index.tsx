@@ -1,7 +1,7 @@
 /** @module Components.Workspace.Sample */
 
 import { ReactNode, useCallback, useContext, useState } from 'react'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { List } from 'antd'
 import { ArrowRightOutlined } from '@ant-design/icons'
 import { v4 as uuid } from 'uuid'
@@ -17,6 +17,8 @@ import {
 } from '@/api/index.d'
 
 import Models from '@/models'
+
+import { IModelTypedBoundaryCondition } from '@/models/index.d'
 
 import { NotificationContext } from '@/context/notification'
 import { addError } from '@/context/notification/actions'
@@ -140,8 +142,10 @@ export const _onSimulationAdd = async (
   scheme.configuration.parameters.done = true
 
   // Boundary conditions
-  //@ts-ignore
-  scheme.configuration.boundaryConditions.dirichlet.values = [
+  ;(
+    scheme.configuration.boundaryConditions
+      .dirichlet as IModelTypedBoundaryCondition
+  ).values = [
     {
       uuid: '0',
       name: 'Boundary 0',
@@ -160,7 +164,8 @@ export const _onSimulationAdd = async (
       selected: [
         {
           label: 2,
-          uuid: geometry.summary.faces?.find((face) => face.label === 2)?.uuid
+          // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+          uuid: geometry.summary.faces?.find((face) => face.label === 2)?.uuid!
         }
       ],
       values: [
@@ -188,7 +193,8 @@ export const _onSimulationAdd = async (
       selected: [
         {
           label: 4,
-          uuid: geometry.summary.faces?.find((face) => face.label === 4)?.uuid
+          // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+          uuid: geometry.summary.faces?.find((face) => face.label === 4)?.uuid!
         }
       ],
       values: [

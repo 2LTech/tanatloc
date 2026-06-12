@@ -3,7 +3,7 @@ import SampleWorkspace from '..'
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 
 const mockRouter = jest.fn()
-jest.mock('next/router', () => ({
+jest.mock('next/navigation', () => ({
   useRouter: () => ({
     push: mockRouter
   })

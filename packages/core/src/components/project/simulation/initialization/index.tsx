@@ -296,16 +296,7 @@ export const _loadResults = async (
 
     // Check files
     if (task.files) {
-      if (!filter) {
-        task.files.forEach((file) => {
-          if (file.type === 'result')
-            results.push({
-              label: file.fileName,
-              value: file.fileName,
-              file: file.fileName
-            })
-        })
-      } else {
+      if (filter) {
         const { filteredFiles, notFilteredFiles } = getFilesWithFilter(
           task.files,
           filter
@@ -326,16 +317,24 @@ export const _loadResults = async (
         })
 
         // Add to results
-        results.push(
-          ...notFilteredFiles
-            .map((file) => ({
+        const newResults = [...options]
+        for (const file of notFilteredFiles) {
+          newResults.push({
+            label: file.fileName,
+            value: file.fileName,
+            file: file.fileName
+          })
+        }
+        results.push(...newResults)
+      } else {
+        task.files.forEach((file) => {
+          if (file.type === 'result')
+            results.push({
               label: file.fileName,
               value: file.fileName,
               file: file.fileName
-            }))
-            .filter((f) => f)
-        )
-        results.push(...options)
+            })
+        })
       }
     }
   })
@@ -408,13 +407,13 @@ const Initialization: React.FunctionComponent<IProps> = ({
 
   // Sub scheme
   const subScheme = useMemo(
-    () => simulation?.scheme.configuration.initialization!,
+    () => simulation.scheme.configuration.initialization!,
     [simulation]
   )
 
   // Dimension
   const dimension = useMemo(
-    () => simulation?.scheme.configuration.dimension,
+    () => simulation.scheme.configuration.dimension,
     [simulation]
   )
 
@@ -546,7 +545,7 @@ const Initialization: React.FunctionComponent<IProps> = ({
           least for the first iteration.
         </Typography.Text>
         <Space
-          direction="vertical"
+          orientation="vertical"
           className={globalStyle.fullWidth}
           style={{ marginTop: '10px' }}
         >
@@ -631,9 +630,9 @@ const Initialization: React.FunctionComponent<IProps> = ({
     if (coupling?.compatibility) {
       // Simulations
       const simulationsOptions = simulations.map((s) => {
-        let disabled =
+        const disabled =
           s.id === simulation.id ||
-          !coupling.compatibility.find(
+          !coupling.compatibility.some(
             (c) => c.algorithm === s.scheme.algorithm
           )
 

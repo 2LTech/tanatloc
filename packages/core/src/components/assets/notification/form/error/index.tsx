@@ -20,7 +20,7 @@ const FormError: React.FunctionComponent<IProps> = ({ error }) => {
   return error ? (
     <Form.Item>
       <Alert
-        message={error.render ?? error.title}
+        title={error.render ?? error.title}
         type={error.type}
         showIcon
         description={

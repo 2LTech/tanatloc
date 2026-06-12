@@ -1,19 +1,11 @@
-# Yarn
-node_modules
-.yarn/*
-!.yarn/cache
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
-
 # Tools
 dump.log
 
 # Test
-coverage
+/coverage
 
+# Doc
+/docs
 
 # Build
-dist
+/dist

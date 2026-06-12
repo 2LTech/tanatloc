@@ -8,7 +8,7 @@ jest.mock('@/config/email', () => ({
 }))
 
 const mockPush = jest.fn()
-jest.mock('next/router', () => ({
+jest.mock('next/navigation', () => ({
   useRouter: () => ({
     push: async (route: string) => mockPush(route)
   })

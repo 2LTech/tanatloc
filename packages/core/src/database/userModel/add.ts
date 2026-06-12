@@ -34,9 +34,9 @@ export const add = async (
   )
 
   const newUserModel = response.rows[0]
-  newUserModel && (newUserModel.model = userModel.model)
-  newUserModel && (newUserModel.template = userModel.template)
-  newUserModel && (newUserModel.owners = [user.id])
+  if (newUserModel) newUserModel.model = userModel.model
+  if (newUserModel) newUserModel.template = userModel.template
+  if (newUserModel) newUserModel.owners = [user.id]
 
   return newUserModel
 }

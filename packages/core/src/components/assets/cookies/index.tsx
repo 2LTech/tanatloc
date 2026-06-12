@@ -1,4 +1,5 @@
 /** @module Components.Assets.Cookies */
+'use client'
 
 import { CSSProperties, useCallback, useEffect, useRef } from 'react'
 import { App, Button, Collapse, Form, Switch, Typography } from 'antd'

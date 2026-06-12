@@ -8,7 +8,7 @@ import {
 } from '@/api/index.d'
 
 const mockPush = jest.fn()
-jest.mock('next/router', () => ({
+jest.mock('next/navigation', () => ({
   useRouter: () => ({
     push: async () => mockPush()
   })

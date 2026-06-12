@@ -1,24 +1,22 @@
 /** @module Components.Login */
+'use client'
 
 import { useState, useEffect, useCallback, useContext, useRef } from 'react'
-import { useRouter } from 'next/router'
-// import dynamic from 'next/dynamic'
+import { useRouter } from 'next/navigation'
 import { Button, Card, Form, Input, Layout, Space, Typography } from 'antd'
 import isElectron from 'is-electron'
 
-// Tanatloc3D Background
-const Background = () => <>TODO</>
-// dynamic(
-//   () => import('@tanatloc/3d').then((mod) => mod.default.extra.Background),
-//   { ssr: false }
-// )
+import Tanatloc3D from '@tanatloc/3d'
 
 import { NotificationContext } from '@/context/notification'
 import { addError } from '@/context/notification/actions'
 
 import Loading from '@/components/loading'
+
 import { asyncFunctionExec } from '@/components/utils/asyncFunction'
+
 import { FormError } from '@/components/assets/notification'
+import WithThree from '@/components/assets/withThree'
 
 import { IFrontUser } from '@/api/index.d'
 import { APIError } from '@/api/error'
@@ -98,7 +96,7 @@ const Login: React.FunctionComponent = () => {
             email: 'admin',
             password: 'password'
           })
-          await router.push('/dashboard')
+          router.push('/dashboard')
         } catch (err) {}
       }
     })
@@ -113,9 +111,7 @@ const Login: React.FunctionComponent = () => {
    * Dashboard
    */
   const dashboard = useCallback(() => {
-    asyncFunctionExec(async () => {
-      await router.push('/dashboard')
-    })
+    router.push('/dashboard')
   }, [router])
 
   // Already connected
@@ -132,9 +128,7 @@ const Login: React.FunctionComponent = () => {
    * Signup
    */
   const signup = useCallback((): void => {
-    asyncFunctionExec(async () => {
-      await router.push('/signup')
-    })
+    router.push('/signup')
   }, [router])
 
   /**
@@ -162,7 +156,7 @@ const Login: React.FunctionComponent = () => {
   if (loadingUser || user) return <Loading />
   return (
     <Layout>
-      <Background />
+      <Tanatloc3D.Extra.Background />
       <Card variant="borderless" className={style.login}>
         <Space
           orientation="vertical"
@@ -216,4 +210,10 @@ const Login: React.FunctionComponent = () => {
   )
 }
 
-export default Login
+const LoginWithThree: React.FunctionComponent = () => (
+  <WithThree>
+    <Login />
+  </WithThree>
+)
+
+export default LoginWithThree

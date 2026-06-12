@@ -1,10 +1,11 @@
 {
+  "$schema": "https://swc.rs/schema.json",
   "minify": true,
   "jsc": {
     "parser": {
       "syntax": "typescript"
     },
-    "target": "es2022"
+    "target": "esnext"
   },
   "module": {
     "type": "es6"

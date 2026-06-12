@@ -1,7 +1,7 @@
 /** @module Components.Organizations */
 
 import { useState, useEffect, useCallback } from 'react'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { Layout, Space, Typography } from 'antd'
 
 import {

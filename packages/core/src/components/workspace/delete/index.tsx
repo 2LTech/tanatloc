@@ -1,7 +1,7 @@
 /** @module Components.Workspace.Delete */
 
 import { useCallback, useContext, useState } from 'react'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 
 import { IFrontMutateWorkspacesItem, IFrontWorkspacesItem } from '@/api/index.d'
 

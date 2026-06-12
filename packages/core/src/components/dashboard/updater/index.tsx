@@ -20,14 +20,12 @@ const Updater: React.FunctionComponent = () => {
   useEffect(() => {
     asyncFunctionExec(async () => {
       const update = await Update.needUpdate()
-      if (update.needed) setNeedUpdate(update)
+      if (update.needed) {
+        setNeedUpdate(update)
+        setVisible(true)
+      }
     })
   }, [])
-
-  // Visible
-  useEffect(() => {
-    if (needUpdate?.needed) setVisible(true)
-  }, [needUpdate])
 
   /**
    * On cancel
@@ -36,11 +34,14 @@ const Updater: React.FunctionComponent = () => {
     setVisible(false)
   }, [])
 
+  console.log(needUpdate)
+
   /**
    * On ok
    */
   const onOk = useCallback(async (): Promise<void> => {
     window.open(
+      //TODO
       'https://github.com/Airthium/tanatloc-electron/releases/tag/' +
         needUpdate?.res.tag_name,
       '_blank'

@@ -4,7 +4,7 @@ import { Form, Input } from 'antd'
 import Password, { errors } from '..'
 
 const mockRouter = jest.fn()
-jest.mock('next/router', () => ({
+jest.mock('next/navigation', () => ({
   useRouter: () => mockRouter()
 }))
 

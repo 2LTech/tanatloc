@@ -139,7 +139,7 @@ const Mesh: React.FunctionComponent<IProps> = ({ simulation, index, swr }) => {
   useEffect(() => {
     const meshParameters =
       simulation.scheme.configuration.geometry.children[index].meshParameters
-    meshParameters && setGlobal(meshParameters)
+    if (meshParameters) setGlobal(meshParameters)
   }, [simulation, index])
 
   /**

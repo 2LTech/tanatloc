@@ -3,8 +3,8 @@
 /** @module ESM-CommonJS */
 
 const swc = require('@swc/core')
-const { promises: fs } = require('fs')
-const path = require('path')
+const { promises: fs } = require('node:fs')
+const path = require('node:path')
 
 const dependencies = [
   'electron-serve',

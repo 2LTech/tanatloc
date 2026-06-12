@@ -1,6 +1,7 @@
 /** @module Components.Dashboard */
+'use client'
 
-import { useRouter } from 'next/router'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useContext, useState } from 'react'
 import { Layout, Menu, Typography } from 'antd'
 import {
@@ -38,6 +39,7 @@ import { logout } from '@/api/logout'
 
 import style from './index.module.css'
 import globalStyle from '@/styles/index.module.css'
+import WithNotification from '../assets/withNotification'
 
 /**
  * Errors
@@ -119,6 +121,7 @@ const Dashboard: React.FunctionComponent = () => {
 
   // Router
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   /**
    * On logout
@@ -141,15 +144,14 @@ const Dashboard: React.FunctionComponent = () => {
       setCurrentKey(key)
 
       if (key === menuItems.logout.key) await onLogout()
-      else if (key === menuItems.editor.key) await router.push('/editor')
+      else if (key === menuItems.editor.key) router.push('/editor')
       else {
-        await router.replace({
-          pathname: '/dashboard',
-          query: { page: key }
-        })
+        const params = new URLSearchParams(searchParams.toString())
+        params.set('page', key)
+        router.push('dashboard?' + params.toString())
       }
     },
-    [router, onLogout]
+    [router, searchParams, onLogout]
   )
 
   /**
@@ -175,7 +177,7 @@ const Dashboard: React.FunctionComponent = () => {
           password: 'password'
         })
       } else if (!loadingUser && !user) {
-        await router.replace('/')
+        router.replace('/')
       }
     })
   }, [user, loadingUser, router])
@@ -184,7 +186,7 @@ const Dashboard: React.FunctionComponent = () => {
   useCustomEffect(
     () => {
       asyncFunctionExec(async () => {
-        const params = new URLSearchParams(window.location.search)
+        const params = new URLSearchParams(globalThis.location.search)
         const page = params.get('page')
 
         if (page) setCurrentKey(page)
@@ -322,4 +324,12 @@ const Dashboard: React.FunctionComponent = () => {
   )
 }
 
-export default Dashboard
+const DashboardWithNotification = () => {
+  return (
+    <WithNotification>
+      <Dashboard />
+    </WithNotification>
+  )
+}
+
+export default DashboardWithNotification

@@ -199,27 +199,27 @@ const getAll = async <T extends TOrganizationGet>(
 
   if (data.includes('owners'))
     organizations.forEach((organization) => {
-      !organization.owners && (organization.owners = [])
+      if (!organization.owners) organization.owners = []
     })
 
   if (data.includes('pendingowners'))
     organizations.forEach((organization) => {
-      !organization.pendingowners && (organization.pendingowners = [])
+      if (!organization.pendingowners) organization.pendingowners = []
     })
 
   if (data.includes('users'))
     organizations.forEach((organization) => {
-      !organization.users && (organization.users = [])
+      if (!organization.users) organization.users = []
     })
 
   if (data.includes('pendingusers'))
     organizations.forEach((organization) => {
-      !organization.pendingusers && (organization.pendingusers = [])
+      if (!organization.pendingusers) organization.pendingusers = []
     })
 
   if (data.includes('groups'))
     organizations.forEach((organization) => {
-      !organization.groups && (organization.groups = [])
+      if (!organization.groups) organization.groups = []
     })
 
   return organizations as IOrganizationGet<T>[]

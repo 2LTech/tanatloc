@@ -27,8 +27,8 @@ export const add = async (organization: {
   )
 
   const newOrganization = response.rows[0]
-  newOrganization && (newOrganization.name = organization.name)
-  newOrganization && (newOrganization.owners = organization.owners)
+  if (newOrganization) newOrganization.name = organization.name
+  if (newOrganization) newOrganization.owners = organization.owners
 
   return newOrganization
 }

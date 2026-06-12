@@ -9,8 +9,10 @@
     "skipLibCheck": true,
     "jsx": "react-jsx",
     "moduleResolution": "bundler",
+    "rootDir": "./src",
     "outDir": "./dist",
     "paths": {
+      "@/*": ["./src/*"],
       "@extra/*": ["./src/extra/*"],
       "@index": ["./index.d.ts"],
       "@header": ["./src/header/index.js"],

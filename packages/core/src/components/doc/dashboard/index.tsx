@@ -2,7 +2,7 @@
 
 import { useCallback } from 'react'
 import { Tabs, Typography } from 'antd'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 
 import { asyncFunctionExec } from '@/components/utils/asyncFunction'
 

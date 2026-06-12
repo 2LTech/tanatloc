@@ -6,7 +6,10 @@ import { query } from '..'
 
 export interface IUserCheck {
   id: string
+  email: string
   isvalidated: boolean
+  hash: string
+  salt: string
 }
 
 /**

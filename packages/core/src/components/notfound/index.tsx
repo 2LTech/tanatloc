@@ -1,18 +1,10 @@
 /** @module Components.Notfound */
 
 import { useCallback } from 'react'
-// import dynamic from 'next/dynamic'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { Button, Layout, Typography } from 'antd'
 
-// Tanatloc3D 404
-const NotFoundCone = () => <>TODO</>
-// dynamic(
-//   () => import('@tanatloc/3d').then((mod) => mod.default.extra.NotFound),
-//   { ssr: false }
-// )
-
-import { asyncFunctionExec } from '@/components/utils/asyncFunction'
+import Tanatloc3D from '@tanatloc/3d'
 
 import style from '@/components/notfound/index.module.css'
 
@@ -28,9 +20,7 @@ const NotFound: React.FunctionComponent = () => {
    * Home
    */
   const home = useCallback((): void => {
-    asyncFunctionExec(async () => {
-      await router.push('/')
-    })
+    router.push('/')
   }, [router])
 
   /**
@@ -44,7 +34,7 @@ const NotFound: React.FunctionComponent = () => {
             Page not found
           </Typography.Title>
         </div>
-        <NotFoundCone />
+        <Tanatloc3D.Extra.NotFound />
         <div className={style.description}>
           <Typography.Title level={3} style={{ textAlign: 'center' }}>
             The requested URL was not found on the server

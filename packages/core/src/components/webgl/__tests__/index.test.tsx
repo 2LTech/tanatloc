@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import WebGL from '..'
 
 const mockBack = jest.fn()
-jest.mock('next/router', () => ({
+jest.mock('next/navigation', () => ({
   useRouter: () => ({
     back: () => mockBack()
   })

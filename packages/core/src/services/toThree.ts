@@ -64,11 +64,11 @@ const toThree = async (
       const run = docker(bindPath, command)
 
       run.stdout.on('data', (stdout: Buffer) => {
-        stdout && (data += stdout.toString())
+        if (stdout) data += stdout.toString()
       })
 
       run.stderr.on('data', (stderr: Buffer) => {
-        stderr && (error += stderr.toString())
+        if (stderr) error += stderr.toString()
       })
 
       run.on('close', (code: any) => {

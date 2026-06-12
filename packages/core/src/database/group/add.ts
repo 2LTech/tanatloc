@@ -29,9 +29,9 @@ export const add = async (
   )
 
   const newGroup = response.rows[0]
-  newGroup && (newGroup.name = group.name)
-  newGroup && (newGroup.users = group.users)
-  newGroup && (newGroup.organization = organization.id)
+  if (newGroup) newGroup.name = group.name
+  if (newGroup) newGroup.users = group.users
+  if (newGroup) newGroup.organization = organization.id
 
   return newGroup
 }

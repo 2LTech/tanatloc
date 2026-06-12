@@ -14,6 +14,7 @@ declare global {
   let electron
 
   interface Window {
+    electronAPI
     MathJax?: {
       typesetPromise: (element?: HTMLDivElement[]) => Promise<void>
     }
@@ -23,4 +24,7 @@ declare global {
 global.tanatloc = global.tanatloc ?? {}
 global.electron = global.electron ?? {
   fullBuild: false
+}
+global.electronAPI = {
+  handleStatus: () => {}
 }

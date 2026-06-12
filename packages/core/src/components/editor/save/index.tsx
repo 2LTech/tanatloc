@@ -1,6 +1,6 @@
 /** @module Components.Editor.Save */
 
-import { Dispatch, useCallback, useContext, useEffect, useState } from 'react'
+import { Dispatch, useCallback, useContext, useMemo, useState } from 'react'
 import { Button, Modal, Tooltip } from 'antd'
 import { SaveOutlined } from '@ant-design/icons'
 import JSON5 from 'json5'
@@ -75,7 +75,7 @@ export const _onSave = async (
     )
     if (usermodel) {
       // Check owner
-      if (usermodel.owners.find((owner) => owner.id === user.id)) {
+      if (usermodel.owners.some((owner) => owner.id === user.id)) {
         Modal.confirm({
           title:
             'A model with the same algorithm entry already exists. Do you want to override it?',
@@ -193,7 +193,6 @@ export const _save = async (
  */
 const Save: React.FunctionComponent<IProps> = ({ user, swr }) => {
   // State
-  const [disabled, setDisabled] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
 
   // Data
@@ -206,10 +205,10 @@ const Save: React.FunctionComponent<IProps> = ({ user, swr }) => {
   } = useContext(EditorContext)
   const { dispatch: notificationDispatch } = useContext(NotificationContext)
 
-  // Valid
-  useEffect(() => {
-    if (templateValid && modelValid) setDisabled(false)
-    else setDisabled(true)
+  // Disabled
+  const disabled = useMemo(() => {
+    if (templateValid && modelValid) return false
+    else return true
   }, [templateValid, modelValid])
 
   /**

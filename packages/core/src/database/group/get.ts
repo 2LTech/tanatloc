@@ -43,7 +43,7 @@ export const get = async <T extends TGroupGet>(
   const response = await getter(tables.GROUPS, id, data)
 
   const group = response.rows[0]
-  group && (group.id = id)
+  if (group) group.id = id
 
   return group
 }

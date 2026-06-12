@@ -1,7 +1,8 @@
 /** @module Components.Signup.Validation */
+'use client'
 
 import { useContext, useEffect } from 'react'
-import { useRouter } from 'next/router'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Card, Layout, Space, Spin, Typography } from 'antd'
 
 import { SUBSCRIBE, REVALIDATE } from '@/config/email'
@@ -34,7 +35,8 @@ const Validation: React.FunctionComponent = () => {
 
   // Data
   const router = useRouter()
-  const { id }: { id?: string } = router.query
+  const searchParams = useSearchParams()
+  const id = searchParams.get('id')
 
   // Link
   useEffect(() => {
@@ -48,7 +50,7 @@ const Validation: React.FunctionComponent = () => {
           try {
             await LinkAPI.process(id)
 
-            await router.push('/login').catch()
+            router.push('/login')
           } catch (err: any) {
             dispatch(addError({ title: errors.internal, err }))
           }

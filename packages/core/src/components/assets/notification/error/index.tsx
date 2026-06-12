@@ -120,8 +120,10 @@ const ErrorNotification: React.FunctionComponent = () => {
     for (const error of errors ?? []) {
       openNotification(error)
 
-      error.err && console.error(error.err)
-      error.err && Sentry.captureException(error.err)
+      if (error.err) {
+        console.error(error.err)
+        Sentry.captureException(error.err)
+      }
 
       dispatch(removeError(error))
     }

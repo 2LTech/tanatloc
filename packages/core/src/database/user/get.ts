@@ -15,7 +15,8 @@ export type TUserGet = (
   | 'isvalidated'
   | 'lastmodificationdate'
   | 'superuser'
-  | 'password'
+  | 'salt'
+  | 'hash'
   | 'passwordlastchange'
   | 'organizations'
   | 'projects'
@@ -34,7 +35,8 @@ export type TUserGetAvatar = 'avatar'[]
 export type TUserGetIsvalidated = 'isvalidated'[]
 export type TUserGetLastmodificationdate = 'lastmodificationdate'[]
 export type TUserGetSuperuser = 'superuser'[]
-export type TUserGetPassword = 'password'[]
+export type TUserGetSalt = 'salt'[]
+export type TUserGetHash = 'hash'[]
 export type TUserGetPasswordlastchange = 'passwordlastchange'[]
 export type TUserGetOrganizations = 'organizations'[]
 export type TUserGetProjects = 'projects'[]
@@ -56,7 +58,8 @@ export interface IUser<T = [], Key = 'id'> {
   isvalidated: TUserGetIsvalidated extends T ? boolean : never
   lastmodificationdate: TUserGetLastmodificationdate extends T ? Date : never
   superuser: TUserGetSuperuser extends T ? boolean : never
-  password: TUserGetPassword extends T ? string : never
+  salt: TUserGetSalt extends T ? string : never
+  hash: TUserGetHash extends T ? string : never
   passwordlastchanged: TUserGetPasswordlastchange extends T ? Date : never
   organizations?: TUserGetOrganizations extends T ? string[] : never[]
   projects?: TUserGetWorkspaces extends T ? string[] : never[]
@@ -81,7 +84,7 @@ export const get = async <T extends TUserGet, Key extends TUserGetKey>(
   const response = await getter(tables.USERS, id, data, key)
 
   const user = response.rows[0]
-  user && (user[key] = id)
+  if (user) user[key] = id
 
   return user
 }

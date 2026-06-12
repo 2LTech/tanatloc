@@ -34,10 +34,10 @@ export const add = async (
   )
 
   const newGeometry = response.rows[0]
-  newGeometry && (newGeometry.name = name)
-  newGeometry && (newGeometry.originalfilename = geometry.name)
-  newGeometry && (newGeometry.extension = extension)
-  newGeometry && (newGeometry.uploadfilename = uploadFileName)
+  if (newGeometry) newGeometry.name = name
+  if (newGeometry) newGeometry.originalfilename = geometry.name
+  if (newGeometry) newGeometry.extension = extension
+  if (newGeometry) newGeometry.uploadfilename = uploadFileName
 
   return newGeometry
 }

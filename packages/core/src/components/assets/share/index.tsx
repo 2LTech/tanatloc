@@ -2,13 +2,12 @@
 
 import {
   useState,
-  useEffect,
   CSSProperties,
   useMemo,
   useCallback,
   useContext
 } from 'react'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import {
   Button,
   Form,
@@ -209,10 +208,16 @@ const Share: React.FunctionComponent<IProps> = ({
   // State
   const [visible, setVisible] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
-  const [treeGroupsData, setTreeGroupsData] = useState<TreeDataNode[]>([])
-  const [treeUsersData, setTreeUsersData] = useState<TreeDataNode[]>([])
-  const [groupsSelected, setGroupsSelected] = useState<string[]>([])
-  const [usersSelected, setUsersSelected] = useState<string[]>([])
+  const [groupsSelected, setGroupsSelected] = useState<string[]>(
+    (workspace ?? project ?? userModel)?.groups.map(
+      (g: { id: string }) => g.id
+    ) ?? []
+  )
+  const [usersSelected, setUsersSelected] = useState<string[]>(
+    (workspace ?? project ?? userModel)?.users.map(
+      (g: { id: string }) => g.id
+    ) ?? []
+  )
 
   // Context
   const { dispatch } = useContext(NotificationContext)
@@ -220,18 +225,20 @@ const Share: React.FunctionComponent<IProps> = ({
   // Data
   const router = useRouter()
 
-  // Effect
-  useEffect(() => {
-    const parent = workspace ?? project ?? userModel
+  // TODO check unnecessary
+  // // Effect
+  // useEffect(() => {
+  //   const parent = workspace ?? project ?? userModel
 
-    const defaultGroups = parent?.groups.map((g: { id: string }) => g.id)
-    const defaultUsers = parent?.users.map((u: { id: string }) => u.id)
+  //   const defaultGroups = parent?.groups.map((g: { id: string }) => g.id)
+  //   const defaultUsers = parent?.users.map((u: { id: string }) => u.id)
 
-    setGroupsSelected(defaultGroups ?? [])
-    setUsersSelected(defaultUsers ?? [])
-  }, [workspace, project, userModel])
+  //   setGroupsSelected(defaultGroups ?? [])
+  //   setUsersSelected(defaultUsers ?? [])
+  // }, [workspace, project, userModel])
 
-  useEffect(() => {
+  // Groups data / Users data
+  const { groupsData, usersData } = useMemo(() => {
     // Tree data
     const groupsData = organizations.map((organization) => {
       const groups = organization.groups.map((group) => {
@@ -251,7 +258,7 @@ const Share: React.FunctionComponent<IProps> = ({
         checkable: false,
         children: groups
       }
-    })
+    }) as TreeDataNode[]
 
     const users: { key: string; title: string; value: string; type: 'user' }[] =
       []
@@ -284,12 +291,14 @@ const Share: React.FunctionComponent<IProps> = ({
       })
     })
 
-    const uniqueUsersData = users.filter(
+    const usersData = users.filter(
       (user, index, self) => self.findIndex((s) => s.key === user.key) === index
-    )
+    ) as TreeDataNode[]
 
-    setTreeGroupsData(groupsData)
-    setTreeUsersData(uniqueUsersData as TreeDataNode[])
+    return {
+      groupsData,
+      usersData
+    }
   }, [organizations])
 
   /**
@@ -332,7 +341,7 @@ const Share: React.FunctionComponent<IProps> = ({
 
   // Selector
   const selector = useMemo(() => {
-    if (treeGroupsData.length)
+    if (groupsData.length)
       return (
         <>
           <Form.Item label={<>{groupsTitle}</>}>
@@ -342,9 +351,16 @@ const Share: React.FunctionComponent<IProps> = ({
               treeDefaultExpandAll
               showCheckedStrategy={TreeSelect.SHOW_ALL}
               placeholder="Select groups"
-              dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+              styles={{
+                popup: {
+                  root: {
+                    maxHeight: 400,
+                    overflow: 'auto'
+                  }
+                }
+              }}
               className={globalStyle.fullWidth}
-              treeData={treeGroupsData}
+              treeData={groupsData}
               value={groupsSelected}
               onChange={setGroupsSelected}
             />
@@ -356,9 +372,16 @@ const Share: React.FunctionComponent<IProps> = ({
               treeDefaultExpandAll
               showCheckedStrategy={TreeSelect.SHOW_ALL}
               placeholder="Select users"
-              dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+              styles={{
+                popup: {
+                  root: {
+                    maxHeight: 400,
+                    overflow: 'auto'
+                  }
+                }
+              }}
               className={globalStyle.fullWidth}
-              treeData={treeUsersData}
+              treeData={usersData}
               value={usersSelected}
               onChange={setUsersSelected}
             />
@@ -382,8 +405,8 @@ const Share: React.FunctionComponent<IProps> = ({
   }, [
     groupsTitle,
     usersTitle,
-    treeGroupsData,
-    treeUsersData,
+    groupsData,
+    usersData,
     groupsSelected,
     usersSelected,
     dashboard

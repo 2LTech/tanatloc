@@ -215,17 +215,17 @@ const Postprocessing: React.FunctionComponent<IProps> = ({
   )
 
   // Options
-  const options = useMemo(
-    () =>
-      PostprocessingList.map((p) => {
-        if (postprocess?.find((pp) => pp.key === p.key))
-          return {
-            label: p.label,
-            value: p.key
-          }
-      }).filter((p) => p) as { label: string; value: string }[],
-    [postprocess]
-  )
+  const options = useMemo(() => {
+    const options = []
+    for (const p of PostprocessingList) {
+      if (postprocess?.find((pp) => pp.key === p.key))
+        options.push({
+          label: p.label,
+          value: p.key
+        })
+    }
+    return options
+  }, [postprocess])
 
   // Parameters
   const parameters = useMemo(() => {
@@ -335,8 +335,7 @@ const Postprocessing: React.FunctionComponent<IProps> = ({
       closable={true}
       onClose={setVisibleFalse}
       open={postProcessing}
-      mask={false}
-      mask={{ enable: true, closable: false }}
+      mask={{ enabled: false }}
     >
       <Form>
         <Form.Item name="filter" label="Filter">

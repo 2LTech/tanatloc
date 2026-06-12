@@ -1,7 +1,7 @@
 /** @module Components.Project.List */
 
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
-import { useRouter } from 'next/router'
+import { useRef, useCallback, useMemo } from 'react'
+import { useRouter } from 'next/navigation'
 import {
   Avatar,
   Button,
@@ -88,6 +88,8 @@ export interface ICardProps {
   organizations: Organization[]
   swr: Swr
 }
+
+// TODO review resize function, must be CSS
 
 /**
  * ProjectCard
@@ -333,54 +335,19 @@ const ProjectList: React.FunctionComponent<IProps> = ({
   // Ref
   const containerRef = useRef<HTMLDivElement>(null)
 
-  // State
-  const [loading, setLoading] = useState<boolean>(true)
-  const [list, setList] = useState<IFrontProjectsItem[]>([])
-  const [height, setHeight] = useState<number>(100)
-
-  /**
-   * On resize
-   */
-  const onResize = useCallback(() => {
-    const div = containerRef.current
-    if (!div) {
-      setTimeout(() => onResize(), 100)
-      return
-    }
-
-    const offsets = div.getBoundingClientRect()
-    const top = offsets.top
-
-    const totalHeight = window.innerHeight
-
-    const newHeight = totalHeight - top
-
-    if (newHeight !== height) setHeight(newHeight)
-  }, [height])
-
-  // Height
-  useEffect((): (() => void) => {
-    window.addEventListener('resize', onResize)
-    onResize()
-    return () => {
-      window.removeEventListener('resize', onResize)
-    }
-  }, [onResize])
-
   // List
-  useEffect(() => {
-    const currentList = projects
-      .map((project) => {
-        // Filter
-        if (
-          filter &&
-          !project.title?.toLowerCase()?.includes(filter.toLowerCase())
-        )
-          return undefined
+  const list = useMemo(() => {
+    const currentList: IFrontProjectsItem[] = []
+    for (const project of projects) {
+      // Filter
+      if (
+        filter &&
+        !project.title?.toLowerCase()?.includes(filter.toLowerCase())
+      )
+        continue
 
-        return project
-      })
-      .filter((p) => p) as IFrontProjectsItem[]
+      currentList.push(project as IFrontProjectsItem)
+    }
 
     switch (sorter) {
       case 'alphaAsc':
@@ -398,14 +365,13 @@ const ProjectList: React.FunctionComponent<IProps> = ({
       default:
         break
     }
-    setList(currentList)
-    setLoading(false)
+    return currentList
   }, [projects, filter, sorter])
 
   /**
    * Render
    */
-  if (loading || swr.loadingProjects) return <Loading.Simple />
+  if (swr.loadingProjects) return <Loading.Simple />
   if (!list.length)
     return (
       <Empty
@@ -424,7 +390,7 @@ const ProjectList: React.FunctionComponent<IProps> = ({
       />
     )
   return (
-    <div ref={containerRef} style={{ height: height }}>
+    <div ref={containerRef}>
       <Space
         style={{ marginBottom: '20px' }}
         wrap={true}

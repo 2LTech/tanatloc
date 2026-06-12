@@ -99,15 +99,13 @@ const Plugin: React.FunctionComponent<IPluginProps> = ({
   swr,
   dispatch
 }) => {
-  // State
-  const [checked, setChecked] = useState<boolean>()
-
-  // Effect
-  useEffect(() => {
-    if (system?.defaultplugins) {
+  // Checked
+  const checked = useMemo(() => {
+    if (system.defaultplugins) {
       const isChecked = system.defaultplugins.includes(plugin.key)
-      setChecked(isChecked)
+      return isChecked
     }
+    return false
   }, [plugin, system])
 
   /**

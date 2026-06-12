@@ -1,8 +1,8 @@
 /** @module Plugins.Local.Lib */
 
-import path from 'path'
-import { promises as fs } from 'fs'
-import { execSync } from 'child_process'
+import path from 'node:path'
+import { promises as fs } from 'node:fs'
+import { execSync } from 'node:child_process'
 import {
   setIntervalAsync,
   SetIntervalAsyncTimer
@@ -176,7 +176,7 @@ const getRefinements = (
   boundaryConditions: IModel['configuration']['boundaryConditions']
 ): IModelMeshRefinement[] => {
   const refinements: IModelMeshRefinement[] = []
-  boundaryConditions &&
+  if (boundaryConditions)
     Object.keys(boundaryConditions).forEach((boundaryKey) => {
       if (
         boundaryKey === 'index' ||
@@ -365,11 +365,11 @@ const computeMesh = async (
     }) => {
       meshingTask.status = 'process'
 
-      pid && (meshingTask.pid = pid)
+      if (pid) meshingTask.pid = pid
 
-      error && (meshingTask.error += 'Error: ' + error + '\n')
+      if (error) meshingTask.error += 'Error: ' + error + '\n'
 
-      data && (meshingTask.log += data + '\n')
+      if (data) meshingTask.log += data + '\n'
 
       if ((Date.now() - start) % updateDelay === 0) updateTasks()
     }
@@ -379,7 +379,7 @@ const computeMesh = async (
       ?.value as string
 
     // Compute mesh
-    let code = await Services.gmsh(
+    const code = await Services.gmsh(
       simulationPath,
       path.join(meshPath, geoFile),
       path.join(meshPath, mshFile),
@@ -525,7 +525,7 @@ const computeSimulation = async (
   await clean(simulationPath)
 
   // Ensure dimension
-  configuration.dimension ?? (configuration.dimension = 3)
+  if (!configuration.dimension) configuration.dimension = 3
 
   // Meshes
   if (!keepMesh)
@@ -598,9 +598,9 @@ const computeSimulation = async (
         asyncFunctionExec(async () => {
           simulationTask.status = 'process'
 
-          pid && (simulationTask.pid = pid)
+          if (pid) simulationTask.pid = pid
 
-          error && (simulationTask.error += 'Error: ' + error + '\n')
+          if (error) simulationTask.error += 'Error: ' + error + '\n'
 
           if ((Date.now() - start) % updateDelay === 0) updateTasks(id, tasks)
         })
@@ -849,9 +849,9 @@ const processResult = async (
         target: partPath
       },
       ({ error }) => {
-        error &&
-          (currentTask!.warning +=
-            'Warning: Result converting process failed (' + error + ')\n')
+        if (error)
+          currentTask!.warning +=
+            'Warning: Result converting process failed (' + error + ')\n'
       },
       { isResult: true }
     )

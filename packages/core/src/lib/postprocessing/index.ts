@@ -67,15 +67,13 @@ const run = async (
     )
 
   // Convert
-  let convertData = ''
   let convertError = ''
   const target = fileNameWithoutExtension + '_' + filter
   const newResults = await Tools.convert(
     resultPath,
     { name: vtuOut, target },
-    ({ data: cData, error: cError }) => {
-      cData && (convertData += cData)
-      cError && (convertError += cError)
+    ({ error: cError }) => {
+      if (cError) convertError += cError
     },
     { isResult: true }
   )

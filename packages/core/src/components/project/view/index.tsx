@@ -1,10 +1,9 @@
 /** @module Components.Project.View */
 
-import { useCallback, useContext, useEffect, useState } from 'react'
-// import dynamic from 'next/dynamic'
+import { useCallback, useContext, useMemo, useState } from 'react'
 import { Spin } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
-import {
+import Tanatloc3D, {
   Tanatloc3DPart,
   Tanatloc3DSelectionPoint,
   Tanatloc3DSelectionValue
@@ -42,13 +41,6 @@ import ResultAPI from '@/api/result'
 import style from './index.module.css'
 
 import theme from '@/styles/theme'
-
-// Tanatloc3D Renderer
-const Renderer = (_props: any) => <>TODO</>
-// dynamic(
-//   () => import('@tanatloc/3d').then((mod) => mod.default.Renderer),
-//   { ssr: false }
-// )
 
 /**
  * Props
@@ -201,9 +193,6 @@ const View: React.FunctionComponent<IProps> = ({
   // State
   const [parts, setParts] = useState<IGeometryPart[]>([])
   const [loading, setLoading] = useState<boolean>(false)
-  const [dataEnabled, setDataEnabled] = useState<boolean>(false)
-  const [postProcessingEnabled, setPostProcessingEnabled] =
-    useState<boolean>(false)
 
   // Context
   const { enabled, part, highlighted, selected, point, type, dispatch } =
@@ -233,7 +222,7 @@ const View: React.FunctionComponent<IProps> = ({
           parts,
           postprocessing
         )
-        newPostprocessing && newParts.push(newPostprocessing)
+        if (newPostprocessing) newParts.push(newPostprocessing)
       }
 
       // Geometries
@@ -265,35 +254,33 @@ const View: React.FunctionComponent<IProps> = ({
   ])
 
   // Data enabled
-  useEffect(() => {
-    if (currentSimulation.id === '0') {
-      setDataEnabled(false)
-      return
-    }
+  const dataEnabled = useMemo(() => {
+    if (currentSimulation.id === '0') return false
 
     const validSimulation = currentSimulation as IFrontSimulation
 
     const tasks = validSimulation.tasks
-    const datas = tasks
-      ?.map((task) => task.datas)
-      .filter((d) => d)
-      .flat()
+    const datas = []
+    for (const task of tasks) {
+      datas.push(...(task.datas ?? []))
+    }
 
-    if (datas?.length) setDataEnabled(true)
-    else setDataEnabled(false)
+    if (datas?.length) return true
+    else return false
   }, [currentSimulation])
 
   // Postprocessing enabled
-  useEffect(() => {
+  const postProcessingEnabled = useMemo(() => {
     if (simulation?.scheme.configuration.run.postprocessing) {
       let oneResult = false
       parts.forEach((part) => {
         if (part.summary.type === 'result') oneResult = true
       })
 
-      if (oneResult) setPostProcessingEnabled(true)
-      else setPostProcessingEnabled(false)
-    } else setPostProcessingEnabled(false)
+      if (oneResult) return true
+      return false
+    }
+    return false
   }, [simulation, parts])
 
   /**
@@ -376,7 +363,7 @@ const View: React.FunctionComponent<IProps> = ({
       >
         <Spin indicator={<LoadingOutlined style={{ fontSize: 80 }} spin />} />
       </div>
-      <Renderer
+      <Tanatloc3D.Renderer
         theme={theme}
         style={{ width: 'calc(100vw - 256px)' }}
         parts={parts as Tanatloc3DPart[]}

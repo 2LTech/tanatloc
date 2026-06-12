@@ -24,6 +24,7 @@ import System from '../system'
 import Group from '../group'
 import Tools from '../tools'
 import UserModel from '../userModel'
+import { pbkdf2Sync } from 'node:crypto'
 
 /**
  * Add
@@ -268,27 +269,27 @@ const getAll = async <T extends TUserGet>(data: T): Promise<IUser<T>[]> => {
 
   if (data.includes('organizations'))
     users.forEach((user) => {
-      !user.organizations && (user.organizations = [])
+      if (!user.organizations) user.organizations = []
     })
 
   if (data.includes('workspaces'))
     users.forEach((user) => {
-      !user.workspaces && (user.workspaces = [])
+      if (!user.workspaces) user.workspaces = []
     })
 
   if (data.includes('authorizedplugins'))
     users.forEach((user) => {
-      !user.authorizedplugins && (user.authorizedplugins = [])
+      if (!user.authorizedplugins) user.authorizedplugins = []
     })
 
   if (data.includes('plugins'))
     users.forEach((user) => {
-      !user.plugins && (user.plugins = [])
+      if (!user.plugins) user.plugins = []
     })
 
   if (data.includes('usermodels'))
     users.forEach((user) => {
-      !user.usermodels && (user.usermodels = [])
+      if (!user.usermodels) user.usermodels = []
     })
 
   return users
@@ -424,5 +425,51 @@ const del = async (user: { id: string }): Promise<void> => {
   await UserDB.del(user)
 }
 
-const User = { login, add, get, getWithData, getBy, getAll, update, del }
+/**
+ * Find user
+ * @param body Body
+ * @returns User
+ */
+const findUser = async ({
+  email
+}: {
+  email: string
+}): Promise<IUserCheck | undefined> => {
+  const user = await UserDB.get(
+    email,
+    ['id', 'isvalidated', 'salt', 'hash'],
+    'email'
+  )
+  console.log(user)
+  return user
+}
+
+const validatePassword = (
+  user: IUserCheck,
+  { password }: { password: string }
+) => {
+  console.log(user)
+  console.log(password)
+  const hash = pbkdf2Sync(
+    password,
+    user.salt,
+    1_000_000,
+    64,
+    'sha512'
+  ).toString('hex')
+  return hash === user.hash
+}
+
+const User = {
+  login,
+  add,
+  get,
+  getWithData,
+  getBy,
+  getAll,
+  update,
+  del,
+  findUser,
+  validatePassword
+}
 export default User

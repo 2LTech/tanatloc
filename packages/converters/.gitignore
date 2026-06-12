@@ -1,15 +1,9 @@
-.vscode
-
-# Build
+# build
 build
 
-# Tests
+# tests
 test/assets/cube_1.stp
 test/assets/Cube
 
-# Coverage
+# coverage
 coverage
-
-# Sonar
-.scannerwork
-bw-output

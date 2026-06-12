@@ -10,7 +10,6 @@ import { IOrganization } from '@/database/organization'
 import { ISimulation, ISimulationTask } from '@/database/simulation'
 import { IUserModel } from '@/database/userModel'
 import { ClientPlugin } from '@/plugins'
-import { IModel } from '@/models'
 import { IUnit } from '@/models'
 
 /**

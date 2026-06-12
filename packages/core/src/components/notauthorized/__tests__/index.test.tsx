@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import NotAuthorized, { errors } from '@/components/notauthorized'
 
 const mockPush = jest.fn()
-jest.mock('next/router', () => ({
+jest.mock('next/navigation', () => ({
   useRouter: () => ({
     push: async () => mockPush()
   })

@@ -1,53 +1,87 @@
 /** @module Route.Project.[id].Copy */
 
-import { Request, Response } from 'express'
-
-import { session } from '@/route/session'
-import { checkProjectAuth } from '@/route/auth'
-import { error } from '@/route/error'
+import { NextRequest, NextResponse } from 'next/server'
 
 import ProjectLib from '@/lib/project'
 
-/**
- * Project copy API
- * @param req Request
- * @param res Response
- */
-const copy = async (req: Request, res: Response) => {
-  try {
-    // Check session
-    const sessionId = await session(req)
+import { session } from '@/route/session'
+import { checkProjectAuth } from '@/route/auth'
 
-    // Id
-    const id = req.query.id ?? req.params.id // Electron
-
-    // Check
-    if (!id || typeof id !== 'string')
-      throw error(400, 'Missing data in your request (query: { id(string) })')
-
-    // Check authorization
-    await checkProjectAuth({ id: sessionId }, { id })
-
-    if (req.method === 'POST') {
-      // Archive project
-      try {
-        res.setHeader('Content-Type', 'application/x-tgz')
-        const copyProject = await ProjectLib.copy(
-          { id: sessionId },
-          req.body.workspace,
-          { id }
-        )
-        res.status(200).json(copyProject)
-      } catch (err: any) {
-        throw error(500, err.message)
-      }
-    } else {
-      // Unauthorized method
-      throw error(402, 'Method ' + req.method + ' not allowed')
-    }
-  } catch (err: any) {
-    res.status(err.status).json({ error: true, message: err.message })
-  }
+export interface IPOSTBody {
+  workspace: { id: string }
 }
 
-export default copy
+/**
+ * Check POST body
+ * @param body Body
+ */
+const checkPOSTBody = (body: IPOSTBody): void => {
+  if (!body?.workspace?.id || typeof body.workspace.id !== 'string')
+    throw new Error(
+      'Missing data in your request (body: { workspace: { id:string } })'
+    )
+}
+
+/**
+ * POST
+ * @param request Request
+ * @param params Params
+ * @returns POST
+ */
+export const POST = async (
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) => {
+  // Check session
+  let sessionId
+  try {
+    sessionId = await session()
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: true, message: err.message },
+      { status: 401 }
+    )
+  }
+
+  // Id
+  const { id } = await params
+
+  // Check authorization
+  try {
+    await checkProjectAuth({ id: sessionId }, { id })
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: true, message: err.message },
+      { status: 403 }
+    )
+  }
+
+  // Body
+  const body = await request.json()
+  try {
+    checkPOSTBody(body)
+  } catch (err: any) {
+    return NextResponse.json(
+      { err: true, message: err.message },
+      { status: 400 }
+    )
+  }
+
+  // Copy
+  try {
+    const copyProject = await ProjectLib.copy(
+      { id: sessionId },
+      body.workspace,
+      { id }
+    )
+    return NextResponse.json(copyProject, {
+      status: 200,
+      headers: { 'Content-Type': 'application/x-tgz' }
+    })
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: true, message: err.message },
+      { status: 500 }
+    )
+  }
+}

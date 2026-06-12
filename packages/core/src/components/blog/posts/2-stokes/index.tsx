@@ -22,7 +22,7 @@ const author = {
  * Post
  * @returns Post
  */
-const Post = () => {
+const Post: React.FunctionComponent = () => {
   return (
     <PostLayout
       title={title}

@@ -2,7 +2,7 @@
 
 import { Button, Switch, Tooltip } from 'antd'
 import { RedoOutlined } from '@ant-design/icons'
-import { useCallback, useContext, useEffect, useState } from 'react'
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useCookies } from 'react-cookie'
 
 import { EditorContext } from '@/context/editor'
@@ -16,7 +16,6 @@ import style from '../index.module.css'
  */
 const AutoSave: React.FunctionComponent = () => {
   // State
-  const [disabled, setDisabled] = useState<boolean>(true)
   const [checked, setChecked] = useState<boolean>(true)
 
   // Cookies
@@ -25,20 +24,25 @@ const AutoSave: React.FunctionComponent = () => {
   // Data
   const { model, template, dispatch } = useContext(EditorContext)
 
-  // Auto-save
-  useEffect(() => {
-    if (cookies.accepted) {
-      setDisabled(false)
+  // Disabled
+  const disabled = useMemo(
+    () => !!cookies.accepted,
 
-      if (checked) {
-        const id = setInterval(() => {
-          sessionStorage.setItem('model', model)
-          sessionStorage.setItem('template', template)
-        }, 30_000)
-        return () => clearInterval(id)
-      }
-    } else setDisabled(true)
-  }, [cookies.accepted, checked, model, template, setCookie])
+    [cookies.accepted]
+  )
+
+  // Auto save
+  useEffect(() => {
+    if (disabled) return
+    if (!checked) return
+
+    const id = setInterval(() => {
+      sessionStorage.setItem('model', model)
+      sessionStorage.setItem('template', template)
+    }, 30_000)
+
+    return () => clearInterval(id)
+  }, [disabled, checked, model, template, setCookie])
 
   /**
    * On checked

@@ -1,7 +1,5 @@
 /** @module Route.Avatar */
 
-import { Request, Response } from 'express'
-
 import { session } from '../session'
 import { checkProjectAuth } from '../auth'
 import { error } from '../error'
@@ -44,38 +42,35 @@ const checkAddBody = (body: IAddBody): void => {
  * @param req Request
  * @param res Result
  */
-const route = async (req: Request, res: Response): Promise<void> => {
+export const avatarPOST = async (request: Request): Promise<Response> => {
   try {
     // Check session
-    const sessionId = await session(req)
+    const sessionId = await session(request)
 
-    if (req.method === 'POST') {
-      // Check
-      checkAddBody(req.body)
+    // Check
+    const body = await request.json()
+    checkAddBody(body)
 
-      const { file, project } = req.body
+    const { file, project } = request.body
 
-      // Check auth
-      if (project) await checkProjectAuth({ id: sessionId }, project)
+    // Check auth
+    if (project) await checkProjectAuth({ id: sessionId }, project)
 
-      // Add
-      try {
-        const avatar = await AvatarLib.add(
-          project || { id: sessionId },
-          project ? 'project' : 'user',
-          file
-        )
-        res.status(200).json(avatar)
-      } catch (err: any) {
-        throw error(500, err.message)
-      }
-    } else {
-      // Unauthorized method
-      throw error(402, 'Method ' + req.method + ' not allowed')
+    // Add
+    try {
+      const avatar = await AvatarLib.add(
+        project || { id: sessionId },
+        project ? 'project' : 'user',
+        file
+      )
+      return Response.json(avatar, { status: 200 })
+    } catch (err: any) {
+      throw error(500, err.message)
     }
   } catch (err: any) {
-    res.status(err.status).json({ error: true, message: err.message })
+    return Response.json(
+      { error: true, message: err.message },
+      { status: err.status }
+    )
   }
 }
-
-export default route

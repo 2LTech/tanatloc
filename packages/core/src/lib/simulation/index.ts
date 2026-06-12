@@ -115,15 +115,15 @@ const del = async (simulation: { id: string }): Promise<void> => {
   const simulationData = await get(simulation.id, ['project'])
 
   // Delete simulation reference in project
-  simulationData &&
-    (await Project.update({ id: simulationData.project }, [
+  if (simulationData)
+    await Project.update({ id: simulationData.project }, [
       {
         type: 'array',
         method: 'remove',
         key: 'simulations',
         value: simulation.id
       }
-    ]))
+    ])
 
   // Delete folder
   const simulationDirectory = path.join(SIMULATION, simulation.id)

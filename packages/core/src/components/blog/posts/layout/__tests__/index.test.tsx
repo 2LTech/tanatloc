@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import Layout, { Ref } from '..'
 
 const mockPush = jest.fn()
-jest.mock('next/router', () => ({
+jest.mock('next/navigation', () => ({
   useRouter: () => ({
     push: async (route: string) => mockPush(route)
   })

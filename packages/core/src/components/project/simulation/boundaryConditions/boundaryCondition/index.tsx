@@ -168,7 +168,6 @@ const BoundaryCondition: React.FunctionComponent<Props> = ({
   onClose
 }) => {
   // State
-  const [uuid, setUuid] = useState<string>()
   const [name, setName] = useState<string>()
   const [bcType, setBCType] = useState<IModelBoundaryConditionValue['type']>()
   const [geometry, setGeometry] = useState<Geometry>()
@@ -176,6 +175,9 @@ const BoundaryCondition: React.FunctionComponent<Props> = ({
   const [selected, setSelected] = useState<ISelection['selected']>()
   const [values, setValues] = useState<IModelBoundaryConditionValue['values']>()
   const [error, setError] = useState<string>()
+
+  // uuid
+  const uuid = useMemo(() => value?.uuid ?? 'add', [value])
 
   // Context
   const { dispatch } = useContext(SelectContext)
@@ -188,43 +190,41 @@ const BoundaryCondition: React.FunctionComponent<Props> = ({
 
   // Already selected
   const alreadySelected = useMemo(() => {
-    const alreadySelected = Object.keys(boundaryConditions)
-      .map((type) => {
-        if (type === 'index' || type === 'title' || type === 'done') return
-        const typedBoundaryCondition = boundaryConditions[
-          type
-        ] as IModelTypedBoundaryCondition
+    const alreadySelected: ISelection[] = []
+    for (const type of Object.keys(boundaryConditions)) {
+      if (type === 'index' || type === 'title' || type === 'done') continue
 
-        return typedBoundaryCondition?.values
-          ?.map((b) => {
-            if (b.uuid === uuid) return
-            return {
-              label: b.name,
-              selected: b.selected
-            }
-          })
-          .filter((s) => s)
-      })
-      .flat()
-      .filter((s) => s)
+      const typedBoundaryCondition = boundaryConditions[
+        type
+      ] as IModelTypedBoundaryCondition
 
-    return alreadySelected as ISelection[]
+      const bcs = []
+      for (const bc of typedBoundaryCondition.values ?? []) {
+        if (bc.uuid === uuid) continue
+        bcs.push({
+          label: bc.name,
+          selected: bc.selected
+        })
+      }
+
+      alreadySelected.push(...bcs)
+    }
+    return alreadySelected
   }, [boundaryConditions, uuid])
 
   // Types
   const types = useMemo(() => {
-    const types = Object.keys(boundaryConditions)
-      .map((type) => {
-        if (type === 'index' || type === 'title' || type === 'done') return
-        const typedBoundaryCondition = boundaryConditions[
-          type
-        ] as IModelTypedBoundaryCondition
-        return {
-          key: type,
-          label: typedBoundaryCondition.label
-        }
+    const types = []
+    for (const type of Object.keys(boundaryConditions)) {
+      if (type === 'index' || type === 'title' || type === 'done') continue
+      const typedBoundaryCondition = boundaryConditions[
+        type
+      ] as IModelTypedBoundaryCondition
+      types.push({
+        key: type,
+        label: typedBoundaryCondition.label
       })
-      .filter((t) => t) as { key: string; label: string }[]
+    }
     return types
   }, [boundaryConditions])
 
@@ -418,13 +418,6 @@ const BoundaryCondition: React.FunctionComponent<Props> = ({
     return count
   }, [boundaryConditions])
 
-  // Initialize uuid
-  useEffect(() => {
-    if (uuid) return
-
-    setUuid(value?.uuid ?? 'add')
-  }, [value, uuid])
-
   // Initialize name
   useEffect(() => {
     if (name) return
@@ -467,9 +460,8 @@ const BoundaryCondition: React.FunctionComponent<Props> = ({
       placement="left"
       closable={false}
       open={true}
-      mask={false}
-      mask={{ enable: true, closable: false }}
-      width={300}
+      mask={{ enabled: false }}
+      size={300}
       extra={<Button type="text" icon={<CloseOutlined />} onClick={onCancel} />}
       footer={
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>

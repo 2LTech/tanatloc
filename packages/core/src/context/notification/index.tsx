@@ -1,4 +1,5 @@
 /** @module Context.Notification */
+'use client'
 
 import { Dispatch, ReactNode, createContext, useMemo, useReducer } from 'react'
 import { App } from 'antd'

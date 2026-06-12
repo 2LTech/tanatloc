@@ -1,6 +1,6 @@
 /** @module Route.User */
 
-import { Request, Response } from 'express'
+import { Request } from 'express'
 
 import { IDataBaseEntry } from '@/database/index.d'
 
@@ -8,6 +8,7 @@ import { session } from '../session'
 import { error } from '../error'
 
 import UserLib from '@/lib/user'
+import { NextRquest, NextResponse } from 'next/server'
 
 export interface IAddBody {
   email: string
@@ -40,6 +41,41 @@ const checkAddBody = (body: IAddBody): void => {
 const checkUpdateBody = (body: IUpdateBody): void => {
   if (!body || !Array.isArray(body))
     throw error(400, 'Missing data in your request (body(array))')
+}
+
+export const GET = async () => {
+  // Check session
+  let sessionId
+  try {
+    sessionId = await session()
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: true, message: err.message },
+      { status: 401 }
+    )
+  }
+
+  // Get
+  try {
+    const user = await UserLib.getWithData(sessionId, [
+      'lastname',
+      'firstname',
+      'email',
+      'avatar',
+      'superuser',
+      'authorizedplugins',
+      'plugins',
+      'usermodels'
+    ])
+
+    return NextResponse.json({ user }, { status: 200 })
+  } catch (err: any) {
+    console.log(err)
+    return NextResponse.json(
+      { error: true, message: err.message },
+      { status: 500 }
+    )
+  }
 }
 
 /**

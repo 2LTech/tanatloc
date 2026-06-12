@@ -1,13 +1,12 @@
 /** @module Components.Editor.Share */
 
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useMemo } from 'react'
 import isElectron from 'is-electron'
 
 import {
   IFrontMutateUser,
   IFrontOrganizationsItem,
-  IFrontUser,
-  IFrontUserModel
+  IFrontUser
 } from '@/api/index.d'
 
 import Share from '@/components/assets/share'
@@ -38,28 +37,26 @@ const UserModelShare: React.FunctionComponent<IProps> = ({
   organizations,
   swr
 }) => {
-  // State
-  const [visible, setVisible] = useState<boolean>(true)
-  const [disabled, setDisabled] = useState<boolean>(true)
-  const [current, setCurrent] = useState<IFrontUserModel>()
-
   // Context
   const { id } = useContext(EditorContext)
 
-  // Electron
-  useEffect(() => {
-    if (isElectron()) setVisible(false)
-    else setVisible(true)
+  // Visible
+  const visible = useMemo(() => {
+    if (isElectron()) return false
+    else return true
   }, [])
 
   // Current
-  useEffect(() => {
-    const userModel = user.usermodels.find((u) => u.id === id)
-    if (userModel?.owners.find((owner) => owner.id === user.id))
-      setDisabled(false)
-    else setDisabled(true)
-    setCurrent(userModel)
-  }, [user, id])
+  const current = useMemo(
+    () => user.usermodels.find((u) => u.id === id),
+    [user, id]
+  )
+
+  // Disabled
+  const disabled = useMemo(() => {
+    if (current?.owners.some((owner) => owner.id === user.id)) return false
+    else return true
+  }, [current, user])
 
   /**
    * Render

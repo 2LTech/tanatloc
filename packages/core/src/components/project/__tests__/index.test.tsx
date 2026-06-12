@@ -12,7 +12,7 @@ jest.mock('next/dynamic', () => (callback: () => Promise<void>) => {
 
 const mockPush = jest.fn()
 const mockReplace = jest.fn()
-jest.mock('next/router', () => ({
+jest.mock('next/navigation', () => ({
   useRouter: () => ({
     query: {},
     push: async () => mockPush(),

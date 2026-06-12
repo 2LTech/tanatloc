@@ -2,7 +2,7 @@
 
 import pg from 'pg'
 import format from '@2ltech/pg-format'
-import crypto from 'crypto'
+import crypto, { pbkdf2Sync, randomBytes } from 'node:crypto'
 import { v4 as uuid } from 'uuid'
 import isElectron from 'is-electron'
 
@@ -73,13 +73,16 @@ export const createDatabase = async (): Promise<void> => {
     let client: pg.PoolClient
 
     // Init
-    Object.defineProperty(global, 'tanatloc', { value: {}, configurable: true })
+    Object.defineProperty(globalThis, 'tanatloc', {
+      value: {},
+      configurable: true
+    })
     await initDatabase()
 
     // Pool
     pool = new pg.Pool({
       host: HOST,
-      port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : PORT,
+      port: process.env.DB_PORT ? Number.parseInt(process.env.DB_PORT) : PORT,
       user: process.env.DB_ADMIN ?? ADMIN,
       database: process.env.DB_ADMIN_DATABASE ?? ADMIN_DATABASE,
       password: process.env.DB_ADMIN_PASSWORD ?? ADMIN_PASSWORD
@@ -135,7 +138,7 @@ export const createDatabase = async (): Promise<void> => {
     // New pool
     pool = new pg.Pool({
       host: HOST,
-      port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : PORT,
+      port: process.env.DB_PORT ? Number.parseInt(process.env.DB_PORT) : PORT,
       database: DATABASE,
       user: USER,
       password: PASSWORD
@@ -192,7 +195,7 @@ export const createDatabase = async (): Promise<void> => {
     console.error(err)
     throw err
   } finally {
-    const globalAny: any = global
+    const globalAny: any = globalThis
     Object.defineProperty(globalAny.tanatloc, 'complete', { value: true })
   }
 }
@@ -314,12 +317,12 @@ const checkSchema = async (table: string): Promise<void> => {
 
       const column = existingColumns[index]
 
-      if (!column) {
-        await checkMissing(table, configColumn)
-      } else {
+      if (column) {
         await checkType(table, column, configColumn)
         await checkConstraint(table, column, configColumn)
         existingColumns.splice(index, 1)
+      } else {
+        await checkMissing(table, configColumn)
       }
     } catch (err) {
       console.warn('   ⚠ Unable to fix ' + table + '/' + configColumn.name)
@@ -537,7 +540,7 @@ const createTable = async (
         ') ',
       []
     )
-    extra && (await extra())
+    if (extra) await extra()
   }
 }
 
@@ -645,9 +648,9 @@ const createModelTable = async (): Promise<void> => {
 const createAdmin = async (): Promise<void> => {
   const authorizedPlugins = ['local']
 
-  const globalAny: any = global
+  const globalAny: any = globalThis
   if (!isElectron() || globalAny.electron?.fullBuild) {
-    authorizedPlugins.push(...['airthium', 'denso', 'rescale', 'sharetask'])
+    authorizedPlugins.push('airthium', 'denso', 'rescale', 'sharetask')
   }
 
   const { rows } = await query('SELECT * FROM ' + tables.USERS, [])
@@ -655,17 +658,21 @@ const createAdmin = async (): Promise<void> => {
     console.info(' *** Create Administrator *** ')
 
     const password = 'password'
-
+    const salt = randomBytes(16).toString('hex')
+    const hash = pbkdf2Sync(password, salt, 1_000_000, 64, 'sha512').toString(
+      'hex'
+    )
     await query(
       'INSERT INTO ' +
         tables.USERS +
-        " (email, password, workspaces, isValidated, lastModificationDate, superuser, authorizedplugins, plugins) VALUES ($1, crypt($2, gen_salt('bf')), $3, $4, to_timestamp($5), $6, $7, $8)",
+        ' (email, salt, hash, workspaces, isValidated, lastModificationDate, superuser, authorizedplugins, plugins) VALUES ($1, $2, $3, $4, $5, to_timestamp($6), $7, $8, $9)',
       [
         'admin',
-        password,
+        salt,
+        hash,
         [],
         true,
-        Date.now() / 1000,
+        Date.now() / 1_000,
         true,
         authorizedPlugins,
         [localPlugin]

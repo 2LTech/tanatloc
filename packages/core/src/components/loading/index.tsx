@@ -1,23 +1,18 @@
 /** @module Components.Loading */
 
-import { ReactNode, useEffect, useState } from 'react'
-// import dynamic from 'next/dynamic'
+import { ReactNode, useMemo } from 'react'
 import Link from 'next/link'
 import { Card, Layout, Space, Spin, Steps, Typography } from 'antd'
 import { LoadingOutlined, WarningOutlined } from '@ant-design/icons'
 
-import type { StepsProps } from 'antd'
+import Tanatloc3D from '@tanatloc/3d'
 
-// Tanatloc3D Background
-const Background = () => <>TODO</>
-// dynamic(
-//   () => import('@tanatloc/3d').then((mod) => mod.default.extra.Background),
-//   { ssr: false }
-// )
+import type { StepsProps } from 'antd'
 
 import globalStyle from '@/styles/index.module.css'
 import style from './index.module.css'
 
+// StepItem type
 type ArrayElement<ArrayType extends readonly unknown[]> =
   ArrayType extends readonly (infer ElementType)[] ? ElementType : never
 type StepItem = ArrayElement<NonNullable<StepsProps['items']>>
@@ -62,76 +57,66 @@ export interface IProps {
 const Loading: React.FunctionComponent<IProps> & {
   Simple: React.FunctionComponent
 } = ({ text, status, errors }) => {
-  // State
-  const [steps, setSteps] = useState<(StepItem & { index: number })[]>([])
-  const [errorMessages, setErrorMessages] = useState<ReactNode[]>([])
-
-  // Status
-  useEffect(() => {
-    if (!status?.length) {
-      setSteps([])
-      return
-    }
+  // Steps
+  const steps = useMemo(() => {
+    if (!status?.length) return []
 
     // New step
-    const newSteps = status
-      .map((desc, index) => {
-        return {
-          index: index,
-          status: 'finish' as StepItem['status'],
-          icon: index === 0 ? <LoadingOutlined /> : undefined,
-          title: desc
-        }
+    const newSteps: (StepItem & { index: number })[] = []
+    for (let i = 0; i < status.length; ++i) {
+      const desc = status[i]
+      if (!desc) continue
+
+      newSteps.push({
+        index: i,
+        status: 'finish',
+        icon: i === 0 ? <LoadingOutlined /> : undefined,
+        title: desc
       })
-      .filter((s) => s)
+    }
 
     // Update
-    setSteps(newSteps)
+    return newSteps
   }, [status])
 
   // Errors
-  useEffect(() => {
-    if (!errors?.length) {
-      setErrorMessages([])
-      return
-    }
+  const errorMessages = useMemo(() => {
+    if (!errors?.length) return []
 
-    setErrorMessages(
-      errors.map((err) => {
-        let child = null
-        if (
-          err.includes('docker: command not found') ||
-          err.includes('Is the docker daemon running')
+    return errors.map((err) => {
+      let child = null
+      if (
+        err.includes('docker: command not found') ||
+        err.includes('Is the docker daemon running')
+      )
+        child = (
+          <Card className={style.errorCard}>
+            There is an error with your Docker installation.
+            <br />
+            Please verify that Docker is correctly installed and running.
+          </Card>
         )
-          child = (
-            <Card className={style.errorCard}>
-              There is an error with your Docker installation.
-              <br />
-              Please verify that Docker is correctly installed and running.
-            </Card>
-          )
-        else if (
-          err.includes('EHOSTUNREACH') ||
-          err.includes('ENETUNREACH') ||
-          err.includes('ETIMEOUT')
+      else if (
+        err.includes('EHOSTUNREACH') ||
+        err.includes('ENETUNREACH') ||
+        err.includes('ETIMEOUT')
+      )
+        child = (
+          <Card className={style.errorCard}>
+            There is an error with your PostgreSQL installation.
+            <br />
+            Please verify that postgres Docker container
+            &quot;tanatloc-postgres&quot; is correctly installed and running.
+          </Card>
         )
-          child = (
-            <Card className={style.errorCard}>
-              There is an error with your PostgreSQL installation.
-              <br />
-              Please verify that postgres Docker container
-              &quot;tanatloc-postgres&quot; is correctly installed and running.
-            </Card>
-          )
 
-        return (
-          <div key={err}>
-            {err}
-            {child}
-          </div>
-        )
-      })
-    )
+      return (
+        <div key={err}>
+          {err}
+          {child}
+        </div>
+      )
+    })
   }, [errors])
 
   // Display
@@ -142,7 +127,7 @@ const Loading: React.FunctionComponent<IProps> & {
    */
   return (
     <Layout>
-      <Background />
+      <Tanatloc3D.Extra.Background />
       <div className={globalStyle.logo}>
         <img src="/images/logo.svg" alt="Tanatloc" />
       </div>

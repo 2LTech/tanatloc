@@ -116,7 +116,7 @@ export const _exportCSV = (
   // Download
   const fileName = name + '.csv'
   const file = new File([CSV], fileName, { type: 'text/csv' })
-  const url = window.URL.createObjectURL(file)
+  const url = globalThis.URL.createObjectURL(file)
   const link = document.createElement('a')
   link.href = url
   link.setAttribute('download', fileName)
@@ -195,10 +195,10 @@ const Data: React.FunctionComponent<IProps> = ({ simulation }) => {
     if (!tasks.length) return
 
     // Tasks data
-    const taskData = tasks
-      .map((task) => task.datas)
-      .filter((t) => t)
-      .flat() as ISimulationTaskData[]
+    const taskData: ISimulationTaskData[] = []
+    for (const task of tasks) {
+      taskData.push(...(task.datas ?? []))
+    }
     if (!taskData.length) return
 
     // Sort
@@ -269,40 +269,39 @@ const Data: React.FunctionComponent<IProps> = ({ simulation }) => {
 
     // Lines
     const colors = Utils.colorGenerator(selection.length)
-    const lines = selection
-      .map((selection, index) => {
-        if (!selection) return
+    const lines = []
+    for (let i = 0; i < selection.length; ++i) {
+      const s = selection[i]
+      if (!s) continue
 
-        const name = data.yNames[index]
-        const color = colors[index]
+      const name = data.yNames[i]
+      const color = colors[i]
 
-        return (
-          <Line
-            key={name}
-            name={name}
-            type="monotone"
-            dataKey={name}
-            stroke={color}
-            strokeWidth={2}
-          />
-        )
-      })
-      .filter((l) => l)
+      lines.push(
+        <Line
+          key={name}
+          name={name}
+          type="monotone"
+          dataKey={name}
+          stroke={color}
+          strokeWidth={2}
+        />
+      )
+    }
 
     // Min / max
     const xs = data.points.map((point) => point.x)
     const xMin = Math.min(...xs)
     const xMax = Math.max(...xs)
-    const ys = selection
-      .map((selection, index) => {
-        if (!selection) return
+    const ys: number[] = []
+    for (let i = 0; i < selection.length; ++i) {
+      const s = selection[i]
+      if (!s) continue
 
-        const name = data.yNames[index]
-        const ys = data.points.map((point) => point[name])
-        return ys
-      })
-      .filter((ys) => ys)
-      .flat() as number[]
+      const name = data.yNames[i]
+      const points = data.points.map((point) => point[name])
+      ys.push(...points)
+    }
     const yMin = Math.min(...ys)
     const yMax = Math.max(...ys)
     const range = yMax - yMin
@@ -320,17 +319,18 @@ const Data: React.FunctionComponent<IProps> = ({ simulation }) => {
    * Set visible false
    */
   const setVisibleFalse = useCallback(
-    (): void => selectDispatch(setData(false)),
+    () => selectDispatch(setData(false)),
     [selectDispatch]
   )
 
   /**
    * Export CSV (tab)
    */
-  const exportCSVTab = useCallback((): void => {
+  const exportCSVTab = useCallback(() => {
+    if (!simulation || !data) return
     setDownloading(true)
     try {
-      _exportCSV(simulation?.name!, data!, '\t')
+      _exportCSV(simulation.name, data, '\t')
     } catch (err: any) {
       dispatch(addError({ title: errors.download, err }))
     } finally {
@@ -341,10 +341,11 @@ const Data: React.FunctionComponent<IProps> = ({ simulation }) => {
   /**
    * Export CSV comma
    */
-  const exportCSVComma = useCallback((): void => {
+  const exportCSVComma = useCallback(() => {
+    if (!simulation || !data) return
     setDownloading(true)
     try {
-      _exportCSV(simulation?.name!, data!, ',')
+      _exportCSV(simulation.name, data, ',')
     } catch (err: any) {
       dispatch(addError({ title: errors.download, err }))
     } finally {
@@ -355,20 +356,22 @@ const Data: React.FunctionComponent<IProps> = ({ simulation }) => {
   /**
    * Export CSV default
    */
-  const exportCSVDefault = useCallback((): void => {
+  const exportCSVDefault = useCallback(() => {
+    if (!simulation || !data) return
     setDownloading(true)
     try {
-      _exportCSV(simulation?.name!, data!)
+      _exportCSV(simulation.name, data)
     } catch (err: any) {
       dispatch(addError({ title: errors.download, err }))
     } finally {
       setDownloading(false)
     }
-  }, [simulation?.name, data, dispatch])
+  }, [simulation, data, dispatch])
 
   /**
    * Format
    * @param value Value
+   * @returns Formatted value
    */
   const format = useCallback(
     (value: any): string => Number(value).toExponential(3),
@@ -387,9 +390,8 @@ const Data: React.FunctionComponent<IProps> = ({ simulation }) => {
       closable={true}
       onClose={setVisibleFalse}
       open={dataDisplay}
-      mask={false}
-      mask={{ enable: true, closable: false }}
-      height="50vh"
+      mask={{ enabled: false }}
+      size="50vh"
       styles={{ body: { height: '100%', overflow: 'hidden' } }}
       extra={
         <Dropdown.Button

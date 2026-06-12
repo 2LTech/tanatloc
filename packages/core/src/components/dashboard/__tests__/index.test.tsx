@@ -5,7 +5,7 @@ import Dashboard from '@/components/dashboard'
 const mockReplace = jest.fn()
 const mockPush = jest.fn()
 const mockQuery = jest.fn()
-jest.mock('next/router', () => ({
+jest.mock('next/navigation', () => ({
   useRouter: () => ({
     replace: () => mockReplace(),
     push: async () => mockPush(),

@@ -28,8 +28,8 @@ export const add = async (
   )
 
   const newWorkspace = response.rows[0]
-  newWorkspace && (newWorkspace.name = workspace.name)
-  newWorkspace && (newWorkspace.owners = [user.id])
+  if (newWorkspace) newWorkspace.name = workspace.name
+  if (newWorkspace) newWorkspace.owners = [user.id]
 
   return newWorkspace
 }

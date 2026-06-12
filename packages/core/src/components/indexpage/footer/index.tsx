@@ -1,17 +1,8 @@
 /** @module Components.Footer */
 
-import { ReactNode, useCallback, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import Link from 'next/link'
-import {
-  Button,
-  Card,
-  Divider,
-  Layout,
-  List,
-  ListProps,
-  Space,
-  Typography
-} from 'antd'
+import { Button, Card, Divider, Layout, Space, Typography } from 'antd'
 
 import packageJson from '../../../../package.json'
 
@@ -30,18 +21,6 @@ export interface IProps {
  * @returns Footer
  */
 const Footer: React.FunctionComponent<IProps> = ({ scroll }) => {
-  /**
-   * Render item
-   * @param item Item
-   * @returns Render
-   */
-  const renderItem: ListProps<ReactNode>['renderItem'] = useCallback(
-    (item: ReactNode): ReactNode => (
-      <List.Item className="item">{item}</List.Item>
-    ),
-    []
-  )
-
   /**
    * Scroll to features
    */
@@ -92,27 +71,27 @@ const Footer: React.FunctionComponent<IProps> = ({ scroll }) => {
   // Data
   const thanks = useMemo(
     () => [
-      <>
+      <div key="freefem">
         - Professor Fréderic Hecht, Dr. Pierre Jolivet, and the{' '}
         <Link href="https://freefem.org/" target="_blank">
           FreeFEM’s
         </Link>{' '}
         contributors
-      </>,
-      <>
+      </div>,
+      <div key="gmsh">
         - Professor Christophe Geuzaine, Professor Jean-François Remacle and the{' '}
         <Link href="https://gmsh.info/" target="_blank">
           Gmsh
         </Link>{' '}
         contributors
-      </>,
-      <>
+      </div>,
+      <div key="opencascade">
         - The{' '}
         <Link href="https://dev.opencascade.org/" target="_blank">
           Open Cascade
         </Link>{' '}
         development team
-      </>
+      </div>
     ],
     []
   )
@@ -160,11 +139,11 @@ const Footer: React.FunctionComponent<IProps> = ({ scroll }) => {
       <div className={style.head}>
         <Card title="Thanks" className={style.card} variant="borderless">
           We would like to thanks:
-          <List bordered={false} dataSource={thanks} renderItem={renderItem} />
+          <Space orientation="vertical">{thanks}</Space>
           Without you this software would not have been possible.
         </Card>
         <Card title="Navigate" className={style.card} variant="borderless">
-          <List dataSource={navigate} renderItem={renderItem} />
+          <Space orientation="vertical">{navigate}</Space>
         </Card>
         <Card title="Contact" className={style.card} variant="borderless">
           <Space orientation="vertical">

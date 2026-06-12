@@ -2,7 +2,7 @@
 
 import { ReactNode, useCallback } from 'react'
 import { NextPageContext } from 'next'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { Layout, Typography } from 'antd'
 
 import style from './index.module.css'

@@ -1,6 +1,6 @@
 /** @module Database */
 
-import { execSync } from 'child_process'
+import { execSync } from 'node:child_process'
 import pg, { QueryConfigValues } from 'pg'
 
 import {
@@ -42,7 +42,13 @@ export const checkdB = async (params?: {
       'docker container ls -a --filter "name=tanatloc-postgres" -q'
     )
 
-    if (!id.length) {
+    if (id.length) {
+      console.info(
+        '- Tanatloc postgres docker already exists (' +
+          id.toString().trim() +
+          ')'
+      )
+    } else {
       id = execSync(
         'docker run --name=tanatloc-postgres -e POSTGRES_PASSWORD=password -p 5433:5432 -d postgres:15'
       )
@@ -52,12 +58,6 @@ export const checkdB = async (params?: {
 
       console.info(
         '- Tanatloc postgres docker created (' + id.toString().trim() + ')'
-      )
-    } else {
-      console.info(
-        '- Tanatloc postgres docker already exists (' +
-          id.toString().trim() +
-          ')'
       )
     }
 
@@ -301,8 +301,9 @@ const arrayUpdater = (
       break
     default:
       throw new Error(
-        //@ts-ignore
-        'No method ' + (data.method ?? 'specified') + ' for array update'
+        'No method ' +
+          ((data as IDataBaseEntryArray).method ?? 'specified') +
+          ' for array update'
       )
   }
 }
@@ -359,8 +360,9 @@ const jsonUpdater = (
       break
     default:
       throw new Error(
-        //@ts-ignore
-        'No method ' + (data.method ?? 'specified') + ' for json update'
+        'No method ' +
+          ((data as IDataBaseEntryJSON).method ?? 'specified') +
+          ' for json update'
       )
   }
 }

@@ -553,6 +553,7 @@ const List: React.FunctionComponent<IProps> = ({
    * On resize
    */
   const onResize = useCallback(() => {
+    // TODO review resize function, must be CSS
     // Check if too many organizations to display
     const table = refTableOrga.current
     /* istanbul ignore next */
@@ -576,7 +577,7 @@ const List: React.FunctionComponent<IProps> = ({
   // Set Table Scroll Limit
   useEffect(() => {
     onResize()
-  }, [organizations, onResize, refTableOrga.current?.offsetTop])
+  }, [organizations, onResize])
 
   /**
    * Render

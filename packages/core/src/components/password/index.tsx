@@ -1,7 +1,7 @@
 /** @module Components.Password */
 
 import { useCallback, useContext, useEffect, useState } from 'react'
-import { NextRouter, useRouter } from 'next/router'
+import { NextRouter, useRouter } from 'next/navigation'
 import {
   Button,
   Card,

@@ -2,7 +2,11 @@
   "compilerOptions": {
     "allowJs": true,
     "target": "esnext",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
@@ -21,41 +25,125 @@
     "preserveConstEnums": true,
     "sourceMap": true,
     "paths": {
-      "@/config": ["./config"],
-      "@/config/*": ["./config/*"],
-      "@/models": ["./models"],
-      "@/models/*": ["./models/*"],
-      "@/templates": ["./templates"],
-      "@/templates/*": ["./templates/*"],
-      "@/plugins": ["./plugins"],
-      "@/plugins/*": ["./plugins/*"],
-      "@/postprocessing": ["./postprocessing"],
-      "@/postprocessing/*": ["./postprocessing/*"],
-      "@/api": ["./src/api"],
-      "@/api/*": ["./src/api/*"],
-      "@/auth": ["./src/auth"],
-      "@/auth/*": ["./src/auth/*"],
-      "@/components": ["./src/components"],
-      "@/components/*": ["./src/components/*"],
-      "@/context": ["./src/context"],
-      "@/context/*": ["./src/context/*"],
-      "@/database": ["./src/database"],
-      "@/database/*": ["./src/database/*"],
-      "@/lib": ["./src/lib"],
-      "@/lib/*": ["./src/lib/*"],
-      "@/pages": ["./src/pages"],
-      "@/pages/*": ["./src/pages/*"],
-      "@/route": ["./src/route"],
-      "@/route/*": ["./src/route/*"],
-      "@/server": ["./src/server"],
-      "@/server/*": ["./src/server/*"],
-      "@/services": ["./src/services"],
-      "@/services/*": ["./src/services/*"],
-      "@/styles": ["./src/styles"],
-      "@/styles/*": ["./src/styles/*"]
+      "@/config": [
+        "./config"
+      ],
+      "@/config/*": [
+        "./config/*"
+      ],
+      "@/models": [
+        "./models"
+      ],
+      "@/models/*": [
+        "./models/*"
+      ],
+      "@/templates": [
+        "./templates"
+      ],
+      "@/templates/*": [
+        "./templates/*"
+      ],
+      "@/plugins": [
+        "./plugins"
+      ],
+      "@/plugins/*": [
+        "./plugins/*"
+      ],
+      "@/postprocessing": [
+        "./postprocessing"
+      ],
+      "@/postprocessing/*": [
+        "./postprocessing/*"
+      ],
+      "@/api": [
+        "./src/api"
+      ],
+      "@/api/*": [
+        "./src/api/*"
+      ],
+      "@/auth": [
+        "./src/auth"
+      ],
+      "@/auth/*": [
+        "./src/auth/*"
+      ],
+      "@/components": [
+        "./src/components"
+      ],
+      "@/components/*": [
+        "./src/components/*"
+      ],
+      "@/context": [
+        "./src/context"
+      ],
+      "@/context/*": [
+        "./src/context/*"
+      ],
+      "@/database": [
+        "./src/database"
+      ],
+      "@/database/*": [
+        "./src/database/*"
+      ],
+      "@/lib": [
+        "./src/lib"
+      ],
+      "@/lib/*": [
+        "./src/lib/*"
+      ],
+      "@/pages": [
+        "./src/pages"
+      ],
+      "@/pages/*": [
+        "./src/pages/*"
+      ],
+      "@/route": [
+        "./src/route"
+      ],
+      "@/route/*": [
+        "./src/route/*"
+      ],
+      "@/server": [
+        "./src/server"
+      ],
+      "@/server/*": [
+        "./src/server/*"
+      ],
+      "@/services": [
+        "./src/services"
+      ],
+      "@/services/*": [
+        "./src/services/*"
+      ],
+      "@/styles": [
+        "./src/styles"
+      ],
+      "@/styles/*": [
+        "./src/styles/*"
+      ]
     },
-    "types": ["node", "jest"]
+    "types": [
+      "node",
+      "jest"
+    ],
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
-  "include": ["*.d.ts", "next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["dist", ".next", "renderer", "next.config.js"]
+  "include": [
+    "*.d.ts",
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": [
+    "dist",
+    ".next",
+    "renderer",
+    "next.config.js"
+  ]
 }

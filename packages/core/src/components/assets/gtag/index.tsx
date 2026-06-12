@@ -1,4 +1,5 @@
 /** @module Components.Assets.GTag */
+'use client'
 
 import { useEffect } from 'react'
 import { useCookies } from 'react-cookie'
@@ -21,10 +22,10 @@ const GoogleTag: React.FunctionComponent = () => {
     document.body.appendChild(script)
 
     script.onload = () => {
-      const win: any = window
+      const win: any = globalThis
       win.dataLayer = win.dataLayer || []
-      function gtag(..._args: any[]) {
-        win.dataLayer.push(arguments)
+      function gtag(...args: any[]) {
+        win.dataLayer.push(args)
       }
       gtag('js', new Date())
       gtag('config', 'G-NYKWRV173F')
@@ -33,9 +34,7 @@ const GoogleTag: React.FunctionComponent = () => {
       console.error('An error occurs with Google Analytics script')
     }
 
-    return () => {
-      document.body.removeChild(script)
-    }
+    return () => script.remove()
   }, [cookies])
 
   /**

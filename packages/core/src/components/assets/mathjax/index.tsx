@@ -1,24 +1,26 @@
 /** @module Components.Assets.Mathjax */
+'use client'
 
-import React, { ReactNode, useEffect, useRef, useState } from 'react'
-import Script from 'next/script'
+import React, { ReactNode, useEffect, useMemo, useRef } from 'react'
 import parse from 'html-react-parser'
-import { Spin } from 'antd'
 
 import { mathjaxRefresh } from '@/lib/mathjax'
 
-/**
- * Head
- */
-const Head: React.FunctionComponent = () => {
-  /**
-   * Render
-   */
-  return <Script src="/mathjax/tex-mml-chtml.js" />
-}
+// Mathjax tags
+const mathjaxBegin = String.raw`\(`
+const mathjaxEnd = String.raw`\)`
 
+// Interfaces
 export interface IPropsInline {
   text?: string
+}
+
+export interface IPropsFormula {
+  text?: string
+}
+
+export interface IPropsHtml {
+  html?: string
 }
 
 /**
@@ -29,8 +31,8 @@ export interface IPropsInline {
 const BackInline: React.FunctionComponent<IPropsInline> = ({ text }) => {
   // Content
   let content = text ?? ''
-  if (text && !text.includes('\\(') && !text.includes('\\)'))
-    content = '\\(' + text + '\\)'
+  if (text && !text.includes(mathjaxBegin) && !text.includes(mathjaxEnd))
+    content = mathjaxBegin + text + mathjaxEnd
 
   /**
    * Render
@@ -41,27 +43,28 @@ const BackInline: React.FunctionComponent<IPropsInline> = ({ text }) => {
 /**
  * Inline
  * @param props Props
+ * @returns Inline
  */
 const Inline: React.FunctionComponent<IPropsInline> = ({ text }) => {
-  // State
-  const [content, setContent] = useState<string>()
-
   // Ref
   const element = useRef<HTMLDivElement>(null)
 
-  // Update text
-  useEffect(() => {
-    if (!text) setContent('')
-    else if (text.includes('\\(') && text.includes('\\)')) setContent(text)
-    else setContent('\\(' + text + '\\)')
+  // Content
+  const content = useMemo(() => {
+    let mathjaxText: string
+    if (!text) mathjaxText = ''
+    else if (text.includes(mathjaxBegin) && text.includes(mathjaxEnd))
+      mathjaxText = text
+    else mathjaxText = mathjaxBegin + text + mathjaxEnd
 
     mathjaxRefresh()
+
+    return mathjaxText
   }, [text])
 
   // Update MathJax
   useEffect(() => {
     const div = element.current
-    /* istanbul ignore next */
     if (!div) return
 
     mathjaxRefresh([div])
@@ -71,20 +74,16 @@ const Inline: React.FunctionComponent<IPropsInline> = ({ text }) => {
    * Render
    */
   return (
-    <div style={{ display: 'inline-block' }} ref={element}>
+    <div ref={element} style={{ display: 'inline-block' }}>
       {content}
     </div>
   )
 }
 
-export interface IPropsFormula {
-  text?: string
-}
-
 /**
  * Back Formula
  * @param props Props
- * @returns Formula
+ * @returns BackFormula
  */
 const BackFormula: React.FunctionComponent<IPropsFormula> = ({ text }) => {
   // Content
@@ -100,27 +99,27 @@ const BackFormula: React.FunctionComponent<IPropsFormula> = ({ text }) => {
 /**
  * Formula
  * @param props Props
+ * @returns Formula
  */
 const Formula: React.FunctionComponent<IPropsFormula> = ({ text }) => {
-  // State
-  const [content, setContent] = useState<string>()
-
   // Ref
   const element = useRef<HTMLDivElement>(null)
 
-  // Update text
-  useEffect(() => {
-    if (!text) setContent('')
-    else if (text.includes('$$')) setContent(text)
-    else setContent('$$' + text + '$$')
+  // Content
+  const content = useMemo(() => {
+    let mathjaxText: string
+    if (!text) mathjaxText = ''
+    else if (text.includes('$$')) mathjaxText = text
+    else mathjaxText = '$$' + text + '$$'
 
     mathjaxRefresh()
+
+    return mathjaxText
   }, [text])
 
   // Update MathJax
   useEffect(() => {
     const div = element.current
-    /* istanbul ignore next */
     if (!div) return
 
     mathjaxRefresh([div])
@@ -132,36 +131,25 @@ const Formula: React.FunctionComponent<IPropsFormula> = ({ text }) => {
   return <div ref={element}>{content}</div>
 }
 
-export interface IPropsHtml {
-  html?: string
-}
-
 /**
  * Html
  * @param props Props
+ * @returns Html
  */
 const Html: React.FunctionComponent<IPropsHtml> = ({ html }) => {
-  // State
-  const [content, setContent] = useState<ReactNode>()
-  const [loading, setLoading] = useState<boolean>(false)
-
   // Ref
   const element = useRef<HTMLDivElement>(null)
 
   // Update text
-  useEffect(() => {
-    setContent('')
+  const content = useMemo(() => {
+    let mathjaxText: ReactNode
 
-    if (html) {
-      setContent('')
-      setLoading(true)
-      setTimeout(() => {
-        setContent(parse(html))
-        setLoading(false)
-      }, 100)
-    }
+    if (html) mathjaxText = parse(html)
+    else mathjaxText = ''
 
     mathjaxRefresh()
+
+    return mathjaxText
   }, [html])
 
   // Update MathJax
@@ -176,9 +164,8 @@ const Html: React.FunctionComponent<IPropsHtml> = ({ html }) => {
   /**
    * Render
    */
-  if (loading) return <Spin />
   return <div ref={element}>{content}</div>
 }
 
-const MathJax = { Head, BackInline, Inline, BackFormula, Formula, Html }
+const MathJax = { BackInline, Inline, BackFormula, Formula, Html }
 export default MathJax

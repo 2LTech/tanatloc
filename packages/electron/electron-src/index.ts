@@ -3,7 +3,7 @@
 import { app } from 'electron'
 import serve from 'electron-serve'
 import fixPath from 'fix-path'
-import path from 'path'
+import path from 'node:path'
 import * as Sentry from '@sentry/electron/main'
 
 import { createWindow } from './helpers'
@@ -70,15 +70,14 @@ const start = async (): Promise<void> => {
   // Install
   try {
     console.info('Install')
-    //@ts-ignore
+    //@ts-expect-error 2307 - created at build
     const install = await import('../../extra/install/install/index.js')
     await install.default({ addStatus, addError })
 
     // Wait complete
     const max = 100
     let iter = 0
-    //@ts-ignore
-    while (!global.tanatloc.complete && iter < max) {
+    while (!globalThis.tanatloc.complete && iter < max) {
       await new Promise((resolve) => setTimeout(resolve, 50))
       iter++
     }
@@ -94,7 +93,7 @@ const start = async (): Promise<void> => {
   if (complete)
     try {
       console.info('Starting server')
-      //@ts-ignore
+      //@ts-expect-error 2307 - created at build
       const server = await import('../../extra/server/server/bin/www.js')
       await server.default({ addStatus })
     } catch (err: any) {

@@ -30,7 +30,7 @@ export interface JSON5Error extends Error {
  */
 const JSONCode: React.FunctionComponent = () => {
   // Ref
-  const editorRef = useRef<ReactAce>(undefined)
+  const editorRef = useRef<ReactAce>(null)
 
   // Data
   const { model, jsonHighlight, jsonError, dispatch } =
@@ -107,7 +107,6 @@ const JSONCode: React.FunctionComponent = () => {
     <div className={style.codeBlock}>
       <Typography.Title level={3}>Model description</Typography.Title>
       <AceEditor
-        //@ts-ignore
         ref={editorRef}
         width="100%"
         height="calc(100% - 32px)"

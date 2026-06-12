@@ -145,13 +145,15 @@ export const _selectItem = (
       tooltip={item.tooltip}
       rules={item.rules}
     >
-      <Select id={'select-' + key}>
-        {item.options?.map((option) => (
-          <Select.Option key={option} value={option} {...(item.props ?? {})}>
-            {option}
-          </Select.Option>
-        ))}
-      </Select>
+      <Select
+        id={'select-' + key}
+        options={item.options?.map((option) => ({
+          key: option,
+          value: option,
+          label: option,
+          ...item.props
+        }))}
+      />
     </Form.Item>
   )
 }
@@ -221,24 +223,10 @@ const PluginDialog: React.FunctionComponent<IProps> = ({
   // State
   const [visible, setVisible] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
+  const [content, setContent] = useState<React.ReactElement>()
 
   // Context
   const { dispatch } = useContext(NotificationContext)
-
-  // Content
-  const content = useMemo(
-    () =>
-      Object.keys(plugin.configuration).map((key, index) => {
-        const item = plugin.configuration[key]
-        if (item.type === 'input')
-          return _inputItem(item, key, index === 0 ? inputRef : undefined)
-        else if (item.type === 'textarea') return _textareaItem(item, key)
-        else if (item.type === 'password') return _passwordItem(item, key)
-        else if (item.type === 'select') return _selectItem(item, key)
-        else return <div key={key}></div>
-      }),
-    [plugin.configuration]
-  )
 
   // Initial values
   const initialValues = useMemo(() => {
@@ -250,7 +238,20 @@ const PluginDialog: React.FunctionComponent<IProps> = ({
         plugin.configuration[key].value ?? plugin.configuration[key].default
     })
     return initialValues
-  }, [plugin?.configuration])
+  }, [plugin.configuration])
+
+  // Content
+  useEffect(() => {
+    Object.keys(plugin.configuration).forEach((key, index) => {
+      const item = plugin.configuration[key]
+      if (item.type === 'input')
+        setContent(_inputItem(item, key, index === 0 ? inputRef : undefined))
+      else if (item.type === 'textarea') setContent(_textareaItem(item, key))
+      else if (item.type === 'password') setContent(_passwordItem(item, key))
+      else if (item.type === 'select') setContent(_selectItem(item, key))
+      else setContent(<div key={key}></div>)
+    })
+  }, [plugin.configuration])
 
   // Autofocus
   useEffect(() => {

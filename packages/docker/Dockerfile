@@ -1,9 +1,9 @@
 ## BUILDER ##
-FROM tanatloc/worker as builder
+FROM tanatloc/worker AS builder
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
-ENV INSTALL_PATH /home/app
+ENV INSTALL_PATH=/home/app
 
 # Install packages
 RUN apt update \
@@ -28,16 +28,15 @@ RUN corepack enable
 
 # Build
 ARG DB_ADMIN
-ENV DB_ADMIN $DB_ADMIN
+ENV DB_ADMIN=$DB_ADMIN
 
-ARG DB_ADMIN_PASSWORD
-ENV DB_ADMIN_PASSWORD $DB_ADMIN_PASSWORD
+RUN --mount=type=secret,id=DB_ADMIN_PASSWORD,env=DB_ADMIN_PASSWORD
 
 ARG DB_HOST
-ENV DB_HOST $DB_HOST
+ENV DB_HOST=$DB_HOST
 
 ARG DB_PORT
-ENV DB_PORT $DB_PORT
+ENV DB_PORT=$DB_PORT
 
 WORKDIR ${INSTALL_PATH}
 
@@ -51,10 +50,10 @@ RUN YARN_CHECKSUM_BEHAVIOR="update" yarn install \
 ## RELEASE ##
 FROM tanatloc/worker
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
-ENV INSTALL_PATH /home/app
-ENV APP_PATH /home/app
+ENV INSTALL_PATH=/home/app
+ENV APP_PATH=/home/app
 
 # Install packages
 RUN apt update \
@@ -94,40 +93,44 @@ COPY --from=builder ${INSTALL_PATH}/.next .next
 COPY --from=builder ${INSTALL_PATH}/yarn.lock yarn.lock
 
 # Corepack prepare
-RUN YARN_VERSION=$(cat package.json | grep packageManager | head -1 | awk -F: '{ print $2 }' | sed 's/["\ ]//g' | sed 's/yarn@//g') \
+RUN YARN_VERSION=$(\
+	cat package.json | grep packageManager | head -1 | awk -F: '{ print $2 }' | sed 's/["\ ]//g' | sed 's/yarn@//g'\
+	) \
 	&& corepack prepare yarn@${YARN_VERSION} -o=yarn-${YARN_VERSION}.tgz \
 	&& mkdir -p ./.cache && cp -r /root/.cache/node ./.cache/node
 
 # Build
 ARG DB_ADMIN
-ENV DB_ADMIN $DB_ADMIN
+ENV DB_ADMIN=$DB_ADMIN
 
-ARG DB_ADMIN_PASSWORD
-ENV DB_ADMIN_PASSWORD $DB_ADMIN_PASSWORD
+RUN --mount=type=secret,id=DB_ADMIN_PASSWORD,env=DB_ADMIN_PASSWORD
 
 ARG DB_HOST
-ENV DB_HOST $DB_HOST
+ENV DB_HOST=$DB_HOST
 
 ARG DB_PORT
-ENV DB_PORT $DB_PORT
+ENV DB_PORT=$DB_PORT
 
 RUN YARN_CHECKSUM_BEHAVIOR="update" yarn install \
 	&& yarn run next telemetry disable
 
 # Path
-ENV ADDITIONAL_PATH $ADDITIONAL_PATH
+ARG ADDITIONAL_PATH
+ENV ADDITIONAL_PATH=$ADDITIONAL_PATH
 
 # Storage
+ARG HOST_STORAGE
 ENV HOST_STORAGE=${HOST_STORAGE}
 
 # ShareTask
-ENV SHARETASK_JVM $SHARETASK_JVM
-RUN mkdir -p /usr/local/sharetask/bin
-RUN mkdir -p /usr/local/jre/bin
+ARG SHARETASK_JVM
+ENV SHARETASK_JVM=$SHARETASK_JVM
+RUN mkdir -p /usr/local/sharetask/bin \
+	mkdir -p /usr/local/jre/bin
 
 # Start script
 COPY docker/start.sh start.sh
 RUN chmod a+x start.sh
 
 ## START
-CMD export PATH="$PATH:$ADDITIONAL_PATH"; ${APP_PATH}/start.sh
+CMD ["export PATH=\"$PATH:$ADDITIONAL_PATH\"", "${APP_PATH}/start.sh"]

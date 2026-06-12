@@ -4,7 +4,7 @@ import Account from '..'
 
 const mockReplace = jest.fn()
 const mockQuery = jest.fn()
-jest.mock('next/router', () => ({
+jest.mock('next/navigation', () => ({
   useRouter: () => ({
     replace: () => mockReplace(),
     query: mockQuery()

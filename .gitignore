@@ -27,6 +27,11 @@ yarn-error.log*
 
 # sonar
 .sonarlint
+.scannerwork
 
 # typescript
 *.tsbuildinfo
+
+# check
+checkLog.out
+checkError.out

@@ -10,7 +10,7 @@ import {
   useState
 } from 'react'
 import dynamic from 'next/dynamic'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { Button, Layout, Menu, MenuProps, Tooltip, Typography } from 'antd'
 import {
   CodeSandboxOutlined,
@@ -630,13 +630,13 @@ const Project: React.FunctionComponent = () => {
 
       // Display geometries
       const children = current.scheme.configuration?.geometry.children ?? []
-      const toDisplay = children
-        .map((child) => {
-          const id = child.value
-          if (!id) return
-          return loadedGeometries.find((g) => g.id === id)
-        })
-        .filter((g) => g) as IFrontGeometriesItem[]
+      const toDisplay: IFrontGeometriesItem[] = []
+      for (const child of children) {
+        const id = child.value
+        if (!id) continue
+        const geometry = loadedGeometries.find((g) => g.id === id)
+        if (geometry) toDisplay.push(geometry)
+      }
       if (toDisplay.length) setGeometries(toDisplay)
 
       switch (item) {
@@ -782,8 +782,8 @@ const Project: React.FunctionComponent = () => {
   // Auto open geometry add
   useCustomEffect(() => {
     if (!loadingProject && !loadingGeometries) {
-      if (!loadedGeometries.length) setGeometryAddVisible(true)
-      else setGeometryAddVisible(false)
+      if (loadedGeometries.length) setGeometryAddVisible(false)
+      else setGeometryAddVisible(true)
     } else {
       setGeometryAddVisible(false)
     }
@@ -796,26 +796,24 @@ const Project: React.FunctionComponent = () => {
 
       if (geometries.length) {
         let needUpdate = false
-        const newGeometries = geometries
-          .map((geometry) => {
-            const current = loadedGeometries.find((g) => g.id === geometry?.id)
-            if (current) {
-              if (
-                JSON.stringify({ ...current, visible: undefined }) !==
-                JSON.stringify({ ...geometry, visible: undefined })
-              ) {
-                // Update
-                needUpdate = true
-                return current
-              }
-              return geometry
-            } else {
-              // Remove
+        const newGeometries: IFrontGeometriesItem[] = []
+        for (const geometry of geometries) {
+          const current = loadedGeometries.find((g) => g.id === geometry?.id)
+          if (current) {
+            if (
+              JSON.stringify({ ...current, visible: undefined }) !==
+              JSON.stringify({ ...geometry, visible: undefined })
+            ) {
+              // Update
               needUpdate = true
-              return null
+              newGeometries.push(current)
             }
-          })
-          .filter((g) => g) as IFrontGeometriesItem[]
+            newGeometries.push(geometry)
+          } else {
+            // Remove
+            needUpdate = true
+          }
+        }
 
         if (needUpdate) setGeometries(newGeometries)
       } else {
@@ -835,7 +833,7 @@ const Project: React.FunctionComponent = () => {
           if (JSON.stringify(current) !== JSON.stringify(simulation)) {
             setSimulation(current)
 
-            if (menuKey && menuKey.key === menuItems.simulations.key)
+            if (menuKey?.key === menuItems.simulations.key)
               setSimulationPanel(menuKey.id, menuKey.item!)
           }
         } else {

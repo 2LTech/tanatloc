@@ -3,7 +3,7 @@ import { render, waitFor } from '@testing-library/react'
 import Validation, { errors } from '..'
 
 const mockRouter = jest.fn()
-jest.mock('next/router', () => ({
+jest.mock('next/navigation', () => ({
   useRouter: () => mockRouter()
 }))
 

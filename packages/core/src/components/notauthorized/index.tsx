@@ -1,7 +1,7 @@
 /** @module Components.Notauthorized */
 
 import { useCallback } from 'react'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { Button, Card, Layout, Space, Typography } from 'antd'
 import { AlertOutlined } from '@ant-design/icons'
 

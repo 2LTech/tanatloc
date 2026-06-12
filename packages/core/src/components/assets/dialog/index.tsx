@@ -146,7 +146,7 @@ const Dialog: React.FunctionComponent<IProps> = ({
       }
       open={visible}
       closable={false}
-      mask={{ enable: true, closable: false }}
+      mask={{ enabled: true, closable: false }}
       onCancel={onModalCancel}
       cancelButtonProps={{
         ...cancelButtonProps,

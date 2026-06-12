@@ -130,5 +130,5 @@ const Background: React.FunctionComponent
 
 const WebGL: React.FunctionComponent<Tanatloc3DWebGLProps>
 
-const Tanatloc3D = { Canvas, Renderer, extra: { NotFound, Background, WebGL } }
+const Tanatloc3D = { Canvas, Renderer, Extra: { NotFound, Background, WebGL } }
 export default Tanatloc3D

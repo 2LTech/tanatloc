@@ -39,10 +39,10 @@ export const add = async (
   )
 
   const newProject = response.rows[0]
-  newProject && (newProject.title = project.title)
-  newProject && (newProject.description = project.description ?? '')
-  newProject && (newProject.owners = [user.id])
-  newProject && (newProject.workspace = workspace.id)
+  if (newProject) newProject.title = project.title
+  if (newProject) newProject.description = project.description ?? ''
+  if (newProject) newProject.owners = [user.id]
+  if (newProject) newProject.workspace = workspace.id
 
   return newProject
 }

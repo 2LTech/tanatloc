@@ -6,7 +6,7 @@ Various formats (STEP, DXF, msh, vtu) to GLB
 
 ## Simple way
 
-Use the Docker build in the [tanatloc/worker](https://github.com/Airthium/tanatloc-worker) repository.
+Use the Docker build in the [@tanatloc/worker](https://github.com/2LTech/tanatloc/packages/worker) package.
 
 ## Hard way
 
@@ -38,18 +38,14 @@ Use the Docker build in the [tanatloc/worker](https://github.com/Airthium/tanatl
 ### Clone
 
 ```shell
-git clone git@github.com:Airthium/tanatloc-converters.git
-cd tanatloc-converters
+git clone git@github.com:2LTech/converters.git
+cd tanatloc
 ```
 
 ### Compilation
 
 ```shell
-mkdir build
-cd build
-cmake ..
-make -j"$(nproc)"
-make install
+yarn workspace @tanatloc/converters run build
 ```
 
 | CMake parameters        | Value                                        |

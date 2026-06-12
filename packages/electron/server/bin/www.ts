@@ -1,18 +1,20 @@
 /** @module Server.Bin */
 
 import app from '../app'
-import { createServer } from 'http'
+import { createServer } from 'node:http'
 
-import init from '../../../core/src/server/init'
-import clean from '../../../core/src/server/clean'
+// @ts-expect-error @ts2307 relative to electron dist
+import init from '../../tanatloc/src/server/init'
+// @ts-expect-error @ts2307 relative to electron dist
+import clean from '../../tanatloc/src/server/clean'
 
 /**
  * Normalize a port into a number, string, or false.
  */
 const normalizePort = (val: string): boolean | number | string => {
-  const p = parseInt(val, 10)
+  const p = Number.parseInt(val, 10)
 
-  if (isNaN(p)) {
+  if (Number.isNaN(p)) {
     // named pipe
     return val
   }
@@ -36,7 +38,10 @@ const www = async ({
   addStatus('Starting server')
 
   // Initialize
-  Object.defineProperty(global, 'tanatloc', { value: {}, configurable: true })
+  Object.defineProperty(globalThis, 'tanatloc', {
+    value: {},
+    configurable: true
+  })
   try {
     await init({ addStatus })
   } catch (err: any) {

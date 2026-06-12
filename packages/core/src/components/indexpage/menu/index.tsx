@@ -1,11 +1,9 @@
 /** @module Components.Index.Menu */
 
 import { useCallback, useMemo } from 'react'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { Button, Layout, Menu, MenuProps, Popover } from 'antd'
 import { BarsOutlined } from '@ant-design/icons'
-
-import { asyncFunctionExec } from '@/components/utils/asyncFunction'
 
 import UserAPI from '@/api/user'
 
@@ -42,9 +40,7 @@ const IndexMenu: React.FunctionComponent = () => {
    */
   const onRouter = useCallback(
     (route: string): void => {
-      asyncFunctionExec(async () => {
-        await router.push(route)
-      })
+      router.push(route)
     },
     [router]
   )

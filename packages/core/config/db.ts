@@ -206,7 +206,11 @@ export const schemas: Scheme = {
       constraint: 'NOT NULL'
     },
     {
-      name: 'password',
+      name: 'salt',
+      type: 'TEXT'
+    },
+    {
+      name: 'hash',
       type: 'TEXT'
     },
     {

@@ -161,12 +161,7 @@
   display: grid !important;
   grid-template-columns: 1fr;
   grid-template-rows: 1fr 1fr;
-  row-gap: 25px;
   column-gap: 25px;
-}
-
-.steps :global(.ant-steps-item) {
-  margin-bottom: 20px;
 }
 
 .steps :global(.ant-steps-item-title) {
@@ -180,14 +175,9 @@
   height: 64px;
   line-height: 64px;
   font-size: 32px;
-  background-color: white !important;
 }
 
-.steps :global(.ant-steps-icon) {
-  color: colorPrimary !important;
-}
-
-.steps :global(.ant-steps-item-tail) {
+.steps :global(.ant-steps-item-rail) {
   display: none !important;
 }
 

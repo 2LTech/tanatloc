@@ -30,7 +30,7 @@ const get = async <T extends TAvatarGet>(
   const response = await getter(tables.AVATARS, id, data)
 
   const avatar = response.rows[0]
-  avatar && (avatar.id = id)
+  if (avatar) avatar.id = id
 
   return avatar
 }

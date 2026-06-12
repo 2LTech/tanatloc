@@ -1,13 +1,15 @@
 /** @module Route.Project */
 
-import { Request, Response } from 'express'
-
-import { session } from '../session'
-import { checkWorkspaceAuth } from '../auth'
-import { error } from '../error'
+import { NextRequest, NextResponse } from 'next/server'
 
 import ProjectLib from '@/lib/project'
 
+import { session } from '../session'
+import { checkWorkspaceAuth } from '../auth'
+
+/**
+ * Interfaces
+ */
 export interface IAddBody {
   workspace: { id: string }
   project: { title: string; description?: string }
@@ -24,57 +26,63 @@ const checkAddBody = (body: IAddBody): void => {
     !body.project?.title ||
     typeof body.project.title !== 'string'
   )
-    throw error(
-      400,
+    throw new Error(
       'Missing data in your request (body: { workspace: { id(uuid) }, project: { title(string), description(?string) } }'
     )
 }
 
-/**
- * Project API
- * @param req Request
- * @param res Response
- */
-const route = async (req: Request, res: Response): Promise<void> => {
-  try {
-    // Check session
-    const sessionId = await session(req)
-
-    switch (req.method) {
-      case 'GET': {
-        // Empty route
-        res.status(200).end()
-        break
-      }
-      case 'POST': {
-        // Check
-        checkAddBody(req.body)
-
-        const { workspace, project } = req.body
-
-        // Check auth
-        await checkWorkspaceAuth({ id: sessionId }, workspace)
-
-        // Add
-        try {
-          const newProject = await ProjectLib.add(
-            { id: sessionId },
-            workspace,
-            project
-          )
-          res.status(200).json(newProject)
-        } catch (err: any) {
-          throw error(500, err.message)
-        }
-        break
-      }
-      default:
-        // Unauthorized method
-        throw error(402, 'Method ' + req.method + ' not allowed')
-    }
-  } catch (err: any) {
-    res.status(err.status).json({ error: true, message: err.message })
-  }
+export const GET = async () => {
+  // Empty route
+  return NextResponse.json(null, { status: 200 })
 }
 
-export default route
+export const POST = async (request: NextRequest) => {
+  // Check session
+  let sessionId
+  try {
+    sessionId = await session()
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: true, message: err.message },
+      { status: 401 }
+    )
+  }
+
+  // Check
+  const body = await request.json()
+  try {
+    checkAddBody(body)
+  } catch (err: any) {
+    return NextResponse.json(
+      { err: true, message: err.message },
+      { status: 400 }
+    )
+  }
+
+  const { workspace, project } = body
+
+  // Check auth
+  try {
+    await checkWorkspaceAuth({ id: sessionId }, workspace)
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: true, message: err.message },
+      { status: 403 }
+    )
+  }
+
+  // Add
+  try {
+    const newProject = await ProjectLib.add(
+      { id: sessionId },
+      workspace,
+      project
+    )
+    return NextResponse.json(newProject, { status: 200 })
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: true, message: err.message },
+      { status: 500 }
+    )
+  }
+}

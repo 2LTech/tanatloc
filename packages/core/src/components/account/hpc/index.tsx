@@ -1,13 +1,6 @@
 /** @module Components.Account.HPC */
 
-import {
-  useState,
-  useEffect,
-  useContext,
-  useRef,
-  useCallback,
-  ReactNode
-} from 'react'
+import { useState, useEffect, useContext, useRef, ReactNode } from 'react'
 import { Card, Space, Spin } from 'antd'
 
 import { NotificationContext } from '@/context/notification'
@@ -67,31 +60,9 @@ const HPC: React.FunctionComponent = () => {
       <Spin />
     </Card>
   ])
-  const [height, setHeight] = useState<number>(100)
 
   // Context
   const { dispatch } = useContext(NotificationContext)
-
-  /**
-   * On resize
-   */
-  const onResize = useCallback(() => {
-    const div = containerRef.current
-    /* istanbul ignore next */
-    if (!div) {
-      setTimeout(() => onResize(), 100)
-      return
-    }
-
-    const offsets = div.getBoundingClientRect()
-    const top = offsets.top
-
-    const totalHeight = window.innerHeight
-
-    const newHeight = totalHeight - top
-
-    if (newHeight !== height) setHeight(newHeight)
-  }, [height])
 
   // Plugins list
   useEffect(() => {
@@ -115,14 +86,7 @@ const HPC: React.FunctionComponent = () => {
     })
   }, [dispatch])
 
-  // Height
-  useEffect(() => {
-    window.addEventListener('resize', onResize)
-    onResize()
-    return () => {
-      window.removeEventListener('resize', onResize)
-    }
-  }, [onResize])
+  // TODO review resize function, must be CSS
 
   /**
    * Render
@@ -130,10 +94,9 @@ const HPC: React.FunctionComponent = () => {
   return (
     <Space
       ref={containerRef}
-      direction="vertical"
+      orientation="vertical"
       className={`${globalStyle.fullWidth} ${globalStyle.scroll}`}
       size={20}
-      style={{ height: height - 20 }}
     >
       {list}
     </Space>

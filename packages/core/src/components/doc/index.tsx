@@ -1,4 +1,5 @@
 /** @module Components.Doc */
+'use client'
 
 import Link from 'next/link'
 import {
@@ -9,7 +10,7 @@ import {
   useRef,
   useState
 } from 'react'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { Button, Layout, Menu, Typography } from 'antd'
 
 import { asyncFunctionExec } from '../utils/asyncFunction'

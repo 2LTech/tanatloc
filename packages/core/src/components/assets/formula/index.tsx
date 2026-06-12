@@ -1,6 +1,6 @@
 /** @module Components.Assets.Formula */
 
-import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react'
+import { ChangeEvent, useCallback, useMemo, useState } from 'react'
 import { Checkbox, Form, Input, Select, Space } from 'antd'
 import { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { CheckCircleOutlined, LoadingOutlined } from '@ant-design/icons'
@@ -70,21 +70,20 @@ const Formula: React.FunctionComponent<IProps> = ({
   )
   const [internalChecked, setInternalChecked] =
     useState<boolean>(!!defaultChecked)
-  const [disabled, setDisabled] = useState<boolean>(
-    defaultChecked !== undefined ? !defaultChecked : false
-  )
+  const [disabled, setDisabled] = useState<boolean>(!!defaultChecked)
   const [autoSave, setAutoSave] = useState<number>(0)
   const [saving, setSaving] = useState<boolean>(false)
 
-  // Default value
-  useEffect(() => {
-    setInternalValue(String(defaultValue ?? 0))
-  }, [defaultValue])
+  // TODO check that
+  // // Default value
+  // useEffect(() => {
+  //   setInternalValue(String(defaultValue ?? 0))
+  // }, [defaultValue])
 
-  // Default checked
-  useEffect(() => {
-    setInternalChecked(!!defaultChecked)
-  }, [defaultChecked])
+  // // Default checked
+  // useEffect(() => {
+  //   setInternalChecked(!!defaultChecked)
+  // }, [defaultChecked])
 
   /**
    * On check change
@@ -139,14 +138,14 @@ const Formula: React.FunctionComponent<IProps> = ({
    */
   const onSelectChange = useCallback(
     (value: string): void => {
-      const unit = units?.find((u) => u.label === value)!
-      onUnitChange?.(unit)
+      const unit = units?.find((u) => u.label === value)
+      if (unit) onUnitChange?.(unit)
     },
     [units, onUnitChange]
   )
 
-  // Addon after
-  const addonAfter = useMemo(() => {
+  // suffix
+  const suffix = useMemo(() => {
     if (unit) {
       if (units && units.length > 1)
         return (
@@ -230,8 +229,8 @@ const Formula: React.FunctionComponent<IProps> = ({
             disabled={disabled}
             value={internalValue}
             onChange={onInputChange}
-            addonBefore={saving ? loading : ok}
-            addonAfter={addonAfter}
+            prefix={saving ? loading : ok}
+            suffix={suffix}
           />
         </Form.Item>
       </Form>

@@ -50,7 +50,7 @@ export interface Marker {
  */
 const FreeFEMCode: React.FunctionComponent = () => {
   // Ref
-  const editorRef = useRef<ReactAce>(undefined)
+  const editorRef = useRef<ReactAce>(null)
   const cursorFromContext = useRef<boolean>(undefined)
   const currentToken = useRef<string>(undefined)
   const timeoutId = useRef<NodeJS.Timeout>(undefined)
@@ -271,7 +271,6 @@ const FreeFEMCode: React.FunctionComponent = () => {
     <div className={style.codeBlock}>
       <Typography.Title level={3}>FreeFEM template</Typography.Title>
       <AceEditor
-        //@ts-ignore
         ref={editorRef}
         className="ace_editor"
         width="100%"

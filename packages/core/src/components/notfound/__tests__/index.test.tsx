@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import NotFound from '@/components/notfound'
 
 const mockRouter = jest.fn()
-jest.mock('next/router', () => ({
+jest.mock('next/navigation', () => ({
   useRouter: () => ({
     push: async () => mockRouter()
   })

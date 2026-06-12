@@ -17,23 +17,23 @@ files:
   - from: ../core/renderer
     to: renderer
 
-  # threejs assets
-  - from: node_modules/three/examples/js/libs/draco
-    to: renderer/three/libs/draco
-
-  # Missing threejs dynamic require
-  - from: node_modules/three
-    to: node_modules/three
-    filter:
-      - examples
-
-  # Mathjax
-  - from: node_modules/mathjax/es5
-    to: renderer/mathjax
-
   # Templates
   - from: ../core/templates
     to: renderer/templates
+
+  # # threejs assets
+  # - from: node_modules/three/examples/jsm/libs/draco
+  #   to: renderer/three/libs/draco
+
+  # # Missing threejs dynamic require
+  # - from: node_modules/three
+  #   to: node_modules/three
+  #   filter:
+  #     - examples
+
+  # # Mathjax
+  # - from: node_modules/mathjax/es5
+  #   to: renderer/mathjax
 
 # Extra ressources
 extraResources: [
@@ -42,7 +42,8 @@ extraResources: [
     # Server
     { from: 'dist-server', to: 'extra/server' },
     # node_modules
-    { from: 'node_modules', to: 'extra/node_modules' }
+    { from: '../../node_modules', to: 'extra/node_modules' }
+    # TODO optimize it !!!
   ]
 
 asar: true

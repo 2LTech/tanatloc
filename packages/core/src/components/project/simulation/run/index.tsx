@@ -1,6 +1,6 @@
 /** @module Components.Project.Simulation.Run */
 
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { useCallback, useContext, useMemo, useState } from 'react'
 import { Button, Card, Checkbox, Layout, Space, Spin, Steps } from 'antd'
 import { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { RocketOutlined, StopOutlined } from '@ant-design/icons'
@@ -135,7 +135,6 @@ const Run: React.FunctionComponent<IProps> = ({
   swr
 }) => {
   // State
-  const [running, setRunning] = useState<boolean>(false)
   const [keepMesh, setKeepMesh] = useState<boolean>(false)
 
   // Context
@@ -207,12 +206,15 @@ const Run: React.FunctionComponent<IProps> = ({
 
       if (index === validSimulation.tasks.length - 1) {
         const lines = task.log?.split('\n') ?? []
-        const percents = lines
-          .filter((line) => line.startsWith('PERCENT:'))
-          .filter((l) => l)
-        const lastPercent = percents?.pop()
+        const percents: string[] = []
+        for (const line of lines) {
+          if (line.startsWith('PERCENT:')) percents.push(line)
+        }
+        const lastPercent = percents.pop()
         const percentNumber = lastPercent
-          ? parseFloat(lastPercent.replace('PERCENT: ', '').replace('%', ''))
+          ? Number.parseFloat(
+              lastPercent.replace('PERCENT: ', '').replace('%', '')
+            )
           : 0
         if (percentNumber) percent = percentNumber
       }
@@ -234,21 +236,18 @@ const Run: React.FunctionComponent<IProps> = ({
     return { steps: newSteps, percent }
   }, [currentSimulation])
 
-  // Running ?
-  useEffect(() => {
-    if (currentSimulation.id === '0') {
-      setRunning(false)
-      return
-    }
+  // Running
+  const running = useMemo(() => {
+    if (currentSimulation.id === '0') return false
 
     const validSimulation = currentSimulation as IFrontSimulation
     if (validSimulation?.tasks?.find((t) => t?.status === 'error')) {
-      setRunning(false)
+      return false
     } else if (
       validSimulation?.tasks?.find((t) => t && t.status !== 'finish')
     ) {
-      setRunning(true)
-    } else setRunning(false)
+      return true
+    } else return false
   }, [currentSimulation])
 
   /**
@@ -283,12 +282,12 @@ const Run: React.FunctionComponent<IProps> = ({
    */
   const onRunClick = useCallback((): void => {
     asyncFunctionExec(async () => {
-      setRunning(true)
+      // setRunning(true)//TODO check
       try {
         await _onRun(simulation, keepMesh)
       } catch (err: any) {
         dispatch(addError({ title: errors.run, err }))
-        setRunning(false)
+        // setRunning(false)  //TODO check
       }
     })
   }, [simulation, keepMesh, dispatch])
@@ -300,7 +299,7 @@ const Run: React.FunctionComponent<IProps> = ({
     asyncFunctionExec(async () => {
       try {
         await _onStop(simulation)
-        setRunning(false)
+        // setRunning(false)//TODO check
       } catch (err: any) {
         dispatch(addError({ title: errors.stop, err }))
       }

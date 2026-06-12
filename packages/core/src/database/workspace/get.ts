@@ -43,7 +43,7 @@ export const get = async <T extends TWorkspaceGet>(
   const response = await getter(tables.WORKSPACES, id, data)
 
   const workspace = response.rows[0]
-  workspace && (workspace.id = id)
+  if (workspace) workspace.id = id
 
   return workspace
 }

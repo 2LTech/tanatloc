@@ -3,6 +3,7 @@
 import { tables } from '@/config/db'
 
 import { query } from '..'
+import { pbkdf2Sync, randomBytes } from 'node:crypto'
 
 export interface INewUser {
   alreadyExists?: boolean
@@ -29,16 +30,22 @@ export const add = async (user: {
       alreadyExists: true
     }
 
+  // Password
+  const salt = randomBytes(16).toString('hex')
+  const hash = pbkdf2Sync(user.password, salt, 1_000, 64, 'sha512').toString(
+    'hex'
+  )
+
   // Create user
   const response = await query(
     'INSERT INTO ' +
       tables.USERS +
-      " (email, password, isvalidated, lastmodificationdate, superuser) VALUES ($1, crypt($2, gen_salt('bf')), $3, to_timestamp($4), $5) returning id",
-    [user.email, user.password, false, Date.now(), false]
+      " (email, salt, hash, isvalidated, lastmodificationdate, superuser) VALUES ($1, crypt($2, gen_salt('bf')), $3, to_timestamp($4), $5) returning id",
+    [user.email, salt, hash, false, Date.now(), false]
   )
 
   const newUser = response.rows[0]
-  newUser && (newUser.email = user.email)
+  if (newUser) newUser.email = user.email
 
   return newUser
 }

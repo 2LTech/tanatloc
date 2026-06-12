@@ -38,7 +38,7 @@ const createSummary = (simulation: {
   // Keys
   const configuration = simulation.scheme?.configuration
 
-  configuration &&
+  if (configuration)
     Object.keys(configuration).forEach((key) => {
       const config = configuration[key as keyof typeof configuration]
 

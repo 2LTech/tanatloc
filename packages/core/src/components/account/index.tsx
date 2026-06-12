@@ -1,7 +1,7 @@
 /** @module Components.Account */
 
 import { useCallback, useMemo } from 'react'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { Layout, Typography, Tabs, Space, TabsProps } from 'antd'
 import isElectron from 'is-electron'
 

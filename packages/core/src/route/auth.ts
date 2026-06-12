@@ -28,7 +28,7 @@ const authGroup = async (
     | IWorkspaceGet<'group'[]>
     | IOrganizationGet<'group'[]>
 ) => {
-  for (let group of object.groups) {
+  for (const group of object.groups) {
     const groupData = await GroupLib.get(group, ['organization'])
     if (!groupData) return false
 
@@ -96,21 +96,19 @@ const auth = async (
  * Check workspace auth
  * @param user User
  * @param workspace Workspace
- * @param status Override workspace error status
  */
 const checkWorkspaceAuth = async (
   user: { id: string },
-  workspace: { id: string },
-  status?: number
+  workspace: { id: string }
 ) => {
   const workspaceAuth = await WorkspaceLib.get(workspace.id, [
     'owners',
     'users',
     'groups'
   ])
-  if (!workspaceAuth) throw error(status ?? 400, 'Invalid workspace identifier')
+  if (!workspaceAuth) throw new Error('Invalid workspace identifier')
 
-  if (!(await auth(user, workspaceAuth))) throw error(403, 'Access denied')
+  if (!(await auth(user, workspaceAuth))) throw new Error('Access denied')
 }
 
 /**

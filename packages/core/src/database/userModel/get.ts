@@ -41,7 +41,7 @@ export const get = async <T extends TUserModelGet>(
   const response = await getter(tables.MODELS, id, data)
 
   const userModel = response.rows[0]
-  userModel && (userModel.id = id)
+  if (userModel) userModel.id = id
 
   return userModel
 }

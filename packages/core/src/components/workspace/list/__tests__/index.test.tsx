@@ -4,7 +4,7 @@ import List, { errors } from '..'
 
 const mockQuery = jest.fn()
 const mockPush = jest.fn()
-jest.mock('next/router', () => ({
+jest.mock('next/navigation', () => ({
   useRouter: () => ({
     query: mockQuery(),
     push: async () => mockPush()

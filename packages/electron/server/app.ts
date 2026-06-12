@@ -4,46 +4,86 @@ import createError from 'http-errors'
 import express, { json, Request, Response, urlencoded } from 'express'
 import cors from 'cors'
 
-import avatar from '../../core/src/route/avatar'
-import email from '../../core/src/route/email'
-import geometries from '../../core/src/route/geometries'
-import geometry from '../../core/src/route/geometry'
-import geometryId from '../../core/src/route/geometry/[id]'
-import geometryDownload from '../../core/src/route/geometry/[id]/download'
-import geometryPart from '../../core/src/route/geometry/[id]/part'
-import group from '../../core/src/route/group'
-import groups from '../../core/src/route/groups'
-import groupsId from '../../core/src/route/groups/[id]'
-import link from '../../core/src/route/link'
-import organization from '../../core/src/route/organization'
-import organizationId from '../../core/src/route/organization/[id]'
-import organizations from '../../core/src/route/organizations'
-import plugin from '../../core/src/route/plugin'
-import plugins from '../../core/src/route/plugins'
-import postprocessing from '../../core/src/route/postprocessing'
-import project from '../../core/src/route/project'
-import projectId from '../../core/src/route/project/[id]'
-import projectArchive from '../../core/src/route/project/[id]/archive'
-import projects from '../../core/src/route/projects'
-import result from '../../core/src/route/result'
-import resultDownload from '../../core/src/route/result/download'
-import resultArchive from '../../core/src/route/result/archive'
-import simulation from '../../core/src/route/simulation'
-import simulationId from '../../core/src/route/simulation/[id]'
-import simulationIdRun from '../../core/src/route/simulation/[id]/run'
-import simulationIdStop from '../../core/src/route/simulation/[id]/stop'
-import simulationIdLog from '../../core/src/route/simulation/[id]/log'
-import simulationIdTasks from '../../core/src/route/simulation/[id]/tasks'
-import simulations from '../../core/src/route/simulations'
-import system from '../../core/src/route/system'
-import user from '../../core/src/route/user'
-import userId from '../../core/src/route/user/[id]'
-import userCheck from '../../core/src/route/user/check'
-import userModel from '../../core/src/route/userModel'
-import users from '../../core/src/route/users'
-import workspace from '../../core/src/route/workspace'
-import { loginRoute } from '../../core/src/route/login'
-import { logout } from '../../core/src/route/logout'
+// @ts-expect-error @ts2307 relative to electron dist
+import avatar from '../tanatloc/src/route/avatar'
+// @ts-expect-error @ts2307 relative to electron dist
+import email from '../tanatloc/src/route/email'
+// @ts-expect-error @ts2307 relative to electron dist
+import geometries from '../tanatloc/src/route/geometries'
+// @ts-expect-error @ts2307 relative to electron dist
+import geometry from '../tanatloc/src/route/geometry'
+// @ts-expect-error @ts2307 relative to electron dist
+import geometryId from '../tanatloc/src/route/geometry/[id]'
+// @ts-expect-error @ts2307 relative to electron dist
+import geometryDownload from '../tanatloc/src/route/geometry/[id]/download'
+// @ts-expect-error @ts2307 relative to electron dist
+import geometryPart from '../tanatloc/src/route/geometry/[id]/part'
+// @ts-expect-error @ts2307 relative to electron dist
+import group from '../tanatloc/src/route/group'
+// @ts-expect-error @ts2307 relative to electron dist
+import groups from '../tanatloc/src/route/groups'
+// @ts-expect-error @ts2307 relative to electron dist
+import groupsId from '../tanatloc/src/route/groups/[id]'
+// @ts-expect-error @ts2307 relative to electron dist
+import link from '../tanatloc/src/route/link'
+// @ts-expect-error @ts2307 relative to electron dist
+import organization from '../tanatloc/src/route/organization'
+// @ts-expect-error @ts2307 relative to electron dist
+import organizationId from '../tanatloc/src/route/organization/[id]'
+// @ts-expect-error @ts2307 relative to electron dist
+import organizations from '../tanatloc/src/route/organizations'
+// @ts-expect-error @ts2307 relative to electron dist
+import plugin from '../tanatloc/src/route/plugin'
+// @ts-expect-error @ts2307 relative to electron dist
+import plugins from '../tanatloc/src/route/plugins'
+// @ts-expect-error @ts2307 relative to electron dist
+import postprocessing from '../tanatloc/src/route/postprocessing'
+// @ts-expect-error @ts2307 relative to electron dist
+import project from '../tanatloc/src/route/project'
+// @ts-expect-error @ts2307 relative to electron dist
+import projectId from '../tanatloc/src/route/project/[id]'
+// @ts-expect-error @ts2307 relative to electron dist
+import projectArchive from '../tanatloc/src/route/project/[id]/archive'
+// @ts-expect-error @ts2307 relative to electron dist
+import projects from '../tanatloc/src/route/projects'
+// @ts-expect-error @ts2307 relative to electron dist
+import result from '../tanatloc/src/route/result'
+// @ts-expect-error @ts2307 relative to electron dist
+import resultDownload from '../tanatloc/src/route/result/download'
+// @ts-expect-error @ts2307 relative to electron dist
+import resultArchive from '../tanatloc/src/route/result/archive'
+// @ts-expect-error @ts2307 relative to electron dist
+import simulation from '../tanatloc/src/route/simulation'
+// @ts-expect-error @ts2307 relative to electron dist
+import simulationId from '../tanatloc/src/route/simulation/[id]'
+// @ts-expect-error @ts2307 relative to electron dist
+import simulationIdRun from '../tanatloc/src/route/simulation/[id]/run'
+// @ts-expect-error @ts2307 relative to electron dist
+import simulationIdStop from '../tanatloc/src/route/simulation/[id]/stop'
+// @ts-expect-error @ts2307 relative to electron dist
+import simulationIdLog from '../tanatloc/src/route/simulation/[id]/log'
+// @ts-expect-error @ts2307 relative to electron dist
+import simulationIdTasks from '../tanatloc/src/route/simulation/[id]/tasks'
+// @ts-expect-error @ts2307 relative to electron dist
+import simulations from '../tanatloc/src/route/simulations'
+// @ts-expect-error @ts2307 relative to electron dist
+import system from '../tanatloc/src/route/system'
+// @ts-expect-error @ts2307 relative to electron dist
+import user from '../tanatloc/src/route/user'
+// @ts-expect-error @ts2307 relative to electron dist
+import userId from '../tanatloc/src/route/user/[id]'
+// @ts-expect-error @ts2307 relative to electron dist
+import userCheck from '../tanatloc/src/route/user/check'
+// @ts-expect-error @ts2307 relative to electron dist
+import userModel from '../tanatloc/src/route/userModel'
+// @ts-expect-error @ts2307 relative to electron dist
+import users from '../tanatloc/src/route/users'
+// @ts-expect-error @ts2307 relative to electron dist
+import workspace from '../tanatloc/src/route/workspace'
+// @ts-expect-error @ts2307 relative to electron dist
+import { loginRoute } from '../tanatloc/src/route/login'
+// @ts-expect-error @ts2307 relative to electron dist
+import { logout } from '../tanatloc/src/route/logout'
 
 // App
 const app = express()

@@ -1,15 +1,17 @@
 /** @module Route.Workspace */
 
-import { Request, Response } from 'express'
+import { NextRequest, NextResponse } from 'next/server'
 
 import { IDataBaseEntry } from '@/database/index.d'
 
-import { session } from '../session'
-import { checkWorkspaceAuth } from '../auth'
-import { error } from '../error'
-
 import WorkspaceLib from '@/lib/workspace'
 
+import { session } from '../session'
+import { checkWorkspaceAuth } from '../auth'
+
+/**
+ * Interfaces
+ */
 export interface IAddBody {
   name: string
 }
@@ -31,7 +33,7 @@ export interface IDeleteBody {
  */
 const checkAddBody = (body: IAddBody): void => {
   if (!body?.name || typeof body.name !== 'string')
-    throw error(400, 'Missing data in your request (body: { name(string) })')
+    throw new Error('Missing data in your request (body: { name(string) })')
 }
 
 /**
@@ -45,8 +47,7 @@ const checkUpdateBody = (body: IUpdateBody): void => {
     !body.data ||
     !Array.isArray(body.data)
   )
-    throw error(
-      400,
+    throw new Error(
       'Missing data in your request (body: { workspace: { id(uuid) }, data(array) })'
     )
 }
@@ -57,87 +58,175 @@ const checkUpdateBody = (body: IUpdateBody): void => {
  */
 const checkDeleteBody = (body: IDeleteBody): void => {
   if (!body?.id || typeof body.id !== 'string')
-    throw error(400, 'Missing data in your request (body: { id(uuid) })')
+    throw new Error('Missing data in your request (body: { id(uuid) })')
 }
 
 /**
- * Workspace API
- * @param req Request
- * @param res Response
+ * GET
+ * @returns GET
  */
-const route = async (req: Request, res: Response): Promise<void> => {
+export const GET = async () => {
+  // Check session
+  let sessionId
   try {
-    // Check session
-    const sessionId = await session(req)
-
-    switch (req.method) {
-      case 'GET': {
-        // Get
-        try {
-          const workspaces = await WorkspaceLib.getByUser({ id: sessionId })
-          res.status(200).json({ workspaces })
-        } catch (err: any) {
-          throw error(500, err.message)
-        }
-        break
-      }
-      case 'POST': {
-        // Check
-        checkAddBody(req.body)
-
-        // Add
-        try {
-          const newWorkspace = await WorkspaceLib.add(
-            { id: sessionId },
-            req.body
-          )
-          res.status(200).json(newWorkspace)
-        } catch (err: any) {
-          throw error(500, err.message)
-        }
-        break
-      }
-      case 'PUT': {
-        // Check
-        checkUpdateBody(req.body)
-
-        const { workspace, data } = req.body
-
-        // Check authorization
-        await checkWorkspaceAuth({ id: sessionId }, { id: workspace.id })
-
-        // Update
-        try {
-          await WorkspaceLib.update(workspace, data)
-          res.status(200).end()
-        } catch (err: any) {
-          throw error(500, err.message)
-        }
-        break
-      }
-      case 'DELETE': {
-        // Check
-        checkDeleteBody(req.body)
-
-        // Check authorization
-        await checkWorkspaceAuth({ id: sessionId }, req.body)
-
-        // Delete
-        try {
-          await WorkspaceLib.del({ id: sessionId }, req.body)
-          res.status(200).end()
-        } catch (err: any) {
-          throw error(500, err.message)
-        }
-        break
-      }
-      default:
-        // Unauthorized method
-        throw error(402, 'Method ' + req.method + ' not allowed')
-    }
+    sessionId = await session()
   } catch (err: any) {
-    res.status(err.status).json({ error: true, message: err.message })
+    return NextResponse.json(
+      { error: true, message: err.message },
+      { status: 401 }
+    )
+  }
+
+  // Get
+  try {
+    const workspaces = await WorkspaceLib.getByUser({ id: sessionId })
+    return NextResponse.json({ workspaces }, { status: 200 })
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: true, message: err.message },
+      { status: 500 }
+    )
   }
 }
 
-export default route
+/**
+ * POST
+ * @param request Request
+ * @returns POST
+ */
+export const POST = async (request: NextRequest) => {
+  // Check session
+  let sessionId
+  try {
+    sessionId = await session()
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: true, message: err.message },
+      { status: 401 }
+    )
+  }
+
+  // Check
+  const body = await request.json()
+  try {
+    checkAddBody(body)
+  } catch (err: any) {
+    return NextResponse.json(
+      { err: true, message: err.message },
+      { status: 400 }
+    )
+  }
+
+  // Add
+  try {
+    const newWorkspace = await WorkspaceLib.add({ id: sessionId }, body)
+    return NextResponse.json(newWorkspace, { status: 200 })
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: true, message: err.message },
+      { status: 500 }
+    )
+  }
+}
+
+/**
+ * PUT
+ * @param request Request
+ * @returns PUT
+ */
+export const PUT = async (request: NextRequest) => {
+  // Check session
+  let sessionId
+  try {
+    sessionId = await session()
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: true, message: err.message },
+      { status: 401 }
+    )
+  }
+
+  // Check
+  const body = await request.json()
+  try {
+    checkUpdateBody(body)
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: true, message: err.message },
+      { status: 400 }
+    )
+  }
+
+  const { workspace, data } = body
+
+  // Check authorization
+  try {
+    await checkWorkspaceAuth({ id: sessionId }, { id: workspace.id })
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: true, message: err.message },
+      { status: 403 }
+    )
+  }
+
+  // Update
+  try {
+    await WorkspaceLib.update(workspace, data)
+    return NextResponse.json(null, { status: 200 })
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: true, message: err.message },
+      { status: 500 }
+    )
+  }
+}
+
+/**
+ * DELETE
+ * @param request Request
+ * @returns DELETE
+ */
+export const DELETE = async (request: NextRequest) => {
+  // Check session
+  let sessionId
+  try {
+    sessionId = await session()
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: true, message: err.message },
+      { status: 401 }
+    )
+  }
+
+  // Check
+  const body = await request.json()
+  try {
+    checkDeleteBody(body)
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: true, message: err.message },
+      { status: 400 }
+    )
+  }
+
+  // Check authorization
+  try {
+    await checkWorkspaceAuth({ id: sessionId }, body)
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: true, message: err.message },
+      { status: 403 }
+    )
+  }
+
+  // Delete
+  try {
+    await WorkspaceLib.del({ id: sessionId }, body)
+    return NextResponse.json(null, { status: 200 })
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: true, message: err.message },
+      { status: 50 }
+    )
+  }
+}

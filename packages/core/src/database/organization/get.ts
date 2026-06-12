@@ -43,7 +43,7 @@ export const get = async <T extends TOrganizationGet>(
   const response = await getter(tables.ORGANIZATIONS, id, data)
 
   const organization = response.rows[0]
-  organization && (organization.id = id)
+  if (organization) organization.id = id
 
   return organization
 }

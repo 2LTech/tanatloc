@@ -17,14 +17,13 @@ export interface IWindowState {
  * @param options Options
  * @description Create the electron window
  */
-export default (
+const createWindow = (
   windowName: string,
   options: { width: number; height: number; webPreferences?: {} }
 ): BrowserWindow => {
   const key = 'window-state'
   const name = `window-state-${windowName}`
   const store = new Store()
-  //@ts-ignore
   store.set('name', name)
   const defaultSize = {
     width: options.width,
@@ -38,7 +37,6 @@ export default (
    * @memberof Electron
    * @returns Store
    */
-  //@ts-ignore
   const restore = (): any => store.get(key, defaultSize)
 
   /**
@@ -85,10 +83,8 @@ export default (
     const bounds = screen.getPrimaryDisplay().bounds
     return {
       ...defaultSize,
-      ...{
-        x: (bounds.width - defaultSize.width) / 2,
-        y: (bounds.height - defaultSize.height) / 2
-      }
+      x: (bounds.width - defaultSize.width) / 2,
+      y: (bounds.height - defaultSize.height) / 2
     }
   }
 
@@ -140,3 +136,5 @@ export default (
 
   return win
 }
+
+export default createWindow

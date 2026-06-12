@@ -31,9 +31,9 @@ export const add = async (simulation: {
   )
 
   const newSimulation = response.rows[0]
-  newSimulation && (newSimulation.name = simulation.name)
-  newSimulation && (newSimulation.scheme = simulation.scheme)
-  newSimulation && (newSimulation.project = simulation.project)
+  if (newSimulation) newSimulation.name = simulation.name
+  if (newSimulation) newSimulation.scheme = simulation.scheme
+  if (newSimulation) newSimulation.project = simulation.project
 
   return newSimulation
 }

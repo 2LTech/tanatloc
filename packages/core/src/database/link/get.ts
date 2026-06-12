@@ -30,7 +30,7 @@ export const get = async <T extends TLinkGet>(
   const response = await getter(tables.LINKS, id, data)
 
   const link = response.rows[0]
-  link && (link.id = id)
+  if (link) link.id = id
 
   return link
 }

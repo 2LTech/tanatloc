@@ -2,9 +2,12 @@
   "name": "@tanatloc/converters",
   "version": "2.0.0",
   "scripts": {
-    "create-path": "mkdir -p build && cd build",
-    "build": "yarn create-path && cmake .. && make -j8",
-    "test": "yarn create-path && cmake && make -j8 && make test",
-    "coverage": "yarn create-path && cmake -DCOVERAGE=ON && make -j8 && make test"
+    "format": "tools/format.sh",
+    "cppcheck": "cppcheck --enable=warning,style,performance,portability,information,missingInclude --suppressions-list=tools/.cppcheck-suppress src/",
+    "shellcheck": "shellcheck tools/format.sh",
+    "create-path": "mkdir -p build",
+    "build": "yarn create-path && cd build && pwd && cmake .. && make -j8",
+    "test": "yarn create-path && cd build && cmake && make -j8 && make test",
+    "coverage": "yarn create-path && cd build && cmake -DCOVERAGE=ON .. && make -j8 && make test"
   }
 }

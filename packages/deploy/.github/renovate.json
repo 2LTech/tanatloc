@@ -1,0 +1,20 @@
+{
+  "extends": [
+    "config:recommended"
+  ],
+  "groupName": "all dependencies",
+  "separateMajorMinor": false,
+  "groupSlug": "all",
+  "packageRules": [
+    {
+      "groupName": "all dependencies",
+      "groupSlug": "all",
+      "matchPackageNames": [
+        "*"
+      ]
+    }
+  ],
+  "lockFileMaintenance": {
+    "enabled": false
+  }
+}

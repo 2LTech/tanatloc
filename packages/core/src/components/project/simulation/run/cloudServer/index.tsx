@@ -11,7 +11,7 @@ import {
   useContext,
   useMemo
 } from 'react'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { Button, Card, Modal, Space, Tooltip, Typography } from 'antd'
 import { CloudDownloadOutlined, CloudServerOutlined } from '@ant-design/icons'
 import { merge } from 'lodash'
@@ -90,8 +90,10 @@ const Plugin: React.FunctionComponent<IPluginProps> = ({
     data: any
     parallel?: boolean
     onSelect: (diff: HPCClientPlugin) => void
-  }> = (_props: any) => <>TODO</>
+  }> = () => <>TODO</>
   // dynamic(() => import(`/plugins/${plugin.key}/src/components`))
+
+  console.log(plugin.key)
 
   /**
    * On select

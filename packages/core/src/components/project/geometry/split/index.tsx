@@ -67,7 +67,7 @@ const Split: React.FunctionComponent<IProps> = ({ project, geometry }) => {
       setLoading(true)
       try {
         const message = await _onSplit(project, geometry)
-        message.length && dispatch(addError({ title: message }))
+        if (message.length) dispatch(addError({ title: message }))
       } catch (err: any) {
         dispatch(addError({ title: errors.split, err }))
       } finally {

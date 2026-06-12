@@ -1,15 +1,10 @@
 /** @module Components.WebGL */
+'use client'
 
 import { useCallback } from 'react'
-// import dynamic from 'next/dynamic'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 
-// Tanatloc3D WebGL
-const WebGL = (_props: any) => <>TODO</>
-// dynamic(
-//   () => import('@tanatloc/3d').then((mod) => mod.default.extra.WebGL),
-//   { ssr: false }
-// )
+import Tanatloc3D from '@tanatloc/3d'
 
 import globalStyle from '@/styles/index.module.css'
 
@@ -37,7 +32,7 @@ const WebGLError: React.FunctionComponent = () => {
    * Render
    */
   return (
-    <WebGL
+    <Tanatloc3D.Extra.WebGL
       logo={
         <div className={globalStyle.logo}>
           <img src="/images/logo.svg" alt="Tanatloc" />

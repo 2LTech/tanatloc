@@ -2,6 +2,7 @@
   "name": "@tanatloc/worker",
   "version": "2.0.0",
   "scripts": {
-    "build": ""
+    "dockercheck": "./build.sh worker --check",
+    "build": "./build.sh worker"
   }
 }

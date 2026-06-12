@@ -4,7 +4,7 @@ import Plugins from '..'
 
 const mockPush = jest.fn()
 const mockQuery = jest.fn()
-jest.mock('next/router', () => ({
+jest.mock('next/navigation', () => ({
   useRouter: () => ({
     push: async () => mockPush(),
     query: mockQuery()

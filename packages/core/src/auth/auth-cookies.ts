@@ -3,10 +3,9 @@
 import { serialize, parse } from 'cookie'
 import { Request, Response } from 'express'
 import isElectron from 'is-electron'
-// import ElectronStore from 'electron-store'
-//TODO
-// let storage: ElectronStore
-// if (isElectron()) storage = new ElectronStore()
+import ElectronStore from 'electron-store'
+let storage: ElectronStore
+if (isElectron()) storage = new ElectronStore()
 
 /**
  * Token name

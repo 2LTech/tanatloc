@@ -18,12 +18,10 @@ const Start: React.FunctionComponent = () => {
   useEffect(() => {
     if (isElectron()) {
       try {
-        //@ts-ignore
         window.electronAPI.handleStatus((_: any, value: string[]) => {
           setStatus(value)
         })
 
-        //@ts-ignore
         window.electronAPI.handleErrors((_: any, value: string[]) => {
           setErrors(value)
         })

@@ -141,7 +141,6 @@ const Material: React.FunctionComponent<Props> = ({
   onClose
 }) => {
   // State
-  const [uuid, setUuid] = useState<string>()
   const [material, setMaterial] = useState<IModelMaterialsValue['material']>()
   const [geometry, setGeometry] = useState<Geometry>()
   const [dimension, setDimension] = useState<number>()
@@ -151,6 +150,9 @@ const Material: React.FunctionComponent<Props> = ({
   // Context
   const { dispatch } = useContext(SelectContext)
 
+  // uuid
+  const uuid = useMemo(() => value?.uuid ?? 'add', [value])
+
   // Materials
   const materials = useMemo(
     () => simulation.scheme.configuration.materials!,
@@ -159,16 +161,14 @@ const Material: React.FunctionComponent<Props> = ({
 
   // Already selected
   const alreadySelected = useMemo(() => {
-    const alreadySelected =
-      materials.values
-        ?.map((m) => {
-          if (m.uuid === uuid) return
-          return {
-            label: m.material.label,
-            selected: m.selected
-          }
-        })
-        .filter((s) => s) ?? []
+    const alreadySelected = []
+    for (const value of materials.values ?? []) {
+      if (value.uuid === uuid) continue
+      alreadySelected.push({
+        label: value.material.label,
+        selected: value.selected
+      })
+    }
     return alreadySelected as ISelection[]
   }, [materials, uuid])
 
@@ -271,13 +271,6 @@ const Material: React.FunctionComponent<Props> = ({
     dispatch(disable())
   }, [onClose, dispatch])
 
-  // Initialize uuid
-  useEffect(() => {
-    if (uuid) return
-
-    setUuid(value?.uuid ?? 'add')
-  }, [value, uuid])
-
   // Initialize geometry
   useEffect(() => {
     if (geometry) return
@@ -312,9 +305,8 @@ const Material: React.FunctionComponent<Props> = ({
       placement="left"
       closable={false}
       open={true}
-      mask={false}
-      mask={{ enable: true, closable: false }}
-      width={300}
+      mask={{ enabled: false }}
+      size={300}
       extra={<Button type="text" icon={<CloseOutlined />} onClick={onCancel} />}
       footer={
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>

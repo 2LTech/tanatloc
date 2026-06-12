@@ -78,7 +78,7 @@ export const get = async <T extends TGeometryGet>(
   const response = await getter(tables.GEOMETRIES, id, data)
 
   const geometry = response.rows[0]
-  geometry && (geometry.id = id)
+  if (geometry) geometry.id = id
 
   return geometry
 }

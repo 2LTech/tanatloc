@@ -4,7 +4,7 @@ import Editor from '..'
 
 const mockReplace = jest.fn()
 const mockPush = jest.fn()
-jest.mock('next/router', () => ({
+jest.mock('next/navigation', () => ({
   useRouter: () => ({
     replace: (route: any) => mockReplace(route),
     push: async (route: any) => mockPush(route)

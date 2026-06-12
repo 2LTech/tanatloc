@@ -6,7 +6,7 @@ import { NextPageContext } from 'next'
 
 const mockReload = jest.fn()
 const mockQuery = jest.fn()
-jest.mock('next/router', () => ({
+jest.mock('next/navigation', () => ({
   useRouter: () => ({
     reload: () => mockReload(),
     query: mockQuery()

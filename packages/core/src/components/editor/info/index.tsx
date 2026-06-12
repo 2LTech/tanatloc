@@ -1,10 +1,10 @@
 /** @module Components.Editor.Info */
 
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useMemo } from 'react'
 import { Avatar, Card } from 'antd'
 import isElectron from 'is-electron'
 
-import { IFrontUser, IFrontUserModel } from '@/api/index.d'
+import { IFrontUser } from '@/api/index.d'
 
 import { EditorContext } from '@/context/editor'
 
@@ -25,17 +25,15 @@ export interface IProps {
  * @returns Info
  */
 const Info: React.FunctionComponent<IProps> = ({ user }) => {
-  // State
-  const [userModel, setUserModel] = useState<IFrontUserModel>()
-
   // Context
   const { id } = useContext(EditorContext)
 
   // User model
-  useEffect(() => {
-    const userModel = user.usermodels.find((u) => u.id === id)
-    setUserModel(userModel)
-  }, [user, id])
+  const userModel = useMemo(
+    () => user.usermodels.find((u) => u.id === id),
+
+    [user, id]
+  )
 
   if (isElectron()) return <></>
   if (!userModel) return <></>

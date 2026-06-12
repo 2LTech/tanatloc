@@ -19,6 +19,7 @@ const config = {
     ]
   },
   moduleNameMapper: {
+    '^@/(.*)$': ['<rootDir>/src/$1'],
     '^@extra/(.*)$': ['<rootDir>/src/extra/$1'],
     '@index': ['<rootDir>/index.d.ts'],
     '@header': ['<rootDir>/src/header/index.tsx'],

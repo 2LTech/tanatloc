@@ -1,8 +1,8 @@
 # Coverage
-/coverage/
+/coverage
 
 # Doc
-/doc/
+/doc
 
 # Build
 /.next
@@ -17,3 +17,6 @@
 
 # Templates
 *.ejs
+
+# Next
+next-env.d.ts

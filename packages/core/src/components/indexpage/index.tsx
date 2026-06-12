@@ -1,7 +1,8 @@
 /** @module Components.Index */
+'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
   Avatar,
@@ -10,7 +11,6 @@ import {
   Collapse,
   Drawer,
   Layout,
-  List,
   Space,
   Spin,
   Steps,
@@ -21,6 +21,7 @@ import { BugOutlined, SettingOutlined } from '@ant-design/icons'
 import packageJson from '../../../package.json'
 
 import { asyncFunctionExec } from '@/components/utils/asyncFunction'
+
 import Side from '@/components/assets/side'
 
 import Menu, { scrollToView } from './menu'
@@ -96,9 +97,7 @@ const Index: React.FunctionComponent = () => {
    */
   const onRouter = useCallback(
     (route: string): void => {
-      asyncFunctionExec(async () => {
-        await router.push(route)
-      })
+      router.push(route)
     },
     [router]
   )
@@ -209,8 +208,8 @@ const Index: React.FunctionComponent = () => {
           open Docker Desktop.
         </Typography>
         <br />
-        <List bordered>
-          <List.Item>
+        <div>
+          <div>
             <Collapse
               items={[
                 {
@@ -244,15 +243,13 @@ const Index: React.FunctionComponent = () => {
                 }
               ]}
             />
-          </List.Item>
-          <List.Item>Accept the terms and conditions</List.Item>
-          <List.Item>
-            Install missing dependencies if needed (WSL2 backend)
-          </List.Item>
-          <List.Item>
+          </div>
+          <div>Accept the terms and conditions</div>
+          <div>Install missing dependencies if needed (WSL2 backend)</div>
+          <div>
             Docker Desktop should display &quot;Docker Desktop running&quot;
-          </List.Item>
-        </List>
+          </div>
+        </div>
         <br />
         <Typography>
           In case of trouble, you can have a look on the{' '}
@@ -478,7 +475,7 @@ const Index: React.FunctionComponent = () => {
                   />
                   <Typography.Title level={4}>Slurm</Typography.Title>
                   <Typography.Text className={globalStyle.textLight}>
-                    Upcoming
+                    On request
                   </Typography.Text>
                 </div>
                 <div>
@@ -489,7 +486,7 @@ const Index: React.FunctionComponent = () => {
                   />
                   <Typography.Title level={4}>Qarnot HPC</Typography.Title>
                   <Typography.Text className={globalStyle.textLight}>
-                    Upcoming
+                    On request
                   </Typography.Text>
                 </div>
                 <div>
@@ -574,6 +571,7 @@ const Index: React.FunctionComponent = () => {
             <br />
             <br />
             <Steps
+              current={-1}
               orientation="vertical"
               className={style.steps}
               items={[
@@ -682,29 +680,6 @@ const Index: React.FunctionComponent = () => {
                 </Link>
               </Space>
             }
-            // top={
-            //   <Side
-            //     left={<></>}
-            //     right={
-            //       <>
-            //         <Typography.Title level={2}>
-            //           Support our fight against climate change
-            //         </Typography.Title>
-            //         <Link
-            //           href="https://wefunder.com/airthium"
-            //           target="_blank"
-            //         >
-            //           <Button size="large">
-            //             <strong>Invest in our crowdfunding</strong>
-            //           </Button>
-            //         </Link>
-            //       </>
-            //     }
-            //     sideClassName={globalStyle.backgroundPrimary}
-            //     leftClassName={style.turbine}
-            //     rightClassName={`${style.indexPadding} ${style.crowdfunding}`}
-            //   />
-            // }
             sideClassName={style.about}
             leftClassName={style.indexPadding}
             rightClassName={style.indexPadding}

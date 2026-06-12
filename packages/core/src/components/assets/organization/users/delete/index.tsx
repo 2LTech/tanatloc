@@ -81,7 +81,7 @@ export const _onDelete = async (
 
   // Local
   const newOrganization = Utils.deepCopy(organization)
-  //@ts-ignore
+  //@ts-expect-error @ts2322 do not understand the different type between owners/pendingowners and users/pendingusers, already good as dbKey is the same on each side of the equal sign
   newOrganization[dBkey] = newOrganization[dBkey].filter(
     (u) => u.id !== user.id
   )

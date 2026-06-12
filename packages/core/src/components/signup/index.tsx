@@ -1,8 +1,9 @@
 /** @module Components.Signup */
+'use client'
 
 import { useState, useEffect, useCallback, useContext } from 'react'
 import Link from 'next/link'
-import { NextRouter, useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { Button, Card, Form, Input, Layout, Space, Typography } from 'antd'
 
 import { TOKEN } from '@/config/email'
@@ -38,16 +39,12 @@ export const errors = {
 
 /**
  * Handle signup
- * @param router Router
  * @param values
  */
-export const _onSignup = async (
-  router: NextRouter,
-  values: {
-    email: string
-    password: string
-  }
-): Promise<void> => {
+export const _onSignup = async (values: {
+  email: string
+  password: string
+}): Promise<void> => {
   // Signup
   let newUser: INewUser
   try {
@@ -66,9 +63,6 @@ export const _onSignup = async (
       ),
       type: 'warning'
     })
-
-  if (TOKEN) await router.push('/signup/send').catch()
-  else await router.push('/login').catch()
 }
 
 /**
@@ -97,9 +91,7 @@ const Signup: React.FunctionComponent = () => {
 
   // Already connected
   useEffect(() => {
-    asyncFunctionExec(async () => {
-      if (user) await router.push('/dashboard')
-    })
+    if (user) router.push('/dashboard')
   }, [user, router])
 
   /**
@@ -111,7 +103,10 @@ const Signup: React.FunctionComponent = () => {
       asyncFunctionExec(async () => {
         setLoading(true)
         try {
-          await _onSignup(router, values)
+          await _onSignup(values)
+
+          if (TOKEN) router.push('/signup/send')
+          else router.push('/login')
         } catch (err: any) {
           setFormError(err)
         } finally {

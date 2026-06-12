@@ -1,4 +1,5 @@
 /** @module Plugins.Local.Components */
+'use client'
 
 import { useCallback, useState } from 'react'
 import { Button, Typography, Space, Modal, Form, InputNumber } from 'antd'
@@ -63,7 +64,7 @@ const LocalParallel: React.FunctionComponent<LocalParallelProps> = ({
         title="Local plugin"
         onCancel={onClose}
         onOk={form.submit}
-        mask={{ enable: true, closable: false }}
+        mask={{ enabled: true, closable: false }}
         width="80%"
       >
         <Form form={form} initialValues={{ nCores: 2 }} onFinish={onOk}>

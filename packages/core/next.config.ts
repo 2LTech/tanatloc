@@ -1,8 +1,8 @@
-import path from 'path'
+import path from 'node:path'
 
 import type { NextConfig } from 'next'
 
-import Sentry from './config/sentry.js'
+import Sentry from '@/config/sentry.js'
 
 // const basePath = ''
 
@@ -36,7 +36,7 @@ const nextConfig: NextConfig = {
 
   //   return config
   // },
-  pageExtensions: ['page.tsx', 'api.ts'],
+  // pageExtensions: ['page.tsx', 'api.ts'],
   env: {
     SENTRY_DSN: Sentry.DSN
   },

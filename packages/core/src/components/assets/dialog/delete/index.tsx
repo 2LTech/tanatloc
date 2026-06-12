@@ -81,7 +81,7 @@ const DeleteDialog: React.FunctionComponent<IProps> = ({
       }
       okText="Delete"
       closable={false}
-      mask={{ enable: true, closable: false }}
+      mask={{ enabled: true, closable: false }}
       open={visible}
       cancelButtonProps={{ disabled: loading }}
       onCancel={onCancel}

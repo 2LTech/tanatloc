@@ -60,14 +60,14 @@ const process = async (
 
     // Update user
     const user = await UserLib.getBy(data!.email, ['id'], 'email')
-    user &&
-      (await UserLib.update({ id: user.id }, [
+    if (user)
+      await UserLib.update({ id: user.id }, [
         {
           type: 'crypt',
           key: 'password',
           value: data!.password
         }
-      ]))
+      ])
 
     // Remove link
     await del({ id })

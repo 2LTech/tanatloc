@@ -149,7 +149,6 @@ const Sensor: React.FunctionComponent<IProps> = ({
   const stopSelection = useCallback(() => {
     setSelectionEnabled(false)
     dispatch(disable())
-    window.removeEventListener('click', stopSelection)
   }, [dispatch])
 
   /**
@@ -158,10 +157,18 @@ const Sensor: React.FunctionComponent<IProps> = ({
   const startSelection = useCallback((): void => {
     if (selectionEnabled) {
       stopSelection()
+      window.removeEventListener('click', stopSelection)
     } else {
       setSelectionEnabled(true)
       dispatch(enable())
-      setTimeout(() => window.addEventListener('click', stopSelection), 50)
+      setTimeout(
+        () =>
+          window.addEventListener('click', () => {
+            stopSelection()
+            window.removeEventListener('click', stopSelection)
+          }),
+        50
+      )
     }
   }, [selectionEnabled, stopSelection, dispatch])
 
@@ -269,9 +276,8 @@ const Sensor: React.FunctionComponent<IProps> = ({
       placement="left"
       closable={false}
       open={visible}
-      mask={false}
-      mask={{ enable: true, closable: false }}
-      width={300}
+      mask={{ enabled: false }}
+      size={300}
       extra={<Button type="text" icon={<CloseOutlined />} onClick={close} />}
       footer={
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>

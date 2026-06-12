@@ -1,39 +1,42 @@
 /** @module Route.Organizations */
 
-import { Request, Response } from 'express'
-
-import { session } from '../session'
-import { error } from '../error'
+import { NextResponse } from 'next/server'
 
 import OrganizationLib from '@/lib/organization'
+
+import { session } from '../session'
 
 /**
  * Organizations API
  * @param req Request
  * @param res Response
  */
-const route = async (req: Request, res: Response) => {
+export const GET = async () => {
+  let sessionId
   try {
     // Check session
-    const sessionId = await session(req)
-
-    if (req.method === 'GET') {
-      try {
-        const organizations = await OrganizationLib.getByUser(
-          { id: sessionId },
-          ['name', 'owners', 'pendingowners', 'users', 'pendingusers', 'groups']
-        )
-        res.status(200).json({ organizations })
-      } catch (err: any) {
-        throw error(500, err.message)
-      }
-    } else {
-      // Unauthorized method
-      throw error(402, 'Method ' + req.method + ' not allowed')
-    }
+    sessionId = await session()
   } catch (err: any) {
-    res.status(err.status).json({ error: true, message: err.message })
+    return NextResponse.json(
+      { error: true, message: err.message },
+      { status: 401 }
+    )
+  }
+
+  try {
+    const organizations = await OrganizationLib.getByUser({ id: sessionId }, [
+      'name',
+      'owners',
+      'pendingowners',
+      'users',
+      'pendingusers',
+      'groups'
+    ])
+    return NextResponse.json({ organizations }, { status: 200 })
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: true, message: err.message },
+      { status: 500 }
+    )
   }
 }
-
-export default route

@@ -67,7 +67,7 @@ export const get = async <T extends TProjectGet>(
   const response = await getter(tables.PROJECTS, id, data)
 
   const project = response.rows[0]
-  project && (project.id = id)
+  if (project) project.id = id
 
   return project
 }

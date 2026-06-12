@@ -33,3 +33,17 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
   unobserve: jest.fn(),
   disconnect: jest.fn()
 }))
+
+// Message chanel (used in React19, not implemented yet in jsdom)
+window.MessageChannel = jest.fn().mockImplementation(() => {
+  return {
+    port1: {
+      onMessage: jest.fn(),
+      postMessage: jest.fn()
+    },
+    port2: {
+      onMessage: jest.fn(),
+      postMessage: jest.fn()
+    }
+  }
+})

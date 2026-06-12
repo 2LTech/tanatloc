@@ -1,5 +1,2 @@
-.vscode
-.yarn
-node_modules
 coverage
 dist

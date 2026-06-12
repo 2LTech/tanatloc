@@ -79,7 +79,7 @@ export const get = async <T extends TSimulationGet>(
   const response = await getter(tables.SIMULATIONS, id, data)
 
   const simulation = response.rows[0]
-  simulation && (simulation.id = id)
+  if (simulation) simulation.id = id
 
   return simulation
 }

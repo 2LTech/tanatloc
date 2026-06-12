@@ -60,8 +60,8 @@ export const _getInTemplate = (values: {
   const results =
     (scalarResults ? scalarResults + ', ' : '') + (vectorialResults ?? '')
 
-  const scalarOrder = values.scalarResults?.map((_) => 1)?.join(', ')
-  const vectorialOrder = values.vectorialResults?.map((_) => 1)?.join(', ')
+  const scalarOrder = values.scalarResults?.map(() => 1)?.join(', ')
+  const vectorialOrder = values.vectorialResults?.map(() => 1)?.join(', ')
   const order = (scalarOrder ? scalarOrder + ', ' : '') + (vectorialOrder ?? '')
 
   return { results, order }
@@ -131,7 +131,7 @@ export const _onAdd = (
       index: index + 1,
       title: 'Run',
       ...(modelJSON.configuration?.run ?? {}),
-      //@ts-ignore
+      //@ts-expect-error @ts2322 TODO need review
       results: [
         ...(modelJSON.configuration?.run?.results ?? []),
         ...(values.scalarResults?.map((result) => ({ name: result.name })) ??

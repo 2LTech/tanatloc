@@ -27,7 +27,7 @@ export const add = async (avatar: {
   )
 
   const newAvatar = response.rows[0]
-  newAvatar && (newAvatar.name = avatar.name)
+  if (newAvatar) newAvatar.name = avatar.name
 
   return newAvatar
 }

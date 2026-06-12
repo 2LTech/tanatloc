@@ -37,7 +37,7 @@ const update = async (): Promise<void> => {
         // Update new MODEL
         const modelJSON = JSON.parse(JSON.stringify(model0))
         modelJSON.userModelId = insert[0].id
-        modelJSON.user && delete modelJSON.user
+        if (modelJSON.user) delete modelJSON.user
         await updater(tables.MODELS, insert[0].id, [
           {
             key: 'model',

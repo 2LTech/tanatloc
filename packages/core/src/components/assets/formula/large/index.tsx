@@ -112,8 +112,8 @@ const Large: React.FunctionComponent<IProps> = ({
   const onInternalUnitChange = useCallback(
     (event: RadioChangeEvent): void => {
       const value = event.target.value
-      const unit = units?.find((u) => u.label === value)!
-      onUnitChange?.(unit)
+      const unit = units?.find((u) => u.label === value)
+      if (unit) onUnitChange?.(unit)
     },
     [units, onUnitChange]
   )

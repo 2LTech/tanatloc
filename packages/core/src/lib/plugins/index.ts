@@ -28,7 +28,8 @@ export const loadPlugins = async (): Promise<Plugin[]> => {
     try {
       // Import
       const plugin = isElectron()
-        ? await require(`../../../plugins/${available}`)
+        ? // eslint-disable-next-line @typescript-eslint/no-require-imports
+          await require(`../../../plugins/${available}`)
         : await import(`../../../plugins/${available}`)
       process.stdout.write(' loaded\n')
       plugins.push({

@@ -161,8 +161,8 @@ const invite = async (
   const recipients = [new Recipient(email)]
   let userName = ''
   if (user.firstname || user.lastname) {
-    user.firstname && (userName = user.firstname + '')
-    user.lastname && (userName += user.lastname)
+    if (user.firstname) userName = user.firstname + ' '
+    if (user.lastname) userName += user.lastname
   } else {
     userName = user.email
   }
