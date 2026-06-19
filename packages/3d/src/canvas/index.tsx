@@ -87,7 +87,7 @@ const Canvas: React.FunctionComponent<Tanatloc3DCanvasProps> = ({
         duration: 0
       })
     }
-  }, [])
+  }, [toWebGL])
 
   // Events
   useEffect(() => {

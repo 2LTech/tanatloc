@@ -328,7 +328,7 @@ const ViewCube: React.FunctionComponent<ViewCubeProps> = ({
       // Leave
       onPointerLeave(event)
     },
-    [baseColor, camera, controls, onPointerLeave]
+    [camera, controls, onPointerLeave]
   )
 
   // Force front
@@ -403,7 +403,7 @@ const Axes: React.FunctionComponent<AxesProps> = ({ dimension }) => {
   // Origin
   const origin: [number, number, number] = useMemo(
     () => [-offset, -offset, -offset],
-    []
+    [offset]
   )
 
   // Directions

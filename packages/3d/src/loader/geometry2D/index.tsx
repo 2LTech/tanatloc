@@ -259,14 +259,7 @@ const Geometry2DFace: React.FunctionComponent<Geometry2DFaceProps> = ({
         }
       }
     },
-    [
-      selection?.enabled,
-      selection?.type,
-      selection?.onPoint,
-      uuid,
-      label,
-      onPointerMove
-    ]
+    [selection, uuid, label, onPointerMove]
   )
 
   /**
@@ -387,7 +380,7 @@ const Geometry2D: React.FunctionComponent<Geometry2DProps> = ({ scene }) => {
       setHover(newHover)
       selection?.onHighlight?.({ uuid: newHover.uuid, label: newHover.label })
     },
-    [selectionable, selection?.onHighlight]
+    [selectionable, selection]
   )
 
   /**
@@ -403,7 +396,7 @@ const Geometry2D: React.FunctionComponent<Geometry2DProps> = ({ scene }) => {
         selection?.onHighlight?.()
       }
     },
-    [selectionable, hover.uuid, selection?.onHighlight]
+    [selectionable, hover.uuid, selection]
   )
 
   /**
@@ -422,7 +415,7 @@ const Geometry2D: React.FunctionComponent<Geometry2DProps> = ({ scene }) => {
     selection?.onSelect?.(
       newSelected.map((s) => ({ uuid: s.uuid, label: s.label }))
     )
-  }, [selectionable, hover, selected, selection?.onSelect])
+  }, [selectionable, hover, selected, selection])
 
   // On selection update
   useEffect(() => {
@@ -443,7 +436,7 @@ const Geometry2D: React.FunctionComponent<Geometry2DProps> = ({ scene }) => {
       setSelected(initSelected)
       selection?.onSelect?.([])
     }
-  }, [selection?.enabled, selection?.onHighlight, selection?.onSelect])
+  }, [selection])
 
   /**
    * Render

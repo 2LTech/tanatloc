@@ -162,15 +162,7 @@ const ZoomToSelection: React.FunctionComponent = () => {
         zoomToSelection: { ...zoomToSelection, enabled: false }
       })
     },
-    [
-      parentElement,
-      camera,
-      controls,
-      gl,
-      scene?.children,
-      scene?.children.length,
-      zoomToSelection
-    ]
+    [parentElement, camera, controls, gl, scene, zoomToSelection]
   )
 
   // Event initialization

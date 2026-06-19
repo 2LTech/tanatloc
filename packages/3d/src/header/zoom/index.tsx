@@ -37,7 +37,7 @@ const Zoom: React.FunctionComponent = () => {
    */
   const onZoomToFit = useCallback(
     () => zoomToFit(scene?.children, camera, controls),
-    [camera, controls, scene?.children, scene?.children.length]
+    [camera, controls, scene]
   )
 
   /**

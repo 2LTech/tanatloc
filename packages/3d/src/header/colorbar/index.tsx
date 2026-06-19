@@ -55,7 +55,7 @@ const Colorbar: React.FunctionComponent = () => {
   const onCustomRangeClose = useCallback((): void => {
     setCustomRangeOpen(false)
     form.resetFields()
-  }, [])
+  }, [form])
 
   /**
    * On custom range

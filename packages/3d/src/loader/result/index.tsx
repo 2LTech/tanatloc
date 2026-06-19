@@ -56,9 +56,7 @@ export const getMinMax = (
       min = -1
       max = 1
     } else {
-      // Pad by ±10% of the magnitude. The delta is absolute so the result
-      // stays min < max for negative constants too — a signed `0.1 * max`
-      // would invert the range (e.g. -5 → min -4.5, max -5.5).
+      // Pad by ±10% of the magnitude.
       const delta = Math.abs(min) * 0.1
       min = min - delta
       max = max + delta
@@ -91,9 +89,7 @@ const ResultChild: React.FunctionComponent<ResultChildProps> = ({ child }) => {
   }, [child])
 
   // Result mesh
-  // The wireframe geometry & material are allocated here (not owned by the GLTF
-  // scene), so we keep references to dispose them on unmount / recreation.
-  const { resultMesh, geometry, material } = useMemo(() => {
+  const { mesh, geometry, material } = useMemo(() => {
     if (!result.meshVisible || child.type !== 'Mesh')
       return { resultMesh: undefined }
 
@@ -109,7 +105,7 @@ const ResultChild: React.FunctionComponent<ResultChildProps> = ({ child }) => {
           : []
     })
     const mesh = <lineSegments args={[geometry, material]} />
-    return { resultMesh: mesh, geometry, material }
+    return { mesh, geometry, material }
   }, [
     display.transparent,
     sectionView.enabled,
@@ -118,9 +114,7 @@ const ResultChild: React.FunctionComponent<ResultChildProps> = ({ child }) => {
     child
   ])
 
-  // Dispose the locally-created wireframe geometry & material when this
-  // component unmounts or when a new pair is memoized (deps change).
-  // child.geometry is owned by the GLTF scene and is intentionally not disposed.
+  // Dispose the locally-created wireframe geometry & material
   useEffect(() => {
     return () => {
       geometry?.dispose()
@@ -157,7 +151,7 @@ const ResultChild: React.FunctionComponent<ResultChildProps> = ({ child }) => {
             : []
         }
       />
-      {resultMesh}
+      {mesh}
     </mesh>
   )
 }

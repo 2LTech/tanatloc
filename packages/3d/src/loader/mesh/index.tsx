@@ -28,8 +28,6 @@ const MeshFace: React.FunctionComponent<MeshFaceProps> = ({ child }) => {
   const sectionView = useStore((s) => s.sectionView)
 
   // Wireframe geometry + material
-  // These are allocated here (not owned by the GLTF scene), so we keep
-  // references to dispose them on unmount / recreation to avoid GPU leaks.
   const { mesh, geometry, material } = useMemo(() => {
     const geometry = new WireframeGeometry(child.geometry)
     const material = new LineBasicMaterial({
@@ -46,9 +44,7 @@ const MeshFace: React.FunctionComponent<MeshFaceProps> = ({ child }) => {
     return { mesh, geometry, material }
   }, [child, display, sectionView])
 
-  // Dispose the locally-created wireframe geometry & material when this
-  // component unmounts or when a new pair is memoized (deps change).
-  // child.geometry is owned by the GLTF scene and is intentionally not disposed.
+  // Dispose the locally-created wireframe geometry & material
   useEffect(() => {
     return () => {
       geometry.dispose()

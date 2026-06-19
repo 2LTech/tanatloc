@@ -113,7 +113,7 @@ const ComputeLut: React.FunctionComponent = () => {
     for (const result of results) {
       for (const child of result.children) setVertexColor(child, lut, min, max)
     }
-  }, [scene?.children, scene?.children.length, JSON.stringify(lut)])
+  }, [scene, lut])
 
   return null
 }

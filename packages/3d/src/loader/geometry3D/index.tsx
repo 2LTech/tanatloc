@@ -157,14 +157,7 @@ const Geometry3DFace: React.FunctionComponent<Geometry3DFaceProps> = ({
         }
       }
     },
-    [
-      selection?.enabled,
-      selection?.type,
-      selection?.onPoint,
-      uuid,
-      label,
-      onPointerMove
-    ]
+    [selection, uuid, label, onPointerMove]
   )
 
   /**
@@ -172,14 +165,14 @@ const Geometry3DFace: React.FunctionComponent<Geometry3DFaceProps> = ({
    */
   const onInternalPointerLeave = useCallback((): void => {
     if (selection?.enabled && selection.type === 'faces') onPointerLeave(uuid)
-  }, [selection?.enabled, selection?.type, uuid, onPointerLeave])
+  }, [selection, uuid, onPointerLeave])
 
   /**
    * On click
    */
   const onInternalClick = useCallback((): void => {
     if (selection?.enabled && selection.type === 'faces') onClick()
-  }, [selection?.enabled, selection?.type, onClick])
+  }, [selection, onClick])
 
   // Material color
   const materialColor = useMemo(() => {
@@ -187,7 +180,7 @@ const Geometry3DFace: React.FunctionComponent<Geometry3DFaceProps> = ({
     else if (solid.hover) return hoverColor
     else if (selection?.enabled && selection.type !== 'faces')
       return material.color
-    else if (selected.find((s) => s.uuid === uuid))
+    else if (selected.some((s) => s.uuid === uuid))
       return hover.uuid === uuid ? hoverSelectColor : selectColor
     else return hover.uuid === uuid ? hoverColor : material.color
   }, [
@@ -385,7 +378,7 @@ const Geometry3D: React.FunctionComponent<Geometry3DProps> = ({ scene }) => {
         selection?.onHighlight?.({ uuid: newHover.uuid, label: newHover.label })
       }
     },
-    [selectionable, hover.distance, selection?.onHighlight]
+    [selectionable, hover.distance, selection]
   )
 
   /**
@@ -400,7 +393,7 @@ const Geometry3D: React.FunctionComponent<Geometry3DProps> = ({ scene }) => {
         selection?.onHighlight?.()
       }
     },
-    [selectionable, hover.uuid, selection?.onHighlight]
+    [selectionable, hover.uuid, selection]
   )
 
   /**
@@ -419,7 +412,7 @@ const Geometry3D: React.FunctionComponent<Geometry3DProps> = ({ scene }) => {
     selection?.onSelect?.(
       newSelected.map((s) => ({ uuid: s.uuid, label: s.label }))
     )
-  }, [selectionable, hover, selected, selection?.onSelect])
+  }, [selectionable, hover, selected, selection])
 
   // On selection update
   useEffect(() => {
@@ -444,7 +437,7 @@ const Geometry3D: React.FunctionComponent<Geometry3DProps> = ({ scene }) => {
       setSelected(initSelected)
       selection?.onSelect?.([])
     }
-  }, [selection?.enabled, selection?.onHighlight, selection?.onSelect])
+  }, [selection])
 
   /**
    * Render

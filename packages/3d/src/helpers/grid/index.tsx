@@ -343,7 +343,7 @@ const AxisLabels: React.FunctionComponent<AxisLabelsProps> = ({
     }
 
     return labels
-  }, [axis, range, division, offset])
+  }, [axis, range, division, offset, multiplicator])
 
   return <group position={position}>{labels}</group>
 }
