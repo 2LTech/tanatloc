@@ -18,7 +18,7 @@ export interface MainStoreFillerProps {
  * @param timeout Timeout
  * @returns Function
  */
-const debounceLeading = (func: Function, timeout: number) => {
+const debounceLeading = (func: (...args: any[]) => void, timeout: number) => {
   let timer: NodeJS.Timeout | undefined
   return (...args: any[]) => {
     if (timer) return

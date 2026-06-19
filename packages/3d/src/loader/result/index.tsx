@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { LineBasicMaterial, WireframeGeometry } from 'three'
 
 import { GLTF } from 'three/addons/loaders/GLTFLoader.js'
@@ -18,11 +18,25 @@ export interface ResultChildProps {
 }
 
 /**
- * Get min / max
- * @param results Results
- * @returns { min, max }
+ * Get the value range of a result child's scalar `data` attribute.
+ *
+ * The returned `{ min, max }` is fed into the global LUT aggregation in
+ * `helpers/computeLut`, which combines every child with `Math.min` / `Math.max`.
+ * `{ min: Infinity, max: -Infinity }` is therefore an intentional "empty range"
+ * sentinel — the identity elements of those reductions — meaning "this child
+ * contributes nothing to the colour scale". It is NOT an inverted/bugged range.
+ *
+ * It is returned in two cases:
+ * - a `color` attribute already exists: the child carries baked-in vertex
+ *   colours (precomputed, or set by a previous `computeLut` pass), so its raw
+ *   `data` must not re-drive or distort the shared LUT range;
+ * - no `data` attribute exists: there is no scalar field to measure.
+ *
+ * @param child Result child mesh
+ * @returns Value range `{ min, max }`; `{ Infinity, -Infinity }` when the child
+ *   has no contributing scalar data (see above)
  */
-const getMinMax = (
+export const getMinMax = (
   child: THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>
 ): { min: number; max: number } => {
   const colorAttribute = child.geometry.getAttribute('color')
@@ -70,8 +84,11 @@ const ResultChild: React.FunctionComponent<ResultChildProps> = ({ child }) => {
   }, [child])
 
   // Result mesh
-  const resultMesh = useMemo(() => {
-    if (!result.meshVisible || child.type !== 'Mesh') return undefined
+  // The wireframe geometry & material are allocated here (not owned by the GLTF
+  // scene), so we keep references to dispose them on unmount / recreation.
+  const { resultMesh, geometry, material } = useMemo(() => {
+    if (!result.meshVisible || child.type !== 'Mesh')
+      return { resultMesh: undefined }
 
     const geometry = new WireframeGeometry(child.geometry)
     const material = new LineBasicMaterial({
@@ -85,7 +102,7 @@ const ResultChild: React.FunctionComponent<ResultChildProps> = ({ child }) => {
           : []
     })
     const mesh = <lineSegments args={[geometry, material]} />
-    return mesh
+    return { resultMesh: mesh, geometry, material }
   }, [
     display.transparent,
     sectionView.enabled,
@@ -93,6 +110,16 @@ const ResultChild: React.FunctionComponent<ResultChildProps> = ({ child }) => {
     result.meshVisible,
     child
   ])
+
+  // Dispose the locally-created wireframe geometry & material when this
+  // component unmounts or when a new pair is memoized (deps change).
+  // child.geometry is owned by the GLTF scene and is intentionally not disposed.
+  useEffect(() => {
+    return () => {
+      geometry?.dispose()
+      material?.dispose()
+    }
+  }, [geometry, material])
 
   /**
    * Render

@@ -1,5 +1,6 @@
 import {
   BoxGeometry,
+  BufferGeometry,
   Float32BufferAttribute,
   Mesh,
   MeshBasicMaterial
@@ -8,7 +9,7 @@ import ReactThreeTestRenderer from '@react-three/test-renderer'
 
 import { GLTF } from 'three/addons/loaders/GLTFLoader.js'
 
-import Result from '.'
+import Result, { getMinMax } from '.'
 
 const mockSetState = jest.fn()
 const mockUseStore = jest.fn()
@@ -278,5 +279,62 @@ describe('loader/result - 1', () => {
     )
 
     await renderer.unmount()
+  })
+})
+
+describe('loader/result - getMinMax', () => {
+  /**
+   * Build a result child mesh carrying the given geometry attributes.
+   */
+  const makeChild = (attributes: {
+    color?: number[]
+    data?: number[]
+  }): Mesh<BufferGeometry, MeshBasicMaterial> => {
+    const geometry = new BufferGeometry()
+    if (attributes.color)
+      geometry.setAttribute(
+        'color',
+        new Float32BufferAttribute(attributes.color, 3)
+      )
+    if (attributes.data)
+      geometry.setAttribute(
+        'data',
+        new Float32BufferAttribute(attributes.data, 1)
+      )
+    return new Mesh(geometry, new MeshBasicMaterial()) as Mesh<
+      BufferGeometry,
+      MeshBasicMaterial
+    >
+  }
+
+  // Sentinel { Infinity, -Infinity } = "no contribution to the LUT range"
+  test('color attribute present → empty-range sentinel', () => {
+    const child = makeChild({ color: [0, 0, 0, 1, 1, 1], data: [1, 2, 3] })
+    // color short-circuits before data is even read
+    expect(getMinMax(child)).toEqual({ min: Infinity, max: -Infinity })
+  })
+
+  test('no data attribute → empty-range sentinel', () => {
+    const child = makeChild({})
+    expect(getMinMax(child)).toEqual({ min: Infinity, max: -Infinity })
+  })
+
+  test('regular data → actual min / max', () => {
+    const child = makeChild({ data: [1, 5, 2, 4, 3] })
+    expect(getMinMax(child)).toEqual({ min: 1, max: 5 })
+  })
+
+  // min === max and |value| below 1e-12 → fixed [-1, 1] range
+  test('constant near-zero data → [-1, 1]', () => {
+    const child = makeChild({ data: [0, 0, 0] })
+    expect(getMinMax(child)).toEqual({ min: -1, max: 1 })
+  })
+
+  // min === max and value above the threshold → ±10% padding around the value
+  test('constant non-zero data → ±10% padded range', () => {
+    const child = makeChild({ data: [5, 5, 5] })
+    const { min, max } = getMinMax(child)
+    expect(min).toBeCloseTo(4.5)
+    expect(max).toBeCloseTo(5.5)
   })
 })

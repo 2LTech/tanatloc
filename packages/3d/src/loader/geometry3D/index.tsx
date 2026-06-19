@@ -409,7 +409,7 @@ const Geometry3D: React.FunctionComponent<Geometry3DProps> = ({ scene }) => {
   const onClick = useCallback(() => {
     if (!selectionable) return
 
-    let newSelected = []
+    let newSelected: Selection[]
     const index = selected.findIndex((s) => s.uuid === hover.uuid)
     if (index === -1) newSelected = [...selected, hover]
     else
@@ -451,7 +451,7 @@ const Geometry3D: React.FunctionComponent<Geometry3DProps> = ({ scene }) => {
    */
   return (
     <mesh type="Geometry3D">
-      {children.map((child, index) => (
+      {children.map((child) => (
         <Geometry3DSolid
           key={child.uuid}
           child={child}

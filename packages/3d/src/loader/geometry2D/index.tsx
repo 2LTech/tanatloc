@@ -412,7 +412,7 @@ const Geometry2D: React.FunctionComponent<Geometry2DProps> = ({ scene }) => {
   const onClick = useCallback(() => {
     if (!selectionable) return
 
-    let newSelected = []
+    let newSelected: Selection[]
     const index = selected.findIndex((s) => s.uuid === hover.uuid)
     if (index === -1) newSelected = [...selected, hover]
     else
@@ -450,7 +450,7 @@ const Geometry2D: React.FunctionComponent<Geometry2DProps> = ({ scene }) => {
    */
   return (
     <mesh type="Geometry2D">
-      {children.map((child, index) => (
+      {children.map((child) => (
         <Geometry2DFace
           key={child.uuid}
           child={child}

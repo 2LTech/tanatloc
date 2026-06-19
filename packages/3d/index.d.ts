@@ -51,7 +51,7 @@ export interface Tanatloc3DSelectionValue {
 
 export interface Tanatloc3DSelectionPoint {
   x: number
-  y: nubmer
+  y: number
   z: number
 }
 

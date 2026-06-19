@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { LineBasicMaterial, WireframeGeometry } from 'three'
 
 import { GLTF } from 'three/addons/loaders/GLTFLoader.js'
@@ -27,8 +27,10 @@ const MeshFace: React.FunctionComponent<MeshFaceProps> = ({ child }) => {
   const display = useStore((s) => s.display)
   const sectionView = useStore((s) => s.sectionView)
 
-  // Geometry
-  const mesh = useMemo(() => {
+  // Wireframe geometry + material
+  // These are allocated here (not owned by the GLTF scene), so we keep
+  // references to dispose them on unmount / recreation to avoid GPU leaks.
+  const { mesh, geometry, material } = useMemo(() => {
     const geometry = new WireframeGeometry(child.geometry)
     const material = new LineBasicMaterial({
       linewidth: 2,
@@ -41,8 +43,18 @@ const MeshFace: React.FunctionComponent<MeshFaceProps> = ({ child }) => {
           : []
     })
     const mesh = <lineSegments args={[geometry, material]} />
-    return mesh
+    return { mesh, geometry, material }
   }, [child, display, sectionView])
+
+  // Dispose the locally-created wireframe geometry & material when this
+  // component unmounts or when a new pair is memoized (deps change).
+  // child.geometry is owned by the GLTF scene and is intentionally not disposed.
+  useEffect(() => {
+    return () => {
+      geometry.dispose()
+      material.dispose()
+    }
+  }, [geometry, material])
 
   /**
    * Render
