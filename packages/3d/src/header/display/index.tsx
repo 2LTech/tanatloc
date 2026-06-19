@@ -4,7 +4,7 @@ import {
   BorderlessTableOutlined,
   RadiusUprightOutlined
 } from '@ant-design/icons'
-import { SwitchChangeEventHandler } from 'antd/es/switch'
+import type { SwitchChangeEventHandler } from 'antd/es/switch'
 
 import useStore from '@store'
 

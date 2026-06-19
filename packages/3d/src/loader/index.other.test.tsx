@@ -1,6 +1,6 @@
 import { render, waitFor } from '@testing-library/react'
 
-import { Tanatloc3DPart } from '@index'
+import type { Tanatloc3DPart } from '@index'
 
 const mockUseStore = jest.fn()
 jest.mock('@store', () => {

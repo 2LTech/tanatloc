@@ -1,10 +1,10 @@
 import * as THREE from 'three'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { ThreeEvent } from '@react-three/fiber'
+import type { ThreeEvent } from '@react-three/fiber'
 
-import { Tanatloc3DSelection, Tanatloc3DSelectionValue } from '@index'
+import type { Tanatloc3DSelection, Tanatloc3DSelectionValue } from '@index'
 
-import { GLTF } from 'three/addons/loaders/GLTFLoader.js'
+import type { GLTF } from 'three/addons/loaders/GLTFLoader.js'
 
 import useStore from '@store'
 

@@ -1,4 +1,4 @@
-import { Color } from 'antd/es/color-picker'
+import type { Color } from 'antd/es/color-picker'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 
 const mockSetState = jest.fn()

@@ -1,8 +1,8 @@
 import * as THREE from 'three'
 import { create } from 'zustand'
-import { TrackballControlsProps } from '@react-three/drei'
+import type { TrackballControlsProps } from '@react-three/drei'
 
-import { Tanatloc3DRendererProps } from '@index'
+import type { Tanatloc3DRendererProps } from '@index'
 
 import {
   defaultDisplay,
@@ -85,10 +85,9 @@ export interface Store {
 /**
  * Local storage settings
  */
-const localStorageSettings =
-  typeof window === 'undefined'
-    ? undefined
-    : localStorage.getItem('tanatloc-3d-settings')
+const localStorageSettings = globalThis.window
+  ? localStorage.getItem('tanatloc-3d-settings')
+  : undefined
 
 /**
  * Store

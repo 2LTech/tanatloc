@@ -9,8 +9,8 @@ import {
   Vector2,
   Vector3
 } from 'three'
-import { ThreeEvent } from '@react-three/fiber'
-import { TrackballControlsProps } from '@react-three/drei'
+import type { ThreeEvent } from '@react-three/fiber'
+import type { TrackballControlsProps } from '@react-three/drei'
 
 import useStore from '@store'
 

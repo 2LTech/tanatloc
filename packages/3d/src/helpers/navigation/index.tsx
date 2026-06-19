@@ -2,7 +2,8 @@ import * as THREE from 'three'
 
 import useStore from '@store'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { ThreeEvent, useFrame } from '@react-three/fiber'
+import { useFrame } from '@react-three/fiber'
+import type { ThreeEvent } from '@react-three/fiber'
 import {
   Edges,
   OrthographicCamera,

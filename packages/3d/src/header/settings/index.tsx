@@ -9,7 +9,7 @@ import {
   Tooltip,
   Typography
 } from 'antd'
-import { Color } from 'antd/es/color-picker'
+import type { Color } from 'antd/es/color-picker'
 import { SettingOutlined } from '@ant-design/icons'
 
 import useStore from '@store'

@@ -1,8 +1,9 @@
-import { ReactNode, useCallback, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
+import type { ReactNode } from 'react'
 import { Button, Card, Modal, Layout, Typography, List } from 'antd'
 import { AlertOutlined } from '@ant-design/icons'
 
-import { Tanatloc3DWebGLProps } from '@index'
+import type { Tanatloc3DWebGLProps } from '@index'
 
 import NoManipBrowser from './info/noManipBrowser'
 import FirefoxWindows from './info/firefoxWindows'

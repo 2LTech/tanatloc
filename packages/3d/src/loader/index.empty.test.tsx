@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react'
 
-import { Tanatloc3DPart } from '@index'
+import type { Tanatloc3DPart } from '@index'
 
 import PartLoader from '.'
 

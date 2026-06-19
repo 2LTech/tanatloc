@@ -5,7 +5,7 @@ import { Button, notification } from 'antd'
 
 import WebGL from 'three/addons/capabilities/WebGL.js'
 
-import { Tanatloc3DCanvasProps } from '@index'
+import type { Tanatloc3DCanvasProps } from '@index'
 
 import useStore from '@store'
 import MainStoreFiller from '@store/mainStoreFiller'

@@ -1,5 +1,5 @@
 import { BoxGeometry, Mesh, MeshBasicMaterial } from 'three'
-import { GLTF } from 'three/addons/loaders/GLTFLoader.js'
+import type { GLTF } from 'three/addons/loaders/GLTFLoader.js'
 import ReactThreeTestRenderer from '@react-three/test-renderer'
 
 import Geometry2D from '.'

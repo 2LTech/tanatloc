@@ -7,7 +7,7 @@ import {
 } from 'three'
 import ReactThreeTestRenderer from '@react-three/test-renderer'
 
-import { GLTF } from 'three/addons/loaders/GLTFLoader.js'
+import type { GLTF } from 'three/addons/loaders/GLTFLoader.js'
 
 import Result, { getMinMax } from '.'
 

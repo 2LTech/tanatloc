@@ -1,4 +1,4 @@
-import * as THREE from 'three'
+import type { Mesh } from 'three'
 import { useEffect, useMemo, useRef } from 'react'
 import { Tetrahedron } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
@@ -52,7 +52,7 @@ const OneTetrahedron: React.FunctionComponent<OneTetrahedronProps> = ({
   height
 }) => {
   // Ref
-  const meshRef = useRef<THREE.Mesh>(null!)
+  const meshRef = useRef<Mesh>(null!)
   const xDir = useRef<-1 | 1>(1)
   const yDir = useRef<-1 | 1>(1)
 

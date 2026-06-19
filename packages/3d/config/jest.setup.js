@@ -1,7 +1,7 @@
 import React from 'react'
 
 // Enable act environment
-global.IS_REACT_ACT_ENVIRONMENT = true
+globalThis.IS_REACT_ACT_ENVIRONMENT = true
 
 // Mock @react-three/drei Text
 const MockText = React.forwardRef((props, ref) => {
@@ -13,7 +13,7 @@ jest.mock('@react-three/drei', () => ({
 }))
 
 // window.matchmedia
-Object.defineProperty(window, 'matchMedia', {
+Object.defineProperty(globalThis, 'matchMedia', {
   writable: true,
   value: (query) => ({
     matches: false,
@@ -28,14 +28,14 @@ Object.defineProperty(window, 'matchMedia', {
 })
 
 // Resize observer
-global.ResizeObserver = jest.fn().mockImplementation(() => ({
+globalThis.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
   unobserve: jest.fn(),
   disconnect: jest.fn()
 }))
 
 // Message chanel (used in React19, not implemented yet in jsdom)
-window.MessageChannel = jest.fn().mockImplementation(() => {
+globalThis.MessageChannel = jest.fn().mockImplementation(() => {
   return {
     port1: {
       onMessage: jest.fn(),

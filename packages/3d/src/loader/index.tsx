@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Buffer } from 'buffer'
 
-import { GLTFLoader, GLTF } from 'three/addons/loaders/GLTFLoader.js'
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import type { GLTF } from 'three/addons/loaders/GLTFLoader.js'
 
-import { Tanatloc3DPart } from '@index'
+import type { Tanatloc3DPart } from '@index'
 
 import useStore from '@store'
 

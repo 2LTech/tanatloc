@@ -3,7 +3,7 @@ import { useCallback } from 'react'
 import { Button, Dropdown, Tooltip } from 'antd'
 import { FundProjectionScreenOutlined } from '@ant-design/icons'
 
-import { Tanatloc3DRendererPropsSnapshot } from '@index'
+import type { Tanatloc3DRendererPropsSnapshot } from '@index'
 
 import useStore from '@store'
 

@@ -1,7 +1,8 @@
 import { useEffect, useMemo } from 'react'
-import { ConfigProvider, Layout, ThemeConfig } from 'antd'
+import { ConfigProvider, Layout } from 'antd'
+import type { ThemeConfig } from 'antd'
 
-import { Tanatloc3DRendererProps } from '@index'
+import type { Tanatloc3DRendererProps } from '@index'
 
 import useStore from '@store'
 

@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { Switch, Tooltip } from 'antd'
 import { TableOutlined } from '@ant-design/icons'
-import { SwitchChangeEventHandler } from 'antd/es/switch'
+import type { SwitchChangeEventHandler } from 'antd/es/switch'
 
 import useStore from '@store'
 

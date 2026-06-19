@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import * as THREE from 'three'
-import { TrackballControlsProps } from '@react-three/drei'
+import type { TrackballControlsProps } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 
 import useStore from '@store'
