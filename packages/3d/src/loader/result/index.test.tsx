@@ -330,11 +330,21 @@ describe('loader/result - getMinMax', () => {
     expect(getMinMax(child)).toEqual({ min: -1, max: 1 })
   })
 
-  // min === max and value above the threshold → ±10% padding around the value
-  test('constant non-zero data → ±10% padded range', () => {
+  // min === max, |value| above the threshold → ±10% padding around the value
+  test('constant positive data → ±10% padded range', () => {
     const child = makeChild({ data: [5, 5, 5] })
     const { min, max } = getMinMax(child)
     expect(min).toBeCloseTo(4.5)
     expect(max).toBeCloseTo(5.5)
+  })
+
+  // Negative constant must use an absolute delta so that min < max is preserved
+  // (a signed 0.1 * max would invert the range to { min: -4.5, max: -5.5 }).
+  test('constant negative data → ±10% padded range, min < max', () => {
+    const child = makeChild({ data: [-5, -5, -5] })
+    const { min, max } = getMinMax(child)
+    expect(min).toBeCloseTo(-5.5)
+    expect(max).toBeCloseTo(-4.5)
+    expect(min).toBeLessThan(max)
   })
 })

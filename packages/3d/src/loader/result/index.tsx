@@ -48,13 +48,20 @@ export const getMinMax = (
   let min = array.reduce((a, b) => Math.min(a, b), Infinity)
   let max = array.reduce((a, b) => Math.max(a, b), -Infinity)
 
+  // Constant field (min === max): widen to a visible range so the LUT and
+  // colour bar have non-zero width.
   if (min === max) {
-    if (min < 1e-12) {
+    if (Math.abs(min) < 1e-12) {
+      // (Near-)zero value: no meaningful scale, use a symmetric unit range.
       min = -1
       max = 1
     } else {
-      min = min - 0.1 * max
-      max = max + 0.1 * max
+      // Pad by ±10% of the magnitude. The delta is absolute so the result
+      // stays min < max for negative constants too — a signed `0.1 * max`
+      // would invert the range (e.g. -5 → min -4.5, max -5.5).
+      const delta = Math.abs(min) * 0.1
+      min = min - delta
+      max = max + delta
     }
   }
 
