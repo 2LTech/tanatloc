@@ -1,34 +1,26 @@
 /** @type {import('jest').Config} */
 const config = {
-  rootDir: '..',
-  setupFiles: ['jest-canvas-mock', './config/jest.setup.js'],
+  rootDir: '../src',
+  setupFiles: ['jest-canvas-mock', '../config/jest.setup.js'],
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'json'],
   testEnvironment: 'jest-environment-jsdom',
-  testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/node_modules/'],
   collectCoverage: true,
-  collectCoverageFrom: ['src/**/*.ts', 'src/**/*.tsx'],
+  collectCoverageFrom: ['<rootDir>/**/*.ts', '<rootDir>/**/*.tsx'],
+  coverageDirectory: '<rootDir>/../coverage',
   transform: {
-    '\\.[jt]sx?$': [
-      'babel-jest',
-      {
-        presets: [
-          '@babel/preset-env',
-          ['@babel/preset-react', { runtime: 'automatic' }],
-          '@babel/preset-typescript'
-        ]
-      }
-    ]
+    '^.+\\.(ts|tsx)?$': ['ts-jest']
   },
   moduleNameMapper: {
-    '^@/(.*)$': ['<rootDir>/src/$1'],
-    '^@extra/(.*)$': ['<rootDir>/src/extra/$1'],
-    '@index': ['<rootDir>/index.d.ts'],
-    '@header': ['<rootDir>/src/header/index.tsx'],
-    '^@helpers/(.*)$': ['<rootDir>/src/helpers/$1'],
-    '@loader': ['<rootDir>/src/loader/index.tsx'],
-    '^@tools/(.*)$': ['<rootDir>/src/tools/$1'],
-    '^@store/(.*)$': ['<rootDir>/src/store/$1'],
-    '@store': ['<rootDir>/src/store/index.ts'],
-    '^@style/(.*)$': ['<rootDir>/src/style/$1']
+    '^@/(.*)$': ['<rootDir>/$1'],
+    '^@extra/(.*)$': ['<rootDir>/extra/$1'],
+    '@index': ['<rootDir>/../index.d.ts'],
+    '@header': ['<rootDir>/header/index.tsx'],
+    '^@helpers/(.*)$': ['<rootDir>/helpers/$1'],
+    '@loader': ['<rootDir>/loader/index.tsx'],
+    '^@tools/(.*)$': ['<rootDir>/tools/$1'],
+    '^@store/(.*)$': ['<rootDir>/store/$1'],
+    '@store': ['<rootDir>/store/index.ts'],
+    '^@style/(.*)$': ['<rootDir>/style/$1']
   }
 }
 

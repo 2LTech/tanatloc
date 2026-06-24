@@ -1,4 +1,4 @@
-import * as THREE from 'three'
+import type { BufferGeometry, Mesh, MeshBasicMaterial } from 'three'
 import { useEffect, useMemo } from 'react'
 import { LineBasicMaterial, WireframeGeometry } from 'three'
 
@@ -14,7 +14,7 @@ export interface ResultProps {
 }
 
 export interface ResultChildProps {
-  child: THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>
+  child: Mesh<BufferGeometry, MeshBasicMaterial>
 }
 
 /**
@@ -37,7 +37,7 @@ export interface ResultChildProps {
  *   has no contributing scalar data (see above)
  */
 export const getMinMax = (
-  child: THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>
+  child: Mesh<BufferGeometry, MeshBasicMaterial>
 ): { min: number; max: number } => {
   const colorAttribute = child.geometry.getAttribute('color')
   if (colorAttribute) return { min: Infinity, max: -Infinity }
@@ -164,11 +164,7 @@ const ResultChild: React.FunctionComponent<ResultChildProps> = ({ child }) => {
 const Result: React.FunctionComponent<ResultProps> = ({ scene }) => {
   // Child
   const children = useMemo(
-    () =>
-      scene.children as THREE.Mesh<
-        THREE.BufferGeometry,
-        THREE.MeshBasicMaterial
-      >[],
+    () => scene.children as Mesh<BufferGeometry, MeshBasicMaterial>[],
     [scene.children]
   )
 

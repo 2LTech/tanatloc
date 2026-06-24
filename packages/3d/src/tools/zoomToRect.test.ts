@@ -1,4 +1,4 @@
-import * as THREE from 'three'
+import type { Box2, Mesh, PerspectiveCamera, Scene, WebGLRenderer } from 'three'
 import type { TrackballControlsProps } from '@react-three/drei'
 import { Vector3 } from 'three'
 
@@ -24,11 +24,11 @@ jest.mock('three', () => {
 describe('tools/zoomToRect', () => {
   const part = {
     type: 'Part'
-  } as THREE.Mesh
+  } as Mesh
   const rect = {
     min: { x: 0, y: 0 },
     max: { x: 10, y: 10 }
-  } as THREE.Box2
+  } as Box2
   const gl = {
     domElement: {
       getBoundingClientRect: () => ({
@@ -38,13 +38,13 @@ describe('tools/zoomToRect', () => {
         height: 100
       })
     }
-  } as THREE.WebGLRenderer
+  } as WebGLRenderer
   const scene = {
     children: [part]
-  } as unknown as THREE.Scene
+  } as unknown as Scene
   const camera = {
     position: new Vector3(0, 0, 5)
-  } as THREE.PerspectiveCamera
+  } as PerspectiveCamera
   const controls = {
     target: new Vector3(0, 0, 0)
   } as TrackballControlsProps
@@ -66,7 +66,7 @@ describe('tools/zoomToRect', () => {
       {
         min: { x: 0, y: 0 },
         max: { x: 1, y: 1 }
-      } as THREE.Box2,
+      } as Box2,
       gl,
       scene.children,
       camera,

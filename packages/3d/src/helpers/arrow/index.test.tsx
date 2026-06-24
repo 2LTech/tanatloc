@@ -3,7 +3,10 @@ import ReactThreeTestRenderer from '@react-three/test-renderer'
 
 import Arrow from '.'
 
-jest.mock('../staticText', () => () => <mesh type="StaticText" />)
+jest.mock('../staticText', () => {
+  const Mesh = () => <mesh type="StaticText" />
+  return Mesh
+})
 
 describe('helpers/arrow', () => {
   const origin = new Vector3(0, 0, 0)

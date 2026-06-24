@@ -1,4 +1,10 @@
-import * as THREE from 'three'
+import type {
+  Box2,
+  PerspectiveCamera,
+  Scene,
+  Vector3,
+  WebGLRenderer
+} from 'three'
 import type { TrackballControlsProps } from '@react-three/drei'
 import { Raycaster, Vector2 } from 'three'
 
@@ -12,10 +18,10 @@ import { Raycaster, Vector2 } from 'three'
  * @returns
  */
 const zoomToRect = (
-  rect: THREE.Box2,
-  gl: THREE.WebGLRenderer,
-  sceneChildren: THREE.Scene['children'],
-  camera: THREE.PerspectiveCamera,
+  rect: Box2,
+  gl: WebGLRenderer,
+  sceneChildren: Scene['children'],
+  camera: PerspectiveCamera,
   controls: TrackballControlsProps
 ) => {
   // Check size
@@ -58,7 +64,7 @@ const zoomToRect = (
   const intersect = intersects[0].point
 
   // Set center
-  const target = controls.target as THREE.Vector3
+  const target = controls.target as Vector3
   target.copy(intersect)
 
   // Zoom

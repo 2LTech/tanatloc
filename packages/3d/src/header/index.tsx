@@ -31,7 +31,9 @@ export interface HeaderProps {
  * @param props Props
  * @returns Header
  */
-const Header: React.FunctionComponent<HeaderProps> = ({ oneResult }) => {
+const Header: React.FunctionComponent<HeaderProps> = ({
+  oneResult
+}: HeaderProps) => {
   // Store
   const { data, postProcessing, onData, onPostProcessing } = useStore(
     (s) => s.props

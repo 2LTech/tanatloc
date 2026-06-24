@@ -1,4 +1,4 @@
-import * as THREE from 'three'
+import type { PerspectiveCamera } from 'three'
 import type { TrackballControlsProps } from '@react-three/drei'
 import { Mesh, Vector3 } from 'three'
 
@@ -7,7 +7,7 @@ import zoom from './zoom'
 describe('tools/zoom', () => {
   const camera = {
     position: new Vector3(0, 0, 5)
-  } as THREE.PerspectiveCamera
+  } as PerspectiveCamera
   const controls = {
     object: new Mesh(),
     target: new Vector3(0, 1, 0)

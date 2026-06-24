@@ -1,4 +1,4 @@
-import * as THREE from 'three'
+import type { PerspectiveCamera, Scene } from 'three'
 import type { TrackballControlsProps } from '@react-three/drei'
 import { Sphere, Vector3 } from 'three'
 
@@ -11,8 +11,8 @@ import computeSceneBoundingBox from './computeSceneBoundingBox'
  * @param controls Controls
  */
 const zoomToFit = (
-  sceneChildren: THREE.Scene['children'] | undefined,
-  camera: THREE.PerspectiveCamera | undefined,
+  sceneChildren: Scene['children'] | undefined,
+  camera: PerspectiveCamera | undefined,
   controls: TrackballControlsProps | undefined
 ): void => {
   if (!sceneChildren || !camera || !controls) return
@@ -29,7 +29,7 @@ const zoomToFit = (
   const fitHeight = maxSize / (2 * Math.atan((Math.PI * camera.fov) / 360))
   const fitWidth = fitHeight / camera.aspect
   const distance = 1.1 * Math.max(fitHeight, fitWidth)
-  const target = controls.target as THREE.Vector3
+  const target = controls.target as Vector3
   const direction = target
     .clone()
     .sub(camera.position)

@@ -2,10 +2,22 @@ import { fireEvent, render, screen } from '@testing-library/react'
 
 import WebGL from '.'
 
-jest.mock('./info/noManipBrowser', () => () => <div />)
-jest.mock('./info/firefoxWindows', () => () => <div />)
-jest.mock('./info/firefoxMac', () => () => <div />)
-jest.mock('./info/safariMac', () => () => <div />)
+jest.mock('./info/noManipBrowser', () => {
+  const Elem = () => <div />
+  return Elem
+})
+jest.mock('./info/firefoxWindows', () => {
+  const Elem = () => <div />
+  return Elem
+})
+jest.mock('./info/firefoxMac', () => {
+  const Elem = () => <div />
+  return Elem
+})
+jest.mock('./info/safariMac', () => {
+  const Elem = () => <div />
+  return Elem
+})
 
 describe('components/webgl', () => {
   test('render', () => {

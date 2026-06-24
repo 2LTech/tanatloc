@@ -5,7 +5,7 @@ import ComputeLut from '.'
 const mockSetState = jest.fn()
 const mockUseStore = jest.fn()
 jest.mock('@store', () => {
-  const useStore = (callback: Function) => mockUseStore(callback)
+  const useStore = (callback: (...args: any) => any) => mockUseStore(callback)
   useStore.setState = () => mockSetState()
   return useStore
 })
@@ -100,7 +100,9 @@ describe('helpers/computeLut', () => {
   test('with same lut', async () => {
     mockUseStore.mockImplementation(() => ({
       ...mainView,
-      ...{ ...lut, min: -1, max: 1 }
+      ...lut,
+      min: -1,
+      max: 1
     }))
     const renderer = await ReactThreeTestRenderer.create(<ComputeLut />)
     const group = renderer.scene.children[0]

@@ -1,4 +1,10 @@
-import * as THREE from 'three'
+import type {
+  PerspectiveCamera,
+  Plane,
+  Scene,
+  WebGLRenderer,
+  Vector3
+} from 'three'
 import { create } from 'zustand'
 import type { TrackballControlsProps } from '@react-three/drei'
 
@@ -28,9 +34,9 @@ export interface Store {
   }
   props: Tanatloc3DRendererProps
   mainView: {
-    gl?: THREE.WebGLRenderer
-    scene?: THREE.Scene
-    camera?: THREE.PerspectiveCamera
+    gl?: WebGLRenderer
+    scene?: Scene
+    camera?: PerspectiveCamera
     controls?: TrackballControlsProps
   }
   unit: {
@@ -45,9 +51,9 @@ export interface Store {
   }
   sectionView: {
     enabled: boolean
-    clippingPlane?: THREE.Plane
+    clippingPlane?: Plane
     hidePlane: boolean
-    snap?: THREE.Vector3
+    snap?: Vector3
     flip?: number
   }
   geometry: {
@@ -87,7 +93,8 @@ export interface Store {
  */
 const localStorageSettings = globalThis.window
   ? localStorage.getItem('tanatloc-3d-settings')
-  : undefined
+  : /* istanbul ignore next (never happend) */
+    undefined
 
 /**
  * Store

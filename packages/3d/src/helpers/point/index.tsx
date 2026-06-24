@@ -1,4 +1,4 @@
-import * as THREE from 'three'
+import type { Box3 } from 'three'
 import { useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import { Sphere as ThreeSphere } from 'three'
@@ -13,7 +13,7 @@ import computeSceneBoundingBox from '@tools/computeSceneBoundingBox'
  * @param boundingBox Bounding box
  * @returns Lines
  */
-const buildLines = (boundingBox: THREE.Box3): ReactNode[] => {
+const buildLines = (boundingBox: Box3): ReactNode[] => {
   const xLength = boundingBox.max.x - boundingBox.min.x
   const yLength = boundingBox.max.y - boundingBox.min.y
   const zLength = boundingBox.max.z - boundingBox.min.z
@@ -54,7 +54,7 @@ const buildLines = (boundingBox: THREE.Box3): ReactNode[] => {
  * @param boundingBox Bounding box
  * @returns Sphere
  */
-const buildSphere = (boundingBox: THREE.Box3): ReactNode => {
+const buildSphere = (boundingBox: Box3): ReactNode => {
   const boundingSphere = new ThreeSphere()
   boundingBox.getBoundingSphere(boundingSphere)
   const radius = boundingSphere.radius / 100

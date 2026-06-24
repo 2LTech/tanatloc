@@ -1,4 +1,4 @@
-import * as THREE from 'three'
+import type { BufferGeometry, Mesh, MeshStandardMaterial } from 'three'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { ThreeEvent } from '@react-three/fiber'
 
@@ -16,11 +16,8 @@ export interface Geometry3DProps {
 }
 
 export interface Geometry3DSolidProps {
-  child: Omit<
-    THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>,
-    'children'
-  > & {
-    children: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>[]
+  child: Omit<Mesh<BufferGeometry, MeshStandardMaterial>, 'children'> & {
+    children: Mesh<BufferGeometry, MeshStandardMaterial>[]
   }
   hover: Selection
   selected: Selection[]
@@ -31,7 +28,7 @@ export interface Geometry3DSolidProps {
 
 export interface Geometry3DFaceProps {
   solid: { hover?: boolean; selected?: boolean }
-  child: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>
+  child: Mesh<BufferGeometry, MeshStandardMaterial>
   hover: Selection
   selected: Selection[]
   onPointerMove: (data: Selection) => void
@@ -349,10 +346,10 @@ const Geometry3D: React.FunctionComponent<Geometry3DProps> = ({ scene }) => {
   const children = useMemo(
     () =>
       scene.children as (Omit<
-        THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>,
+        Mesh<BufferGeometry, MeshStandardMaterial>,
         'children'
       > & {
-        children: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>[]
+        children: Mesh<BufferGeometry, MeshStandardMaterial>[]
       })[],
     [scene.children]
   )

@@ -1,7 +1,7 @@
-import * as THREE from 'three'
+import type { Mesh } from 'three'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Line, OrthographicCamera, Text } from '@react-three/drei'
 import { Float32BufferAttribute } from 'three'
+import { Line, OrthographicCamera, Text } from '@react-three/drei'
 
 import { Lut } from 'three/addons/math/Lut.js'
 
@@ -29,7 +29,10 @@ const size = 10
  * @param props props
  * @returns Label
  */
-const Label: React.FunctionComponent<LabelProps> = ({ position, value }) => {
+const Label: React.FunctionComponent<LabelProps> = ({
+  position,
+  value
+}: LabelProps) => {
   /**
    * Render
    */
@@ -58,9 +61,11 @@ const Label: React.FunctionComponent<LabelProps> = ({ position, value }) => {
  * Colorbar
  * @returns Colorbar
  */
-const Colorbar: React.FunctionComponent<ColorbarProps> = ({ resize }) => {
+const Colorbar: React.FunctionComponent<ColorbarProps> = ({
+  resize
+}: ColorbarProps) => {
   // Ref
-  const ref = useRef<THREE.Mesh>(null!)
+  const ref = useRef<Mesh>(null!)
 
   // State
   const [aspectRatio, setAspectRatio] = useState<number>(1)

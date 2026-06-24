@@ -1,4 +1,4 @@
-import * as THREE from 'three'
+import type { Vector3 } from 'three'
 import { useEffect, useState } from 'react'
 
 import useStore from '@store'
@@ -15,10 +15,10 @@ export interface LightProps {
  * @param props Props
  * @returns Light
  */
-const Light: React.FunctionComponent<LightProps> = ({ update }) => {
+const Light: React.FunctionComponent<LightProps> = ({ update }: LightProps) => {
   // State
-  const [positionRight, setPositionRight] = useState<THREE.Vector3>()
-  const [positionLeft, setPositionLeft] = useState<THREE.Vector3>()
+  const [positionRight, setPositionRight] = useState<Vector3>()
+  const [positionLeft, setPositionLeft] = useState<Vector3>()
 
   // Store
   const { camera, controls } = useStore((s) => s.mainView)
@@ -33,7 +33,7 @@ const Light: React.FunctionComponent<LightProps> = ({ update }) => {
     const cameraUp = camera.up.clone().normalize()
 
     // Target
-    const target = controls.target as THREE.Vector3
+    const target = controls.target as Vector3
 
     // Direction
     const direction = target.clone().sub(cameraPosition).normalize()

@@ -1,4 +1,4 @@
-import * as THREE from 'three'
+import type { PerspectiveCamera, Vector3 } from 'three'
 import type { TrackballControlsProps } from '@react-three/drei'
 
 /**
@@ -13,13 +13,13 @@ const zoomFactor = 0.01
  * @param direction Direction
  */
 const zoom = (
-  camera: THREE.PerspectiveCamera | undefined,
+  camera: PerspectiveCamera | undefined,
   controls: TrackballControlsProps | undefined,
   direction: 1 | -1
 ): void => {
   if (!camera || !controls) return
-  const object = controls.object as THREE.PerspectiveCamera
-  const target = controls.target as THREE.Vector3
+  const object = controls.object as PerspectiveCamera
+  const target = controls.target as Vector3
   const targetDistance = object.position.distanceTo(target)
   const zoomDistance = targetDistance * direction * zoomFactor
   const translation = target

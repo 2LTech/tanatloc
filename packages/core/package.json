@@ -36,7 +36,7 @@
     "modelValidator": "ts-json-schema-generator --path models/index.d.ts --type 'IModel' --tsconfig ./tsconfig.json --no-type-check --out src/components/editor/steps/model.json"
   },
   "dependencies": {
-    "electron": "42.4.1",
+    "electron": "42.5.0",
     "electron-serve": "3.0.1",
     "electron-store": "11.0.2"
   },
@@ -52,9 +52,9 @@
     "@babel/preset-react": "8.0.1",
     "@babel/preset-typescript": "8.0.1",
     "@hapi/iron": "7.0.1",
-    "@sentry/nextjs": "10.59.0",
+    "@sentry/nextjs": "10.60.0",
     "@swc/cli": "0.8.1",
-    "@swc/core": "1.15.41",
+    "@swc/core": "1.15.43",
     "@tanatloc/3d": "workspace:^",
     "@tanatloc/formula-validator": "workspace:^",
     "@testing-library/dom": "10.4.1",
@@ -78,7 +78,7 @@
     "@types/url-join": "5.0.0",
     "@types/uuid": "11.0.0",
     "ajv": "8.20.0",
-    "antd": "6.4.4",
+    "antd": "6.4.5",
     "archiver": "8.0.0",
     "babel-jest": "30.4.1",
     "cookie": "1.1.1",
@@ -112,16 +112,16 @@
     "react-ace": "14.0.1",
     "react-cookie": "8.1.2",
     "react-dom": "19.2.7",
-    "recharts": "3.8.1",
+    "recharts": "3.9.0",
     "set-interval-async": "3.0.3",
-    "sharp": "0.35.1",
-    "swr": "2.4.1",
+    "sharp": "0.35.2",
+    "swr": "2.4.2",
     "tar": "7.5.16",
     "ts-json-schema-generator": "2.9.0",
     "tsx": "4.22.4",
     "typedoc": "0.28.19",
     "typescript": "6.0.3",
     "url-join": "5.0.0",
-    "uuid": "14.0.0"
+    "uuid": "14.0.1"
   }
 }

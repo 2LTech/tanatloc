@@ -5,22 +5,20 @@ RED='\e[31m'
 BOLD='\e[1m'
 ENDSTYLE='\e[0m'
 
-error=''
-
 run() {
 	echo -e "❯❯❯❯ $1..."
 	($2 > /dev/null)
 	echo -e "${GREEN}  ✅ done${ENDSTYLE}"
 }
 
-> checkLog.out
-> checkError.out
+true > checkLog.out
+true > checkError.out
 
 runInWorkspace() {
 	echo -e "╰┈➤ $1..."
 	echo -e "╰┈➤ $1" >> checkLog.out
 	echo -e "╰┈➤ $1" >> checkError.out
-	$(yarn workspace "$2" run "$3" >> checkLog.out 2>>checkError.out)
+	eval "yarn workspace $2 run $3 >> checkLog.out 2>>checkError.out"
 	exitStatus=$?
 	if [ $exitStatus -eq 0 ]; then
 		echo -e "${GREEN}  ✅ done${ENDSTYLE}"
@@ -77,7 +75,7 @@ runInWorkspace "depcheck" "@tanatloc/electron" "depcheck"
 runInWorkspace "prettier" "@tanatloc/electron" "prettier"
 runInWorkspace "doc" "@tanatloc/electron" "doc"
 runInWorkspace "test" "@tanatloc/electron" "test"
-BUILD_VERSION=test runInWorkspace "dist" "@tanatloc/electron" "dist"
+BUILD_VERSION="test" runInWorkspace "dist" "@tanatloc/electron" "dist"
 
 # formula-validator
 echo -e ""

@@ -1,4 +1,4 @@
-import * as THREE from 'three'
+import type { PerspectiveCamera, Scene } from 'three'
 import { Box3, Vector3 } from 'three'
 import type { TrackballControlsProps } from '@react-three/drei'
 
@@ -8,11 +8,11 @@ const mockBox = new Box3(new Vector3(0, 0, 0), new Vector3(1, 1, 1))
 jest.mock('./computeSceneBoundingBox', () => () => mockBox)
 
 describe('tools/zoomToFit', () => {
-  const scene = { children: [] } as unknown as THREE.Scene
+  const scene = { children: [] } as unknown as Scene
   const camera = {
     position: new Vector3(0, 0, 5),
     updateProjectionMatrix: jest.fn
-  } as unknown as THREE.PerspectiveCamera
+  } as unknown as PerspectiveCamera
   const controls = {
     target: new Vector3(0, 0, 0)
   } as TrackballControlsProps

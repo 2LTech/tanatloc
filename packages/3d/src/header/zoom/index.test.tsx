@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react'
 const mockSetState = jest.fn()
 const mockUseStore = jest.fn()
 jest.mock('@store', () => {
-  const useStore = (callback: Function) => mockUseStore(callback)
+  const useStore = (callback: (...args: any) => any) => mockUseStore(callback)
   useStore.setState = () => mockSetState()
   return useStore
 })
@@ -41,7 +41,7 @@ describe('header/zoom', () => {
   })
 
   test('zoomIn', async () => {
-    global.requestAnimationFrame = () => 0
+    globalThis.requestAnimationFrame = () => 0
     const { unmount } = render(<Zoom />)
 
     const button = screen.getByRole('button', { name: 'zoom-in' })
@@ -54,7 +54,7 @@ describe('header/zoom', () => {
   })
 
   test('zoomOut', () => {
-    global.requestAnimationFrame = () => 1
+    globalThis.requestAnimationFrame = () => 1
     const { unmount } = render(<Zoom />)
 
     const button = screen.getByRole('button', { name: 'zoom-out' })

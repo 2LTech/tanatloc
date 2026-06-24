@@ -5,7 +5,7 @@ import Background, { BackgroundRender } from '.'
 const mockUseStore = jest.fn()
 const mockSetState = jest.fn()
 jest.mock('@store', () => {
-  const useStore = (callback: Function) => mockUseStore(callback)
+  const useStore = (callback: (...args: any) => any) => mockUseStore(callback)
   useStore.setState = () => mockSetState()
   return useStore
 })

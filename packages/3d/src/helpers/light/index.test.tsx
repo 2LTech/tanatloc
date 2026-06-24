@@ -5,7 +5,7 @@ import Light from '.'
 
 const mockUseStore = jest.fn()
 jest.mock('@store', () => {
-  const useStore = (callback: Function) => mockUseStore(callback)
+  const useStore = (callback: (...args: any) => any) => mockUseStore(callback)
   return useStore
 })
 

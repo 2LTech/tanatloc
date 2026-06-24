@@ -30,12 +30,12 @@ const Parts: React.FunctionComponent = () => {
     // Check parts to add
     const toAdd = parts.filter(
       (part) =>
-        !children.find((child) => child.props.uuid === part.summary.uuid)
+        !children.some((child) => child.props.uuid === part.summary.uuid)
     )
 
     // Check children to remove
     const toRemove = children.filter(
-      (child) => !parts?.find((part) => part.summary.uuid === child.props.uuid)
+      (child) => !parts?.some((part) => part.summary.uuid === child.props.uuid)
     )
 
     // Check

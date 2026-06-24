@@ -2,10 +2,15 @@ import ReactThreeTestRenderer from '@react-three/test-renderer'
 
 import Colorbar from '.'
 
-const mockUseStore = jest.fn()
-jest.mock('@store', () => {
-  const useStore = (callback: Function) => mockUseStore(callback)
-  return useStore
+jest.mock('@react-three/drei', () => {
+  const actualDrei = jest.requireActual('@react-three/drei')
+  const MockText = (props: any) => {
+    return <mesh {...props} />
+  }
+  return {
+    ...actualDrei,
+    Text: MockText
+  }
 })
 
 jest.mock('three/addons/math/Lut.js', () => {
@@ -31,6 +36,12 @@ jest.mock('three/addons/math/Lut.js', () => {
   }
 
   return { Lut }
+})
+
+const mockUseStore = jest.fn()
+jest.mock('@store', () => {
+  const useStore = (callback: (...args: any) => any) => mockUseStore(callback)
+  return useStore
 })
 
 jest.mock('@tools/toReadable', () => () => 'value')

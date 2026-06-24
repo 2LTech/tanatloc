@@ -1,4 +1,4 @@
-import * as THREE from 'three'
+import type { Group, Mesh, Scene } from 'three'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   Euler,
@@ -21,20 +21,20 @@ import computeSceneBoundingBox from '@tools/computeSceneBoundingBox'
  */
 export interface ControlPlaneProps {
   hover?: boolean
-  position: THREE.Vector3
+  position: Vector3
   scale: number
   onPointerMove: () => void
   onPointerOut: () => void
-  updatePosition: (position: THREE.Vector3) => void
+  updatePosition: (position: Vector3) => void
 }
 
 export interface ControlDomeProps {
   hover?: boolean
-  position: THREE.Vector3
+  position: Vector3
   scale: number
   onPointerMove: () => void
   onPointerOut: () => void
-  updatePosition: (position: THREE.Vector3) => void
+  updatePosition: (position: Vector3) => void
 }
 
 export type Type = 'Plane' | 'Dome' | undefined
@@ -79,7 +79,7 @@ const cameraDirections = {
  */
 const onStart = (
   enabled: boolean,
-  sceneChildren?: THREE.Scene['children']
+  sceneChildren?: Scene['children']
 ): { success: boolean } => {
   if (!enabled || !sceneChildren) return { success: false }
 
@@ -115,9 +115,9 @@ const onStart = (
  * @returns { success: boolean }
  */
 const onSnap = (
-  snap?: THREE.Vector3,
-  sceneChildren?: THREE.Scene['children'],
-  group?: THREE.Group
+  snap?: Vector3,
+  sceneChildren?: Scene['children'],
+  group?: Group
 ): { success: boolean } => {
   if (!snap || !sceneChildren || !group) return { success: false }
 
@@ -150,7 +150,7 @@ const onSnap = (
  * @param group Group
  * @returns { success: boolean }
  */
-const onFlip = (flip?: number, group?: THREE.Group): { success: boolean } => {
+const onFlip = (flip?: number, group?: Group): { success: boolean } => {
   if (!flip || !group) return { success: false }
 
   // Update group
@@ -185,9 +185,9 @@ const setCameraDirections = (camera: PerspectiveCamera) => {
  * @param mouse Mouse
  */
 const setInitialData = (
-  group: THREE.Group,
-  intersection: THREE.Vector3,
-  pointer: THREE.Vector2
+  group: Group,
+  intersection: Vector3,
+  pointer: Vector2
 ): void => {
   const initialPosition = group.position
 
@@ -209,7 +209,7 @@ const setInitialData = (
  * Update clipping plane
  * @param controller Controller
  */
-const updateClippingPlane = (controller: THREE.Group): void => {
+const updateClippingPlane = (controller: Group): void => {
   const normal = defaultNormal.clone().applyQuaternion(controller.quaternion)
   clippingPlane.setFromNormalAndCoplanarPoint(normal, controller.position)
 }
@@ -228,7 +228,7 @@ const _onPointerDown = (
   hoverPlane: boolean,
   hoverDome: boolean,
   event: ThreeEvent<PointerEvent>,
-  group: THREE.Group,
+  group: Group,
   camera?: PerspectiveCamera,
   controls?: TrackballControlsProps
 ): { type: Type; enabled: boolean } => {
@@ -287,15 +287,14 @@ const _onPointerDown = (
 const _onPointerMove = (
   enabled: boolean,
   event: ThreeEvent<PointerEvent>,
-  group: THREE.Group,
-  plane: THREE.Mesh,
+  group: Group,
+  plane: Mesh,
   type: Type,
   camera?: PerspectiveCamera
 ): void => {
   if (!enabled || !camera) return
 
-  /* istanbul ignore else */
-  /* that is never something else than Plane but this is a security check */
+  /* istanbul ignore else (never happend) */
   if (type === 'Dome') {
     const pointer = event.pointer
 
@@ -345,11 +344,11 @@ const _onPointerUp = (controls?: TrackballControlsProps): void => {
  */
 const SectionView: React.FunctionComponent = () => {
   // Ref
-  const ref = useRef<THREE.Group>(null!)
-  const planeRef = useRef<THREE.Mesh>(null!)
+  const ref = useRef<Group>(null!)
+  const planeRef = useRef<Mesh>(null!)
 
   // State
-  const [position, setPosition] = useState<THREE.Vector3>()
+  const [position, setPosition] = useState<Vector3>()
   const [scale, setScale] = useState<number>()
 
   const [hoverPlane, setHoverPlane] = useState<boolean>(false)
@@ -449,7 +448,7 @@ const SectionView: React.FunctionComponent = () => {
 
   // Intialization
   useEffect(() => {
-    /* istanbul ignore next */
+    /* istanbul ignore next (never happend) */
     if (sectionView.clippingPlane !== clippingPlane)
       useStore.setState({ sectionView: { ...sectionView, clippingPlane } })
   }, [sectionView])

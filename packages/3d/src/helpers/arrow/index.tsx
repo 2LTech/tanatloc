@@ -1,4 +1,4 @@
-import * as THREE from 'three'
+import type { Mesh } from 'three'
 import { useEffect, useMemo, useRef } from 'react'
 import { Vector3 } from 'three'
 
@@ -8,8 +8,8 @@ import StaticText from '../staticText'
  * Props
  */
 export interface ArrowProps {
-  origin?: THREE.Vector3
-  direction?: THREE.Vector3
+  origin?: Vector3
+  direction?: Vector3
   length?: number
   color?: string | number
   text?: string
@@ -29,9 +29,9 @@ const Arrow: React.FunctionComponent<ArrowProps> = ({
   length = 1,
   color,
   text
-}) => {
+}: ArrowProps) => {
   // Ref
-  const ref = useRef<THREE.Mesh>(null!)
+  const ref = useRef<Mesh>(null!)
 
   // Material
   const material = useMemo(() => <meshBasicMaterial color={color} />, [color])

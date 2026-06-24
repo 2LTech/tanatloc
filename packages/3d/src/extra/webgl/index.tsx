@@ -19,7 +19,7 @@ import style from '@style/WebGL'
 const WebGLError: React.FunctionComponent<Tanatloc3DWebGLProps> = ({
   logo,
   back
-}) => {
+}: Tanatloc3DWebGLProps) => {
   /**
    * Chrome Windows
    */

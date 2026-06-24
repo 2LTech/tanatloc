@@ -12,7 +12,7 @@ jest.mock('next/navigation', () => ({
 }))
 
 const mockFetch = jest.fn()
-global.fetch = async () => mockFetch()
+globalThis.fetch = async () => mockFetch()
 
 const mockOpen = jest.fn()
 window.open = mockOpen

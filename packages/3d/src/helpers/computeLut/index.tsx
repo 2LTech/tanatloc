@@ -1,4 +1,4 @@
-import * as THREE from 'three'
+import type { BufferGeometry, Mesh, MeshStandardMaterial } from 'three'
 import { useEffect } from 'react'
 import { Float32BufferAttribute } from 'three'
 
@@ -12,7 +12,7 @@ import useStore, { Store } from '@store'
  * @returns { min, max }
  */
 const getMinMax = (
-  results: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>[]
+  results: Mesh<BufferGeometry, MeshStandardMaterial>[]
 ): { min: number; max: number } => {
   let min = Infinity
   let max = -Infinity
@@ -39,7 +39,7 @@ const getMinMax = (
  * @param max Max
  */
 const setVertexColor = (
-  child: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>,
+  child: Mesh<BufferGeometry, MeshStandardMaterial>,
   lut: Store['lut'],
   min: number,
   max: number
@@ -87,11 +87,8 @@ const ComputeLut: React.FunctionComponent = () => {
     const parts = scene.children.filter((child) => child.type === 'Part')
     const results = parts.filter(
       (part) => part.userData.type === 'result'
-    ) as (Omit<
-      THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>,
-      'children'
-    > & {
-      children: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>[]
+    ) as (Omit<Mesh<BufferGeometry, MeshStandardMaterial>, 'children'> & {
+      children: Mesh<BufferGeometry, MeshStandardMaterial>[]
     })[]
 
     // Get min / max

@@ -1,4 +1,4 @@
-import * as THREE from 'three'
+import type { PerspectiveCamera, Scene, WebGLRenderer } from 'three'
 import { useCallback } from 'react'
 import { Button, Dropdown, Tooltip } from 'antd'
 import { FundProjectionScreenOutlined } from '@ant-design/icons'
@@ -18,9 +18,9 @@ const exportSnapshotKey = 'exportSnapshot'
  * @param camera Camera
  */
 const projectSnapshot = (
-  gl: THREE.WebGLRenderer,
-  scene: THREE.Scene,
-  camera: THREE.PerspectiveCamera,
+  gl: WebGLRenderer,
+  scene: Scene,
+  camera: PerspectiveCamera,
   propsSnapshotProject: Tanatloc3DRendererPropsSnapshot['project']
 ) => {
   // Initial data
@@ -67,9 +67,9 @@ const projectSnapshot = (
  * @param camera Camera
  */
 const exportSnapshot = (
-  gl: THREE.WebGLRenderer,
-  scene: THREE.Scene,
-  camera: THREE.PerspectiveCamera
+  gl: WebGLRenderer,
+  scene: Scene,
+  camera: PerspectiveCamera
 ) => {
   // Initial data
   const width = gl.domElement.width
@@ -99,7 +99,7 @@ const exportSnapshot = (
  */
 const Snapshot: React.FunctionComponent = () => {
   // Store
-  const props = useStore((s) => s.props)
+  const { snapshot } = useStore((s) => s.props)
   const { camera, gl, scene } = useStore((s) => s.mainView)
 
   /**
@@ -111,12 +111,12 @@ const Snapshot: React.FunctionComponent = () => {
       if (!gl || !scene || !camera) return
 
       if (key === projectSnapshotKey) {
-        projectSnapshot(gl, scene, camera, props.snapshot?.project)
+        projectSnapshot(gl, scene, camera, snapshot?.project)
       } else {
         exportSnapshot(gl, scene, camera)
       }
     },
-    [gl, scene, camera, props.snapshot?.project]
+    [gl, scene, camera, snapshot?.project]
   )
 
   /**
@@ -133,7 +133,7 @@ const Snapshot: React.FunctionComponent = () => {
    */
   return (
     <Tooltip title="Take snapshot" placement="left">
-      {props.snapshot?.project ? (
+      {snapshot?.project ? (
         <Dropdown
           placement="bottom"
           menu={{

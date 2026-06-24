@@ -5,7 +5,7 @@ import Grid from '.'
 
 const mockUseStore = jest.fn()
 jest.mock('@store', () => {
-  const useStore = (callback: Function) => mockUseStore(callback)
+  const useStore = (callback: (...args: any) => any) => mockUseStore(callback)
   return useStore
 })
 
@@ -20,7 +20,10 @@ jest.mock('@tools/toReadable', () => () => 'value')
 
 jest.mock('@tools/sign', () => () => 1)
 
-jest.mock('../staticText', () => () => <mesh />)
+jest.mock('../staticText', () => {
+  const Mesh = () => <mesh />
+  return Mesh
+})
 
 describe('helpers/grid', () => {
   const update = 1

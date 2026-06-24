@@ -3,13 +3,27 @@ import ReactThreeTestRenderer from '@react-three/test-renderer'
 
 import Navigation from '.'
 
+jest.mock('@react-three/drei', () => {
+  const actualDrei = jest.requireActual('@react-three/drei')
+  const MockText = (props: any) => {
+    return <mesh {...props} />
+  }
+  return {
+    ...actualDrei,
+    Text: MockText
+  }
+})
+
 const mockUseStore = jest.fn()
 jest.mock('@store', () => {
-  const useStore = (callback: Function) => mockUseStore(callback)
+  const useStore = (callback: (...args: any) => any) => mockUseStore(callback)
   return useStore
 })
 
-jest.mock('../arrow', () => () => <mesh />)
+jest.mock('../arrow', () => {
+  const Mesh = () => <mesh />
+  return Mesh
+})
 
 describe('helpers/navigation', () => {
   const mainView = {

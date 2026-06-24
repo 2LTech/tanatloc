@@ -1,5 +1,5 @@
+import type { Camera, PerspectiveCamera, Scene, WebGLRenderer } from 'three'
 import { useMemo } from 'react'
-import * as THREE from 'three'
 import type { TrackballControlsProps } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 
@@ -46,16 +46,16 @@ const MainStoreFiller: React.FunctionComponent<MainStoreFillerProps> = ({
     () =>
       debounceLeading(
         (
-          camera: THREE.Camera,
-          gl: THREE.WebGLRenderer,
-          scene: THREE.Scene,
+          camera: Camera,
+          gl: WebGLRenderer,
+          scene: Scene,
           controls: TrackballControlsProps
         ) =>
           useStore.setState({
             mainView: {
               gl,
               scene,
-              camera: camera as THREE.PerspectiveCamera,
+              camera: camera as PerspectiveCamera,
               controls
             }
           }),

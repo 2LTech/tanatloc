@@ -147,7 +147,10 @@ const getDepth = (axis: Axis, size: [number, number, number]): number => {
  * @param props Props
  * @returns AxisLine
  */
-const AxisLine: React.FunctionComponent<AxisLineProps> = ({ start, stop }) => {
+const AxisLine: React.FunctionComponent<AxisLineProps> = ({
+  start,
+  stop
+}: AxisLineProps) => {
   const geometry = new BufferGeometry().setFromPoints([
     new Vector3(start[0], start[1], start[2]),
     new Vector3(stop[0], stop[1], stop[2])
@@ -170,7 +173,7 @@ const AxisGrid: React.FunctionComponent<AxisGridProps> = ({
   size,
   divisions,
   offset
-}) => {
+}: AxisGridProps) => {
   // Width
   const width = useMemo(() => getWidth(axis, size), [axis, size])
 
@@ -269,7 +272,7 @@ const AxisLabels: React.FunctionComponent<AxisLabelsProps> = ({
   range,
   division,
   offset
-}) => {
+}: AxisLabelsProps) => {
   // Store
   const { unit } = useStore((s) => s.unit)
 
@@ -353,7 +356,7 @@ const AxisLabels: React.FunctionComponent<AxisLabelsProps> = ({
  * @param props Props
  * @returns Grid
  */
-const Grid: React.FunctionComponent<GridProps> = ({ update }) => {
+const Grid: React.FunctionComponent<GridProps> = ({ update }: GridProps) => {
   // Store
   const { camera, scene } = useStore((s) => s.mainView)
   const { grid } = useStore((s) => s.display)

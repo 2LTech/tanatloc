@@ -4,19 +4,43 @@ import Header from '.'
 
 const mockUseStore = jest.fn()
 jest.mock('@store', () => {
-  const useStore = (callback: Function) => mockUseStore(callback)
+  const useStore = (callback: (...args: any) => any) => mockUseStore(callback)
   return useStore
 })
 
-const colorbarRole = 'Colorbar'
-jest.mock('./snapshot', () => () => <div />)
-jest.mock('./unit', () => () => <div />)
-jest.mock('./display', () => () => <div />)
-jest.mock('./zoom', () => () => <div />)
-jest.mock('./sectionView', () => () => <div />)
-jest.mock('./colorbar', () => () => <div role={colorbarRole} />)
-jest.mock('./results', () => () => <div />)
-jest.mock('./settings', () => () => <div />)
+jest.mock('./snapshot', () => {
+  const Elem = () => <div />
+  return Elem
+})
+jest.mock('./unit', () => {
+  const Elem = () => <div />
+  return Elem
+})
+jest.mock('./display', () => {
+  const Elem = () => <div />
+  return Elem
+})
+jest.mock('./zoom', () => {
+  const Elem = () => <div />
+  return Elem
+})
+jest.mock('./sectionView', () => {
+  const Elem = () => <div />
+  return Elem
+})
+const colorbarRole = 'colorbar'
+jest.mock('./colorbar', () => {
+  const Elem = () => <div role={colorbarRole} />
+  return Elem
+})
+jest.mock('./results', () => {
+  const Elem = () => <div />
+  return Elem
+})
+jest.mock('./settings', () => {
+  const Elem = () => <div />
+  return Elem
+})
 
 describe('header', () => {
   const oneResult = false

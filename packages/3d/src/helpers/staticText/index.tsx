@@ -1,4 +1,4 @@
-import * as THREE from 'three'
+import type { Mesh } from 'three'
 import { useRef } from 'react'
 import { Vector3 } from 'three'
 import { useFrame } from '@react-three/fiber'
@@ -8,7 +8,7 @@ import { Text } from '@react-three/drei'
  * Props
  */
 export interface StaticTextProps {
-  position?: THREE.Vector3
+  position?: Vector3
   fontSize?: number
   color?: any
   children?: string
@@ -26,7 +26,7 @@ const StaticText: React.FunctionComponent<StaticTextProps> = ({
   children = ''
 }) => {
   // Ref
-  const ref = useRef<THREE.Mesh>(null!)
+  const ref = useRef<Mesh>(null!)
 
   // Always front of camera
   useFrame(({ camera }) => {

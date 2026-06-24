@@ -1,6 +1,11 @@
-import * as THREE from 'three'
-
-import useStore from '@store'
+import type {
+  BufferGeometry,
+  Group,
+  Mesh,
+  MeshBasicMaterial,
+  PerspectiveCamera
+} from 'three'
+import { Vector3, Color } from 'three'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import type { ThreeEvent } from '@react-three/fiber'
@@ -10,7 +15,7 @@ import {
   Text,
   TrackballControlsProps
 } from '@react-three/drei'
-import Arrow from '@helpers/arrow'
+
 import {
   Corner,
   Face,
@@ -21,10 +26,14 @@ import {
   obliques
 } from './def'
 
+import useStore from '@store'
+
+import Arrow from '@helpers/arrow'
+
 /**
  * Props
  */
-export type Mesh = THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>
+export type LocalMesh = Mesh<BufferGeometry, MeshBasicMaterial>
 
 export interface NavigationProps {
   resize?: number
@@ -33,20 +42,14 @@ export interface NavigationProps {
 export interface ViewCubeProps {
   visible?: boolean
   forceFront?: boolean
-  camera?: THREE.PerspectiveCamera
+  camera?: PerspectiveCamera
   controls?: TrackballControlsProps
 }
-
-export interface FaceProps extends Face {}
-
-export interface CornerProps extends Omit<Corner, 'name'> {}
-
-export interface ObliqueProps extends Omit<Oblique, 'name'> {}
 
 export interface AxisProps {
   direction: [number, number, number]
   origin: [number, number, number]
-  color: any
+  color: number
   text: string
 }
 
@@ -66,7 +69,7 @@ const delta = 10
 // Zoom
 const zoom = 0.4
 
-const closestAxis = (vector: THREE.Vector3): [number, number, number] => {
+const closestAxis = (vector: Vector3): [number, number, number] => {
   vector.normalize()
 
   const x = vector.x
@@ -94,17 +97,17 @@ const closestAxis = (vector: THREE.Vector3): [number, number, number] => {
  * @param up Up
  */
 const setCamera = (
-  camera: THREE.PerspectiveCamera,
+  camera: PerspectiveCamera,
   controls: TrackballControlsProps,
   lookAt: [number, number, number],
   up?: [number, number, number]
 ) => {
   // Distance
-  const target = controls.target as THREE.Vector3
+  const target = controls.target as Vector3
   const distance = camera.position.distanceTo(target)
 
   // Position change
-  const interval = new THREE.Vector3(...lookAt)
+  const interval = new Vector3(...lookAt)
     .clone()
     .normalize()
     .multiplyScalar(distance)
@@ -117,7 +120,7 @@ const setCamera = (
 
   // Update
   camera.position.copy(newPosition)
-  camera.up.copy(new THREE.Vector3(...up))
+  camera.up.copy(new Vector3(...up))
 }
 
 /**
@@ -125,14 +128,14 @@ const setCamera = (
  * @param props Props
  * @returns Face
  */
-const DrawFace: React.FunctionComponent<FaceProps> = ({
+const DrawFace: React.FunctionComponent<Face> = ({
   name,
   size,
   position,
   lookAt
-}) => {
+}: Face) => {
   // Ref
-  const ref = useRef<THREE.Group>(null)
+  const ref = useRef<Group>(null)
 
   // Store
   const {
@@ -141,9 +144,7 @@ const DrawFace: React.FunctionComponent<FaceProps> = ({
 
   // Look at
   useEffect(() => {
-    ref.current?.lookAt(
-      new THREE.Vector3(...lookAt.map((l) => 10 * cubeSize * l))
-    )
+    ref.current?.lookAt(new Vector3(...lookAt.map((l) => 10 * cubeSize * l)))
   }, [lookAt])
 
   /**
@@ -179,11 +180,11 @@ const Faces = () => (
  * @param props Props
  * @returns Corner
  */
-const DrawCorner: React.FunctionComponent<CornerProps> = ({
+const DrawCorner: React.FunctionComponent<Omit<Corner, 'name'>> = ({
   size,
   position,
   lookAt
-}) => {
+}: Omit<Corner, 'name'>) => {
   // Store
   const {
     colors: { baseColor }
@@ -220,11 +221,11 @@ const Corners = () => (
  * @param props Props
  * @returns Oblique
  */
-const DrawOblique: React.FunctionComponent<ObliqueProps> = ({
+const DrawOblique: React.FunctionComponent<Omit<Oblique, 'name'>> = ({
   size,
   position,
   lookAt
-}) => {
+}: Omit<Oblique, 'name'>) => {
   // Store
   const {
     colors: { baseColor }
@@ -266,10 +267,10 @@ const ViewCube: React.FunctionComponent<ViewCubeProps> = ({
   forceFront,
   camera,
   controls
-}) => {
+}: ViewCubeProps) => {
   // Ref
   const distance = useRef<number>(null)
-  const current = useRef<Mesh>(null)
+  const current = useRef<LocalMesh>(null)
 
   // Store
   const {
@@ -282,13 +283,13 @@ const ViewCube: React.FunctionComponent<ViewCubeProps> = ({
    */
   const onPointerEnter = useCallback(
     (event: ThreeEvent<PointerEvent>) => {
-      const mesh = event.object as Mesh
+      const mesh = event.object as LocalMesh
       const eventDistance = event.distance
       if (
         mesh.type === 'Mesh' &&
         (distance.current ? eventDistance < distance.current : true)
       ) {
-        mesh.material.color = new THREE.Color(hoverColor)
+        mesh.material.color = new Color(hoverColor)
         distance.current = eventDistance
         current.current = mesh
       }
@@ -302,9 +303,9 @@ const ViewCube: React.FunctionComponent<ViewCubeProps> = ({
    */
   const onPointerLeave = useCallback(
     (event: ThreeEvent<PointerEvent>) => {
-      const mesh = event.object as Mesh
+      const mesh = event.object as LocalMesh
       if (mesh.type === 'Mesh') {
-        mesh.material.color = new THREE.Color(baseColor)
+        mesh.material.color = new Color(baseColor)
         distance.current = Infinity
         current.current = null
       }
@@ -365,16 +366,16 @@ const Axis: React.FunctionComponent<AxisProps> = ({
   direction,
   color,
   text
-}) => {
+}: AxisProps) => {
   // Direction
   const direction3 = useMemo(
-    () => new THREE.Vector3(direction[0], direction[1], direction[2]),
+    () => new Vector3(direction[0], direction[1], direction[2]),
     [direction]
   )
 
   // Origin
   const origin3 = useMemo(
-    () => new THREE.Vector3(origin[0], origin[1], origin[2]),
+    () => new Vector3(origin[0], origin[1], origin[2]),
     [origin]
   )
 
@@ -397,7 +398,7 @@ const Axis: React.FunctionComponent<AxisProps> = ({
  * @param props Props
  * @returns Axes
  */
-const Axes: React.FunctionComponent<AxesProps> = ({ dimension }) => {
+const Axes: React.FunctionComponent<AxesProps> = ({ dimension }: AxesProps) => {
   // Offset
   const offset = useMemo(() => (cubeSize + delta) / 2, [])
 
@@ -448,7 +449,9 @@ const Axes: React.FunctionComponent<AxesProps> = ({ dimension }) => {
  * @param props props
  * @returns Navigation
  */
-const Navigation: React.FunctionComponent<NavigationProps> = ({ resize }) => {
+const Navigation: React.FunctionComponent<NavigationProps> = ({
+  resize
+}: NavigationProps) => {
   // Ref
   const currentDimension = useRef<number>(3)
 

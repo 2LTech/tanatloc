@@ -1,6 +1,6 @@
-import { basename } from 'path'
+import { basename } from 'node:path'
 import depcheck from 'depcheck'
-import { exit } from 'process'
+import { exit } from 'node:process'
 
 const customTypescript = async (fileName, deps) => {
   const newDeps = []
@@ -37,12 +37,12 @@ const customJest = async (fileName, deps) => {
       const config = (await import(fileName)).default
 
       // Setup files
-      config.setupFiles &&
+      if (config.setupFiles)
         newDeps.push(
           ...config.setupFiles.filter((file) => file.charAt(0) !== '.')
         )
       // Environment
-      config.testEnvironment && newDeps.push(config.testEnvironment)
+      if (config.testEnvironment) newDeps.push(config.testEnvironment)
       // Transform
       Object.values(config.transform ?? {}).forEach((value) => {
         if (!value.includes('<rootDir>')) newDeps.push(value[0])

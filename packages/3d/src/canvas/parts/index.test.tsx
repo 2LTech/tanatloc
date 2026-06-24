@@ -5,12 +5,15 @@ import Parts from '.'
 const mockSetState = jest.fn()
 const mockUseStore = jest.fn()
 jest.mock('@store', () => {
-  const useStore = (callback: Function) => mockUseStore(callback)
+  const useStore = (callback: (...args: any) => any) => mockUseStore(callback)
   useStore.setState = () => mockSetState()
   return useStore
 })
 
-jest.mock('@loader', () => () => <div />)
+jest.mock('@loader', () => {
+  const Elem = () => <div />
+  return Elem
+})
 
 describe('Parts', () => {
   const parts = [

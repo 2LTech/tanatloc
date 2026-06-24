@@ -50,7 +50,7 @@ const Background: React.FunctionComponent = () => {
 const OneTetrahedron: React.FunctionComponent<OneTetrahedronProps> = ({
   width,
   height
-}) => {
+}: OneTetrahedronProps) => {
   // Ref
   const meshRef = useRef<Mesh>(null!)
   const xDir = useRef<-1 | 1>(1)

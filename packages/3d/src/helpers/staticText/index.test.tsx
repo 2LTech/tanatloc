@@ -3,6 +3,12 @@ import { Vector3 } from 'three'
 
 import StaticText from '.'
 
+jest.mock('@react-three/drei', () => ({
+  Text: (props: any) => {
+    return <mesh {...props} />
+  }
+}))
+
 describe('helpers/staticText', () => {
   const position = new Vector3(0, 0, 0)
   const fontSize = 16

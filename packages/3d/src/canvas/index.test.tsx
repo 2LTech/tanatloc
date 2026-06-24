@@ -26,31 +26,62 @@ jest.mock('three/addons/capabilities/WebGL.js', () => ({
 
 const mockUseStore = jest.fn()
 jest.mock('@store', () => {
-  const useStore = (callback: Function) => mockUseStore(callback)
+  const useStore = (callback: (...args: any) => any) => mockUseStore(callback)
   return useStore
 })
+jest.mock('@store/mainStoreFiller', () => {
+  const Elem = () => <div />
+  return Elem
+})
 
-jest.mock('@store/mainStoreFiller', () => () => <div />)
-
-jest.mock('@helpers/frameRate', () => () => <div />)
-jest.mock('@helpers/navigation', () => () => <div />)
-jest.mock('@helpers/grid', () => () => <div />)
-jest.mock('@helpers/zoomToSelection', () => () => <div />)
-jest.mock('@helpers/sectionView', () => () => <div />)
-jest.mock('@helpers/computeLut', () => () => <div />)
-jest.mock('@helpers/colorbar', () => () => <div />)
-jest.mock('@helpers/light', () => () => <div />)
-jest.mock('@helpers/point', () => () => <div />)
+jest.mock('@helpers/frameRate', () => {
+  const Elem = () => <div />
+  return Elem
+})
+jest.mock('@helpers/navigation', () => {
+  const Elem = () => <div />
+  return Elem
+})
+jest.mock('@helpers/grid', () => {
+  const Elem = () => <div />
+  return Elem
+})
+jest.mock('@helpers/zoomToSelection', () => {
+  const Elem = () => <div />
+  return Elem
+})
+jest.mock('@helpers/sectionView', () => {
+  const Elem = () => <div />
+  return Elem
+})
+jest.mock('@helpers/computeLut', () => {
+  const Elem = () => <div />
+  return Elem
+})
+jest.mock('@helpers/colorbar', () => {
+  const Elem = () => <div />
+  return Elem
+})
+jest.mock('@helpers/light', () => {
+  const Elem = () => <div />
+  return Elem
+})
+jest.mock('@helpers/point', () => {
+  const Elem = () => <div />
+  return Elem
+})
 
 jest.mock('@extra/404', () => ({
   NotFoundRender: () => <div />
 }))
-
 jest.mock('@extra/background', () => ({
   BackgroundRender: () => <div />
 }))
 
-jest.mock('./parts', () => () => <div />)
+jest.mock('./parts', () => {
+  const Elem = () => <div />
+  return Elem
+})
 
 describe('Tanatloc3D', () => {
   const props = { parts: [{ summary: { type: 'result' } }] }
@@ -86,7 +117,7 @@ describe('Tanatloc3D', () => {
   test('resize', () => {
     const { unmount } = render(<Canvas />)
 
-    fireEvent.resize(window)
+    fireEvent.resize(globalThis.window)
 
     unmount()
   })

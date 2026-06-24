@@ -1,4 +1,4 @@
-import * as THREE from 'three'
+import type { Mesh, Scene } from 'three'
 import { Box3, Vector3 } from 'three'
 
 /**
@@ -7,16 +7,16 @@ import { Box3, Vector3 } from 'three'
  * @returns True
  * @returns False
  */
-const checkBoundingBox = (box: THREE.Box3): boolean => {
+const checkBoundingBox = (box: Box3): boolean => {
   const min = box.min
   const max = box.max
   if (
-    !isFinite(min.x) ||
-    !isFinite(min.y) ||
-    !isFinite(min.z) ||
-    !isFinite(max.x) ||
-    !isFinite(max.y) ||
-    !isFinite(max.z)
+    !Number.isFinite(min.x) ||
+    !Number.isFinite(min.y) ||
+    !Number.isFinite(min.z) ||
+    !Number.isFinite(max.x) ||
+    !Number.isFinite(max.y) ||
+    !Number.isFinite(max.z)
   )
     return false
 
@@ -28,14 +28,12 @@ const checkBoundingBox = (box: THREE.Box3): boolean => {
  * @param children Scene children
  * @returns Bounding box
  */
-const computeSceneBoundingBox = (
-  children: THREE.Scene['children']
-): THREE.Box3 => {
+const computeSceneBoundingBox = (children: Scene['children']): Box3 => {
   const box = new Box3()
 
   children.forEach((child) => {
     if (child.type === 'Part') {
-      const mesh = child as THREE.Mesh
+      const mesh = child as Mesh
       mesh.geometry.computeBoundingBox()
       box.expandByObject(mesh)
     }

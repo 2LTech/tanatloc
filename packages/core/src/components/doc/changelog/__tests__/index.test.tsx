@@ -3,7 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import Changelog from '..'
 
 const mockFetch = jest.fn()
-global.fetch = async () => mockFetch()
+globalThis.fetch = async () => mockFetch()
 
 describe('components/doc/changelog', () => {
   beforeEach(() => {

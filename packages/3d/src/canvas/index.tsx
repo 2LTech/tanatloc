@@ -33,7 +33,7 @@ import defaultStyle from '@style/Canvas'
  */
 const Canvas: React.FunctionComponent<Tanatloc3DCanvasProps> = ({
   toWebGL
-}) => {
+}: Tanatloc3DCanvasProps) => {
   // Ref
   const mainViewControls = useRef(null!)
 

@@ -1,4 +1,4 @@
-import * as THREE from 'three'
+import type { BufferGeometry, Mesh, MeshStandardMaterial } from 'three'
 import { useEffect, useMemo } from 'react'
 import { LineBasicMaterial, WireframeGeometry } from 'three'
 
@@ -14,7 +14,7 @@ export interface MeshProps {
 }
 
 export interface MeshFaceProps {
-  child: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>
+  child: Mesh<BufferGeometry, MeshStandardMaterial>
 }
 
 /**
@@ -82,14 +82,10 @@ const MeshFace: React.FunctionComponent<MeshFaceProps> = ({ child }) => {
  * @param props props
  * @returns Mesh
  */
-const Mesh: React.FunctionComponent<MeshProps> = ({ scene }) => {
+const MeshObject: React.FunctionComponent<MeshProps> = ({ scene }) => {
   // Children
   const children = useMemo(
-    () =>
-      scene.children as THREE.Mesh<
-        THREE.BufferGeometry,
-        THREE.MeshStandardMaterial
-      >[],
+    () => scene.children as Mesh<BufferGeometry, MeshStandardMaterial>[],
     [scene.children]
   )
 
@@ -105,4 +101,4 @@ const Mesh: React.FunctionComponent<MeshProps> = ({ scene }) => {
   )
 }
 
-export default Mesh
+export default MeshObject
