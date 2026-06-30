@@ -1,14 +1,29 @@
 import Tanatloc3D from '.'
 
-jest.mock('./canvas', () => () => <div />)
+jest.mock('./canvas', () => {
+  const Elem = () => <div />
+  return Elem
+})
 
-jest.mock('./renderer', () => () => <div />)
+jest.mock('./renderer', () => {
+  const Elem = () => <div />
+  return Elem
+})
 
-jest.mock('@extra/404', () => () => <div />)
+jest.mock('@extra/404', () => {
+  const Elem = () => <div />
+  return Elem
+})
 
-jest.mock('@extra/background', () => () => <div />)
+jest.mock('@extra/background', () => {
+  const Elem = () => <div />
+  return Elem
+})
 
-jest.mock('@extra/webgl', () => () => <div />)
+jest.mock('@extra/webgl', () => {
+  const Elem = () => <div />
+  return Elem
+})
 
 describe('index', () => {
   test('defined', () => {

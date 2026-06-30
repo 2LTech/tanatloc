@@ -15,6 +15,8 @@ export interface Geometry2DProps {
   scene: GLTF['scene']
 }
 
+export type Selection = Tanatloc3DSelectionValue
+
 export interface Geometry2DFaceProps {
   child: Omit<Mesh<BufferGeometry, MeshStandardMaterial>, 'children'> & {
     children: Mesh<BufferGeometry, MeshStandardMaterial>[]
@@ -34,8 +36,6 @@ export interface Geometry2DEdgeProps {
   onPointerLeave: (uuid: string) => void
   onClick: () => void
 }
-
-export interface Selection extends Tanatloc3DSelectionValue {}
 
 // Initial hover
 const initHover: Selection = {
@@ -97,7 +97,7 @@ const Geometry2DEdge: React.FunctionComponent<Geometry2DEdgeProps> = ({
   onPointerMove,
   onPointerLeave,
   onClick
-}) => {
+}: Geometry2DEdgeProps) => {
   // Store
   const { selection } = useStore((s) => s.props)
   const display = useStore((s) => s.display)
@@ -153,7 +153,7 @@ const Geometry2DEdge: React.FunctionComponent<Geometry2DEdgeProps> = ({
   // Material color
   const materialColor = useMemo(() => {
     if (selection?.enabled && selection.type !== 'edges') return material.color
-    else if (selected.find((s) => s.uuid === uuid))
+    else if (selected.some((s) => s.uuid === uuid))
       return hover.uuid === uuid ? hoverSelectColor : selectColor
     else return hover.uuid === uuid ? hoverColor : material.color
   }, [
@@ -208,7 +208,7 @@ const Geometry2DFace: React.FunctionComponent<Geometry2DFaceProps> = ({
   onPointerMove,
   onPointerLeave,
   onClick
-}) => {
+}: Geometry2DFaceProps) => {
   // Store
   const { selection } = useStore((s) => s.props)
   const display = useStore((s) => s.display)
@@ -276,7 +276,7 @@ const Geometry2DFace: React.FunctionComponent<Geometry2DFaceProps> = ({
   // Material color
   const materialColor = useMemo(() => {
     if (selection?.enabled && selection.type !== 'faces') return material.color
-    else if (selected.find((s) => s.uuid === uuid))
+    else if (selected.some((s) => s.uuid === uuid))
       return hover.uuid === uuid ? hoverSelectColor : selectColor
     else return hover.uuid === uuid ? hoverColor : material.color
   }, [
@@ -339,7 +339,9 @@ const Geometry2DFace: React.FunctionComponent<Geometry2DFaceProps> = ({
  * @param props Props
  * @returns Geometry2D
  */
-const Geometry2D: React.FunctionComponent<Geometry2DProps> = ({ scene }) => {
+const Geometry2D: React.FunctionComponent<Geometry2DProps> = ({
+  scene
+}: Geometry2DProps) => {
   // State
   const [hover, setHover] = useState<Selection>(initHover)
   const [selected, setSelected] = useState<Selection[]>(initSelected)

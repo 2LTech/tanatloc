@@ -14,7 +14,7 @@ import Result, { getMinMax } from '.'
 const mockSetState = jest.fn()
 const mockUseStore = jest.fn()
 jest.mock('@store', () => {
-  const useStore = (callback: Function) => mockUseStore(callback)
+  const useStore = (callback: (...args: any) => void) => mockUseStore(callback)
   useStore.setState = () => mockSetState()
   return useStore
 })

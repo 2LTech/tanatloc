@@ -45,7 +45,13 @@ export default config.defineConfig([
             'intensity',
             'decay',
             'userData',
-            'visible'
+            'visible',
+            'metalness',
+            'roughness',
+            'uuid',
+            'object',
+            'depthWrite',
+            'clippingPlanes'
           ]
         }
       ]

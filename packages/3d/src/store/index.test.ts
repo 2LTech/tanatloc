@@ -1,6 +1,12 @@
 const mockSet = jest.fn()
 jest.mock('zustand', () => ({
-  create: (callback: Function) => {
+  create: (
+    callback: (...args: any) => {
+      setExtra: (...args: any) => void
+      setProps: (...args: any) => void
+      setMainView: (...args: any) => void
+    }
+  ) => {
     const res = callback(mockSet)
     res.setExtra({})
     res.setProps({})

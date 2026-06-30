@@ -1,7 +1,7 @@
 import type { Mesh } from 'three'
 import { useRef } from 'react'
 import { Vector3 } from 'three'
-import { useFrame } from '@react-three/fiber'
+import { ReactThreeFiber, useFrame } from '@react-three/fiber'
 import { Text } from '@react-three/drei'
 
 /**
@@ -10,7 +10,7 @@ import { Text } from '@react-three/drei'
 export interface StaticTextProps {
   position?: Vector3
   fontSize?: number
-  color?: any
+  color?: ReactThreeFiber.Color
   children?: string
 }
 
@@ -24,7 +24,7 @@ const StaticText: React.FunctionComponent<StaticTextProps> = ({
   fontSize,
   color,
   children = ''
-}) => {
+}: StaticTextProps) => {
   // Ref
   const ref = useRef<Mesh>(null!)
 

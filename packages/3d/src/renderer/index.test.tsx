@@ -5,12 +5,15 @@ import Renderer from '.'
 const mockSetState = jest.fn()
 const mockUseStore = jest.fn()
 jest.mock('@store', () => {
-  const useStore = (callback: Function) => mockUseStore(callback)
+  const useStore = (callback: (...args: any) => void) => mockUseStore(callback)
   useStore.setState = () => mockSetState()
   return useStore
 })
 
-jest.mock('@header', () => () => <div />)
+jest.mock('@header', () => {
+  const Elem = () => <div />
+  return Elem
+})
 
 describe('src/renderer', () => {
   const props = {

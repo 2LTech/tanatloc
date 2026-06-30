@@ -1,1 +1,1 @@
-export { APILogoutRoute as GET } from '@2ltech/nextjs-app-passport'
+export { APILogoutRoute as POST } from '@2ltech/nextjs-app-passport'

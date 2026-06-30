@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Buffer } from 'buffer'
+import { Buffer } from 'node:buffer'
 
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import type { GLTF } from 'three/addons/loaders/GLTFLoader.js'
@@ -32,7 +32,9 @@ export interface MeshesProps {
  * @param props
  * @returns Meshes
  */
-const Meshes: React.FunctionComponent<MeshesProps> = ({ scene }) => {
+const Meshes: React.FunctionComponent<MeshesProps> = ({
+  scene
+}: MeshesProps) => {
   // Type
   const type = useMemo(
     () => scene.userData.type as string,
@@ -61,7 +63,9 @@ const Meshes: React.FunctionComponent<MeshesProps> = ({ scene }) => {
  * @param props Props
  * @returns PartLoader
  */
-const PartLoader: React.FunctionComponent<PartLoaderProps> = ({ part }) => {
+const PartLoader: React.FunctionComponent<PartLoaderProps> = ({
+  part
+}: PartLoaderProps) => {
   // Ref
   const currentGLTF = useRef<GLTF>(undefined)
 

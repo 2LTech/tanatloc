@@ -22,7 +22,9 @@ export interface MeshFaceProps {
  * @param props Props
  * @returns MeshFace
  */
-const MeshFace: React.FunctionComponent<MeshFaceProps> = ({ child }) => {
+const MeshFace: React.FunctionComponent<MeshFaceProps> = ({
+  child
+}: MeshFaceProps) => {
   // Store
   const display = useStore((s) => s.display)
   const sectionView = useStore((s) => s.sectionView)
@@ -82,7 +84,9 @@ const MeshFace: React.FunctionComponent<MeshFaceProps> = ({ child }) => {
  * @param props props
  * @returns Mesh
  */
-const MeshObject: React.FunctionComponent<MeshProps> = ({ scene }) => {
+const MeshObject: React.FunctionComponent<MeshProps> = ({
+  scene
+}: MeshProps) => {
   // Children
   const children = useMemo(
     () => scene.children as Mesh<BufferGeometry, MeshStandardMaterial>[],

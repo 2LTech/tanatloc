@@ -71,7 +71,9 @@ export const getMinMax = (
  * @param props props
  * @returns ResultChild
  */
-const ResultChild: React.FunctionComponent<ResultChildProps> = ({ child }) => {
+const ResultChild: React.FunctionComponent<ResultChildProps> = ({
+  child
+}: ResultChildProps) => {
   // Store
   const display = useStore((s) => s.display)
   const sectionView = useStore((s) => s.sectionView)
@@ -161,7 +163,9 @@ const ResultChild: React.FunctionComponent<ResultChildProps> = ({ child }) => {
  * @param props Props
  * @returns Result
  */
-const Result: React.FunctionComponent<ResultProps> = ({ scene }) => {
+const Result: React.FunctionComponent<ResultProps> = ({
+  scene
+}: ResultProps) => {
   // Child
   const children = useMemo(
     () => scene.children as Mesh<BufferGeometry, MeshBasicMaterial>[],

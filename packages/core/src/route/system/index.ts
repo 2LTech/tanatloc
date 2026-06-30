@@ -8,6 +8,12 @@ import UserLib from '@/lib/user'
 import SystemLib from '@/lib/system'
 
 import { session } from '../session'
+import {
+  errorInternal,
+  errorRequest,
+  errorSession,
+  errorSuperuser
+} from '../error'
 
 export type IUpdateBody = IDataBaseEntry[]
 
@@ -29,11 +35,8 @@ export const GET = async () => {
       'defaultplugins'
     ])
     return NextResponse.json({ system: items }, { status: 200 })
-  } catch (err: any) {
-    return NextResponse.json(
-      { error: true, message: err.message },
-      { status: 500 }
-    )
+  } catch (err) {
+    return errorInternal(err)
   }
 }
 
@@ -42,40 +45,27 @@ export const PUT = async (request: NextRequest) => {
   let sessionId
   try {
     sessionId = await session()
-  } catch (err: any) {
-    return NextResponse.json(
-      { error: true, message: err.message },
-      { status: 401 }
-    )
+  } catch (err) {
+    return errorSession(err)
   }
 
   // Check superuser
   const superuser = await UserLib.get(sessionId, ['superuser'])
-  if (!superuser?.superuser)
-    return NextResponse.json(
-      { error: true, message: 'Access denied' },
-      { status: 403 }
-    )
+  if (!superuser?.superuser) return errorSuperuser()
 
   // Check
   const body = await request.json()
   try {
     checkUpdateBody(body)
-  } catch (err: any) {
-    return NextResponse.json(
-      { error: true, message: err.message },
-      { status: 400 }
-    )
+  } catch (err) {
+    return errorRequest(err)
   }
 
   // Update
   try {
     await SystemLib.update(body)
     return NextResponse.json(null, { status: 200 })
-  } catch (err: any) {
-    return NextResponse.json(
-      { error: true, message: err.message },
-      { status: 500 }
-    )
+  } catch (err) {
+    return errorInternal(err)
   }
 }

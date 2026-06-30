@@ -108,7 +108,7 @@ const Geometry3DFace: React.FunctionComponent<Geometry3DFaceProps> = ({
   onPointerMove,
   onPointerLeave,
   onClick
-}) => {
+}: Geometry3DFaceProps) => {
   // Store
   const { selection } = useStore((s) => s.props)
   const display = useStore((s) => s.display)
@@ -236,7 +236,7 @@ const Geometry3DSolid: React.FunctionComponent<Geometry3DSolidProps> = ({
   onPointerMove,
   onPointerLeave,
   onClick
-}) => {
+}: Geometry3DSolidProps) => {
   // Store
   const { selection } = useStore((s) => s.props)
 
@@ -292,7 +292,7 @@ const Geometry3DSolid: React.FunctionComponent<Geometry3DSolidProps> = ({
     return (
       selection?.enabled &&
       selection.type === 'solids' &&
-      !!selected.find((s) => s.uuid === uuid)
+      !!selected.some((s) => s.uuid === uuid)
     )
   }, [selection?.enabled, selection?.type, uuid, selected])
 
@@ -331,7 +331,9 @@ const Geometry3DSolid: React.FunctionComponent<Geometry3DSolidProps> = ({
  * @param props Props
  * @returns Geometry3D
  */
-const Geometry3D: React.FunctionComponent<Geometry3DProps> = ({ scene }) => {
+const Geometry3D: React.FunctionComponent<Geometry3DProps> = ({
+  scene
+}: Geometry3DProps) => {
   // Ref
   const lastDistance = useRef<number>(Infinity)
 

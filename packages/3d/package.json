@@ -27,8 +27,6 @@
   },
   "devDependencies": {
     "@babel/core": "8.0.1",
-    "@babel/plugin-syntax-import-assertions": "7.29.7",
-    "@babel/plugin-syntax-jsx": "8.0.1",
     "@eslint/js": "10.0.1",
     "@react-three/eslint-plugin": "0.1.2",
     "@react-three/test-renderer": "9.1.0",

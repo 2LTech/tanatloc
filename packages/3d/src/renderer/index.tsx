@@ -16,7 +16,7 @@ import style from '@style/Renderer'
  */
 const Renderer: React.FunctionComponent<
   Tanatloc3DRendererProps & { theme?: ThemeConfig }
-> = (props) => {
+> = (props: Tanatloc3DRendererProps & { theme?: ThemeConfig }) => {
   // Store
   const { parts } = useStore((s) => s.props)
 

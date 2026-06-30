@@ -4,7 +4,7 @@ import type { Tanatloc3DPart } from '@index'
 
 const mockUseStore = jest.fn()
 jest.mock('@store', () => {
-  const useStore = (callback: Function) => mockUseStore(callback)
+  const useStore = (callback: (...args: any) => void) => mockUseStore(callback)
   return useStore
 })
 
@@ -12,9 +12,9 @@ jest.mock('three/addons/loaders/GLTFLoader.js', () => {
   class GLTFLoader {
     load(
       _url: string,
-      callback: Function,
-      progress: Function,
-      error: Function
+      callback: (...args: any) => void,
+      progress: (...args: any) => void,
+      error: (...args: any) => void
     ) {
       callback({
         scene: { userData: { type: 'other' } }
@@ -28,12 +28,24 @@ jest.mock('three/addons/loaders/GLTFLoader.js', () => {
 
 jest.mock('@tools/zoomToFit', () => () => undefined)
 
-jest.mock('./geometry2D', () => () => <mesh />)
-jest.mock('./geometry3D', () => () => <mesh />)
-jest.mock('./mesh', () => () => <mesh />)
-jest.mock('./result', () => () => <mesh />)
+jest.mock('./geometry2D', () => {
+  const Elem = () => <mesh />
+  return Elem
+})
+jest.mock('./geometry3D', () => {
+  const Elem = () => <mesh />
+  return Elem
+})
+jest.mock('./mesh', () => {
+  const Elem = () => <mesh />
+  return Elem
+})
+jest.mock('./result', () => {
+  const Elem = () => <mesh />
+  return Elem
+})
 
-global.URL.createObjectURL = jest.fn()
+globalThis.URL.createObjectURL = jest.fn()
 
 describe('loader', () => {
   const part = {

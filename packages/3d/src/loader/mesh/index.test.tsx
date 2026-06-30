@@ -12,7 +12,7 @@ import Mesh from '.'
 
 const mockUseStore = jest.fn()
 jest.mock('@store', () => {
-  const useStore = (callback: Function) => mockUseStore(callback)
+  const useStore = (callback: (...args: any) => void) => mockUseStore(callback)
   return useStore
 })
 

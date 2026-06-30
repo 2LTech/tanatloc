@@ -18,8 +18,10 @@ export interface MainStoreFillerProps {
  * @param timeout Timeout
  * @returns Function
  */
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 const debounceLeading = (func: (...args: any[]) => void, timeout: number) => {
   let timer: NodeJS.Timeout | undefined
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   return (...args: any[]) => {
     if (timer) return
 
@@ -40,7 +42,7 @@ const debounceLeading = (func: (...args: any[]) => void, timeout: number) => {
  */
 const MainStoreFiller: React.FunctionComponent<MainStoreFillerProps> = ({
   controls
-}) => {
+}: MainStoreFillerProps) => {
   // Update function
   const update = useMemo(
     () =>

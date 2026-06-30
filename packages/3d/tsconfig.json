@@ -26,5 +26,5 @@
     },
     "types": ["node", "jest"]
   },
-  "include": ["./src", "index.d.ts", "types.d.ts"]
+  "include": ["./src", "index.d.ts"]
 }
