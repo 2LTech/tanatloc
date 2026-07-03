@@ -23,20 +23,27 @@ const eslintConfig = defineConfig([
   {
     settings: {
       react: { version: '19' }
-    },
+    }
+  },
+  {
+    files: ['**/*.test.{ts,tsx}', '**/jest.setup.js'],
     rules: {
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-empty-object-type': 'off',
-      '@typescript-eslint/no-unused-vars': [
-        'error',
-        {
-          caughtErrors: 'none',
-          ignoreRestSiblings: true
-        }
-      ],
-      '@next/next/no-img-element': 'off'
+      '@typescript-eslint/no-explicit-any': 'off'
     }
   }
 ])
 
 export default eslintConfig
+
+// rules: {
+//       '@typescript-eslint/no-explicit-any': 'off',
+//       '@typescript-eslint/no-empty-object-type': 'off',
+//       '@typescript-eslint/no-unused-vars': [
+//         'error',
+//         {
+//           caughtErrors: 'none',
+//           ignoreRestSiblings: true
+//         }
+//       ],
+//       '@next/next/no-img-element': 'off'
+//     }

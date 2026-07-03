@@ -1,12 +1,15 @@
 /** @module Route.Avatar */
 
-import { session } from '../session'
-import { checkProjectAuth } from '../auth'
-import { error } from '../error'
+import { NextRequest } from 'next/server'
 
 import AvatarLib from '@/lib/avatar'
 
-export interface IAddBody {
+import { session } from '@/route/session'
+import { checkProjectAuth } from '@/route/auth'
+import { errorInternal, errorRequest, errorSession } from '@/route/error'
+
+// Interfaces
+export interface IPOSTBody {
   file: {
     name: string
     uid: string
@@ -18,10 +21,10 @@ export interface IAddBody {
 }
 
 /**
- * Check add body
+ * Check POST body
  * @param body Body
  */
-const checkAddBody = (body: IAddBody): void => {
+const checkPOSTBody = (body: IPOSTBody): void => {
   if (
     !body?.file?.name ||
     typeof body.file.name !== 'string' ||
@@ -31,46 +34,46 @@ const checkAddBody = (body: IAddBody): void => {
     typeof body.file.data !== 'string' ||
     (body.project && (!body.project.id || typeof body.project.id !== 'string'))
   )
-    throw error(
-      400,
+    throw new Error(
       'Missing data in your request (body: { file: { name(string), uid(uuid), data(string) }, ?project: { id(uuid) } })'
     )
 }
 
 /**
  * Avatar API
- * @param req Request
- * @param res Result
+ * @param request Request
  */
-export const avatarPOST = async (request: Request): Promise<Response> => {
+export const POST = async (request: NextRequest) => {
+  // Check session
+  let sessionId
   try {
-    // Check session
-    const sessionId = await session(request)
+    sessionId = await session()
+  } catch (err) {
+    return errorSession(err)
+  }
 
-    // Check
-    const body = await request.json()
-    checkAddBody(body)
+  // Check
+  const body = await request.json()
+  try {
+    checkPOSTBody(body)
+  } catch (err) {
+    return errorRequest(err)
+  }
 
-    const { file, project } = request.body
+  const { file, project } = body
 
-    // Check auth
-    if (project) await checkProjectAuth({ id: sessionId }, project)
+  // Check auth
+  if (project) await checkProjectAuth({ id: sessionId }, project)
 
-    // Add
-    try {
-      const avatar = await AvatarLib.add(
-        project || { id: sessionId },
-        project ? 'project' : 'user',
-        file
-      )
-      return Response.json(avatar, { status: 200 })
-    } catch (err: any) {
-      throw error(500, err.message)
-    }
-  } catch (err: any) {
-    return Response.json(
-      { error: true, message: err.message },
-      { status: err.status }
+  // Add
+  try {
+    const avatar = await AvatarLib.add(
+      project || { id: sessionId },
+      project ? 'project' : 'user',
+      file
     )
+    return Response.json(avatar, { status: 200 })
+  } catch (err) {
+    throw errorInternal(err)
   }
 }

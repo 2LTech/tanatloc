@@ -35,7 +35,7 @@ const update = async (): Promise<void> => {
         )
 
         // Update new MODEL
-        const modelJSON = JSON.parse(JSON.stringify(model0))
+        const modelJSON = structuredClone(model0)
         modelJSON.userModelId = insert[0].id
         if (modelJSON.user) delete modelJSON.user
         await updater(tables.MODELS, insert[0].id, [
@@ -68,9 +68,9 @@ const update = async (): Promise<void> => {
         ])
       }
     }
-  } catch (err: any) {
+  } catch (err) {
     console.error('   ⚠ Update 1.2.8 failed')
-    console.error(err)
+    console.error(err instanceof Error ? err.message : String(err))
   }
 }
 

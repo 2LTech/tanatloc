@@ -1,13 +1,6 @@
-/** @module Pages.API.Avatar */
+/** @module App.API.Avatar */
 
-import { avatarPOST } from '@/route/avatar'
-import { NextRequest } from 'next/server'
-
-/**
- * Avatar API
- * @param request Request
- */
-export const POST = async (request: NextRequest) => avatarPOST(request)
+export { POST } from '@/route/avatar'
 
 export const config = {
   api: {

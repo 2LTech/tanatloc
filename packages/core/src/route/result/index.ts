@@ -1,14 +1,15 @@
 /** @module Route.Result */
 
-import { Request, Response } from 'express'
-
-import { session } from '../session'
-import { checkSimulationAuth } from '../auth'
-import { error } from '../error'
+import { NextRequest, NextResponse } from 'next/server'
 
 import ResultLib from '@/lib/result'
 
-export interface ILoadBody {
+import { session } from '@/route/session'
+import { checkSimulationAuth } from '@/route/auth'
+import { errorInternal, errorRequest, errorSession } from '@/route/error'
+
+// Interfaces
+export interface IPOSTBody {
   simulation: {
     id: string
   }
@@ -20,10 +21,10 @@ export interface ILoadBody {
 }
 
 /**
- * Check load body
+ * Check POST body
  * @param body Body
  */
-const checkLoadBody = (body: ILoadBody): void => {
+const checkPOSTBody = (body: IPOSTBody): void => {
   if (
     !body?.simulation?.id ||
     typeof body.simulation.id !== 'string' ||
@@ -32,46 +33,38 @@ const checkLoadBody = (body: ILoadBody): void => {
     !body.result.glb ||
     typeof body.result.glb !== 'string'
   )
-    throw error(
-      400,
+    throw new Error(
       'Missing data in your request (body: { simulation: { id(uuid) }, result: { originPath(string), glb(string) } }'
     )
 }
 
-/**
- * Result API
- * @param req Request
- * @param res Response
- */
-const route = async (req: Request, res: Response): Promise<void> => {
+export const POST = async (request: NextRequest) => {
+  // Check session
+  let sessionId
   try {
-    // Check session
-    const sessionId = await session(req)
+    sessionId = await session()
+  } catch (err) {
+    return errorSession(err)
+  }
 
-    if (req.method === 'POST') {
-      // Load result
-      // Check
-      checkLoadBody(req.body)
+  // Body
+  const body = await request.json()
+  try {
+    checkPOSTBody(body)
+  } catch (err) {
+    return errorRequest(err)
+  }
 
-      const { simulation, result } = req.body
+  const { simulation, result } = body
 
-      // Check auth
-      await checkSimulationAuth({ id: sessionId }, { id: simulation.id })
+  // Check auth
+  await checkSimulationAuth({ id: sessionId }, { id: simulation.id })
 
-      // Load
-      try {
-        const data = await ResultLib.load(simulation, result)
-        res.status(200).json(data)
-      } catch (err: any) {
-        throw error(500, err.message)
-      }
-    } else {
-      // Unauthorized method
-      throw error(402, 'Method ' + req.method + ' not allowed')
-    }
-  } catch (err: any) {
-    res.status(err.status).json({ error: true, message: err.message })
+  // Load
+  try {
+    const data = await ResultLib.load(simulation, result)
+    return NextResponse.json({ data }, { status: 200 })
+  } catch (err) {
+    return errorInternal(err)
   }
 }
-
-export default route

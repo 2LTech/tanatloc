@@ -1,71 +1,59 @@
 /** @module Route.Email */
 
-import { Request, Response } from 'express'
-
-import { error } from '../error'
+import { NextRequest, NextResponse } from 'next/server'
 
 import { PASSWORD_RECOVERY } from '@/config/email'
 
 import EmailLib from '@/lib/email'
 import UserLib from '@/lib/user'
 
-export interface ICheckBody {
+import { errorInternal, errorRequest } from '@/route/error'
+
+// Interfaces
+export interface IPUTBody {
   email: string
   type: string
 }
 
 /**
- * Check send body
+ * Check PUT body
  * @param body Body
  */
-const checkSendBody = (body: ICheckBody): void => {
+const checkPUTBody = (body: IPUTBody): void => {
   if (
     !body?.type ||
     typeof body.type !== 'string' ||
     !body.email ||
     typeof body.email !== 'string'
   )
-    throw error(
-      400,
+    throw new Error(
       'Missing data in your request (body: { email(string), type(string) }'
     )
 }
 
-/**
- * Email API
- * @param req Request
- * @param res Result
- */
-const route = async (req: Request, res: Response): Promise<void> => {
+export const PUT = async (request: NextRequest) => {
+  const body = await request.json()
   try {
-    if (req.method === 'PUT') {
-      // Check
-      checkSendBody(req.body)
+    checkPUTBody(body)
+  } catch (err) {
+    return errorRequest(err)
+  }
 
-      const { email, type } = req.body
+  const { email, type } = body
 
-      if (type === PASSWORD_RECOVERY) {
-        try {
-          // Check if user exists
-          const existingUser = await UserLib.getBy(email, [], 'email')
+  if (type === PASSWORD_RECOVERY) {
+    try {
+      // Check if user exists
+      const existingUser = await UserLib.getBy(email, [], 'email')
 
-          // Recover
-          if (existingUser) await EmailLib.recover(email)
-          res.status(200).end()
-        } catch (err: any) {
-          throw error(500, err.message)
-        }
-      } else {
-        // Wrong type
-        throw error(400, 'Type ' + type + ' not allowed')
-      }
-    } else {
-      // Unauthorized method
-      throw error(402, 'Method ' + req.method + ' not allowed')
+      // Recover
+      if (existingUser) await EmailLib.recover(email)
+      return NextResponse.json(null, { status: 200 })
+    } catch (err) {
+      return errorInternal(err)
     }
-  } catch (err: any) {
-    res.status(err.status).json({ error: true, message: err.message })
+  } else {
+    // Wrong type
+    return errorRequest('Type ' + type + ' not allowed')
   }
 }
-
-export default route

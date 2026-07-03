@@ -2,7 +2,7 @@
 
 import isElectron from 'is-electron'
 import isDocker from 'is-docker'
-import { execSync } from 'child_process'
+import { execSync } from 'node:child_process'
 
 import packageJson from '../package.json' with { type: 'json' }
 
@@ -25,12 +25,12 @@ export const initDockers = async (params?: {
     await params?.addStatus('Updating tanatloc/worker')
     console.info('Updating tanatloc/worker')
     execSync('docker pull tanatloc/worker')
-  } catch (err) {}
+  } catch {}
 
   // postgres
   try {
     execSync('docker image inspect postgres:15')
-  } catch (err) {
+  } catch {
     await params?.addStatus('Pulling postgres 15')
     console.info('Pulling postgres 15')
     execSync('docker pull postgres:15')
@@ -78,8 +78,10 @@ const main = async (params?: IParams): Promise<void> => {
 }
 
 if (!isElectron())
-  main()
-    .then(() => console.info('End.'))
-    .catch((err) => console.error(err))
+  try {
+    await main()
+  } catch (err) {
+    console.error(err)
+  }
 
 export default main

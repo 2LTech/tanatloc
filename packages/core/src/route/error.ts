@@ -4,8 +4,6 @@ import { NextResponse } from 'next/server'
 
 import Sentry from '@/lib/sentry'
 
-import { IRouteError } from './index.d'
-
 export const errors = {
   sessionError: 'Session error',
   accesDenied: 'Access denied',
@@ -26,9 +24,13 @@ export const errorSession = (err: unknown) => {
   )
 }
 
-export const errorSuperuser = () => {
+export const errorAccessDenied = (err?: unknown) => {
+  const errorMessage = err instanceof Error ? err.message : String(err)
   return NextResponse.json(
-    { error: true, message: errors.accesDenied },
+    {
+      error: true,
+      message: errors.accesDenied + (err ? ' - ' + errorMessage : '')
+    },
     { status: 403 }
   )
 }
@@ -46,7 +48,12 @@ export const errorRequest = (err: unknown) => {
   )
 }
 
-export const errorInternal = (err?: unknown) => {
+export const errorInternal = (err: unknown) => {
+  // Display server side
+  console.error(err)
+  // Sentry
+  Sentry.captureException(err)
+  // Return response
   return NextResponse.json(
     {
       error: true,
@@ -57,27 +64,4 @@ export const errorInternal = (err?: unknown) => {
     },
     { status: 500 }
   )
-}
-
-/**
- * Route error
- * @param status Status code
- * @param message Message
- * @param display Display
- * @returns Error
- */
-export const error = (
-  status: number,
-  message: string,
-  display: boolean = true
-) => {
-  const err: IRouteError = new Error(message)
-  err.status = status
-
-  if (display) {
-    console.error(err)
-    Sentry.captureException(err)
-  }
-
-  return err
 }

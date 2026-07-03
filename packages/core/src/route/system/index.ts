@@ -7,21 +7,22 @@ import { IDataBaseEntry } from '@/database/index.d'
 import UserLib from '@/lib/user'
 import SystemLib from '@/lib/system'
 
-import { session } from '../session'
+import { session } from '@/route/session'
 import {
+  errorAccessDenied,
   errorInternal,
   errorRequest,
-  errorSession,
-  errorSuperuser
-} from '../error'
+  errorSession
+} from '@/route/error'
 
-export type IUpdateBody = IDataBaseEntry[]
+// Interfaces
+export type IPUTBody = IDataBaseEntry[]
 
 /**
- * Check update body
+ * Check PUT body
  * @param body Body
  */
-const checkUpdateBody = (body: IUpdateBody): void => {
+const checkPUTBody = (body: IPUTBody): void => {
   if (!body || !Array.isArray(body))
     throw new Error('Missing data in your request (body(array))')
 }
@@ -51,12 +52,12 @@ export const PUT = async (request: NextRequest) => {
 
   // Check superuser
   const superuser = await UserLib.get(sessionId, ['superuser'])
-  if (!superuser?.superuser) return errorSuperuser()
+  if (!superuser?.superuser) return errorAccessDenied()
 
   // Check
   const body = await request.json()
   try {
-    checkUpdateBody(body)
+    checkPUTBody(body)
   } catch (err) {
     return errorRequest(err)
   }

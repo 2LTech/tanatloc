@@ -1,17 +1,18 @@
 /** @module Route.Link */
 
-import { Request, Response } from 'express'
-
-import { error } from '../error'
+import { NextRequest, NextResponse } from 'next/server'
 
 import LinkLib from '@/lib/link'
 
-export interface IGetBody {
+import { errorInternal, errorRequest } from '@/route/error'
+
+// Interfaces
+export interface IPOSTBody {
   id: string
   data: string[]
 }
 
-export interface IProcessBody {
+export interface IPUTBody {
   id: string
   data?: {
     email: string
@@ -20,75 +21,68 @@ export interface IProcessBody {
 }
 
 /**
- * Check get body
+ * Check POST body
  * @param body Body
  */
-const checkGetBody = (body: IGetBody): void => {
+const checkPOSTBody = (body: IPOSTBody): void => {
   if (
     !body?.id ||
     typeof body.id !== 'string' ||
     !body.data ||
     !Array.isArray(body.data)
   )
-    throw error(
-      400,
+    throw new Error(
       'Missing data in your request (body: { id(uuid), data(array) })'
     )
 }
 
 /**
- * Check process body
+ * Check PUT body
  * @param body Body
  */
-const checkProcessBody = (body: IProcessBody): void => {
+const checkPUTBody = (body: IPUTBody): void => {
   if (!body?.id || typeof body.id !== 'string')
-    throw error(
-      400,
+    throw new Error(
       'Missing data in your request (body: { id(uuid), data(?object) })'
     )
 }
 
-/**
- * Link API
- * @param req Request
- * @param res Response
- */
-const route = async (req: Request, res: Response): Promise<void> => {
+export const POST = async (request: NextRequest) => {
+  // Body
+  const body = await request.json()
   try {
-    switch (req.method) {
-      case 'POST': {
-        // Check
-        checkGetBody(req.body)
+    checkPOSTBody(body)
+  } catch (err) {
+    return errorRequest(err)
+  }
 
-        // Get
-        try {
-          const link = await LinkLib.get(req.body.id, req.body.data)
-          res.status(200).json(link)
-        } catch (err: any) {
-          throw error(500, err.message)
-        }
-        break
-      }
-      case 'PUT': {
-        // Check
-        checkProcessBody(req.body)
+  const { id, data } = body
 
-        // Process
-        try {
-          await LinkLib.process(req.body.id, req.body.data)
-          res.status(200).end()
-        } catch (err: any) {
-          throw error(500, err.message)
-        }
-        break
-      }
-      default:
-        // Unauthorized method
-        throw error(402, 'Method ' + req.method + ' not allowed')
-    }
-  } catch (err: any) {
-    res.status(err.status).json({ error: true, message: err.message })
+  // Get
+  try {
+    const link = await LinkLib.get(id, data)
+    return NextResponse.json(link, { status: 200 })
+  } catch (err) {
+    return errorInternal(err)
   }
 }
 
-export default route
+export const PUT = async (request: NextRequest) => {
+  // Body
+  const body = await request.json()
+  try {
+    checkPUTBody(body)
+  } catch (err) {
+    return errorRequest(err)
+  }
+
+  const { id, data } = body
+
+  // Process
+  try {
+    await LinkLib.process(id, data)
+    return NextResponse.json(null, { status: 200 })
+  } catch (err) {
+    return errorInternal(err)
+  }
+}

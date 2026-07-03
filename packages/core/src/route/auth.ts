@@ -1,7 +1,5 @@
 /** @module Route.Auth */
 
-import { error } from './error'
-
 import ProjectLib from '@/lib/project'
 import WorkspaceLib from '@/lib/workspace'
 import GroupLib from '@/lib/group'
@@ -115,12 +113,10 @@ const checkWorkspaceAuth = async (
  * Check project auth
  * @param user User
  * @param project Project
- * @param status Override project error status
  */
 const checkProjectAuth = async (
   user: { id: string },
-  project: { id: string },
-  status?: number
+  project: { id: string }
 ): Promise<void> => {
   const projectAuth = await ProjectLib.get(project.id, [
     'owners',
@@ -128,14 +124,14 @@ const checkProjectAuth = async (
     'groups',
     'workspace'
   ])
-  if (!projectAuth) throw error(status ?? 400, 'Invalid project identifier')
+  if (!projectAuth) throw new Error('Invalid project identifier')
 
   const workspaceAuth = await WorkspaceLib.get(projectAuth.workspace, [
     'owners',
     'users',
     'groups'
   ])
-  if (!workspaceAuth) throw error(500, 'Invalid workspace identifier')
+  if (!workspaceAuth) throw new Error('Invalid workspace identifier')
 
   if (
     !(await auth(
@@ -148,22 +144,20 @@ const checkProjectAuth = async (
       workspaceAuth
     ))
   )
-    throw error(403, 'Access denied')
+    throw new Error('Access denied')
 }
 
 /**
  * Check geometry auth
  * @param user User
  * @param geometry Geometry
- * @param status Override simulation error status
  */
 const checkGeometryAuth = async (
   user: { id: string },
-  geometry: { id: string },
-  status?: number
+  geometry: { id: string }
 ): Promise<void> => {
   const geometryAuth = await GeometryLib.get(geometry.id, ['project'])
-  if (!geometryAuth) throw error(status ?? 400, 'Invalid geometry identifier')
+  if (!geometryAuth) throw new Error('Invalid geometry identifier')
 
   const projectAuth = await ProjectLib.get(geometryAuth.project, [
     'owners',
@@ -171,14 +165,14 @@ const checkGeometryAuth = async (
     'groups',
     'workspace'
   ])
-  if (!projectAuth) throw error(500, 'Invalid project identifier')
+  if (!projectAuth) throw new Error('Invalid project identifier')
 
   const workspaceAuth = await WorkspaceLib.get(projectAuth.workspace, [
     'owners',
     'users',
     'groups'
   ])
-  if (!workspaceAuth) throw error(500, 'Invalid workspace identifier')
+  if (!workspaceAuth) throw new Error('Invalid workspace identifier')
 
   if (
     !(await auth(
@@ -191,23 +185,20 @@ const checkGeometryAuth = async (
       workspaceAuth
     ))
   )
-    throw error(403, 'Access denied')
+    throw new Error('Access denied')
 }
 
 /**
  * Check simulation auth
  * @param user User
  * @param simulation Simulation
- * @param status Override simulation error status
  */
 const checkSimulationAuth = async (
   user: { id: string },
-  simulation: { id: string },
-  status?: number
+  simulation: { id: string }
 ): Promise<void> => {
   const simulationAuth = await SimulationLib.get(simulation.id, ['project'])
-  if (!simulationAuth)
-    throw error(status ?? 400, 'Invalid simulation identifier')
+  if (!simulationAuth) throw new Error('Invalid simulation identifier')
 
   const projectAuth = await ProjectLib.get(simulationAuth.project, [
     'owners',
@@ -215,14 +206,14 @@ const checkSimulationAuth = async (
     'groups',
     'workspace'
   ])
-  if (!projectAuth) throw error(500, 'Invalid project identifier')
+  if (!projectAuth) throw new Error('Invalid project identifier')
 
   const workspaceAuth = await WorkspaceLib.get(projectAuth.workspace, [
     'owners',
     'users',
     'groups'
   ])
-  if (!workspaceAuth) throw error(500, 'Invalid workspace identifier')
+  if (!workspaceAuth) throw new Error('Invalid workspace identifier')
 
   if (
     !(await auth(
@@ -235,7 +226,7 @@ const checkSimulationAuth = async (
       workspaceAuth
     ))
   )
-    throw error(403, 'Access denied')
+    throw new Error('Access denied')
 }
 
 /**
@@ -246,18 +237,16 @@ const checkSimulationAuth = async (
  */
 const checkOrganizationAuth = async (
   user: { id: string },
-  organization: { id: string },
-  status?: number
+  organization: { id: string }
 ): Promise<void> => {
   const organizationAuth = await OrganizationLib.get(organization.id, [
     'owners',
     'users',
     'groups'
   ])
-  if (!organizationAuth)
-    throw error(status ?? 400, 'Invalid organization identifier')
+  if (!organizationAuth) throw new Error('Invalid organization identifier')
 
-  if (!(await auth(user, organizationAuth))) throw error(403, 'Access denied')
+  if (!(await auth(user, organizationAuth))) throw new Error('Access denied')
 }
 
 export default auth

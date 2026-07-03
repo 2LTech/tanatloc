@@ -1,16 +1,22 @@
 /** @module Route.Group */
 
-import { Request, Response } from 'express'
+import { NextRequest, NextResponse } from 'next/server'
 
 import { IDataBaseEntry } from '@/database/index.d'
-
-import { session } from '../session'
-import { error } from '../error'
 
 import OrganizationLib from '@/lib/organization'
 import GroupLib from '@/lib/group'
 
-export interface IAddBody {
+import { session } from '@/route/session'
+import {
+  errorAccessDenied,
+  errorInternal,
+  errorRequest,
+  errorSession
+} from '@/route/error'
+
+// Interfaces
+export interface IPOSTBody {
   organization: {
     id: string
   }
@@ -20,14 +26,14 @@ export interface IAddBody {
   }
 }
 
-export interface IUpdateBody {
+export interface IPUTBody {
   group: {
     id: string
   }
   data: IDataBaseEntry[]
 }
 
-export interface IDeleteBody {
+export interface IDELETEBody {
   id: string
 }
 
@@ -35,7 +41,7 @@ export interface IDeleteBody {
  * Check add body
  * @param body Body
  */
-const checkAddBody = (body: IAddBody): void => {
+const checkPOSTBody = (body: IPOSTBody): void => {
   if (
     !body?.organization?.id ||
     typeof body.organization.id !== 'string' ||
@@ -44,8 +50,7 @@ const checkAddBody = (body: IAddBody): void => {
     !body.group.users ||
     !Array.isArray(body.group.users)
   )
-    throw error(
-      400,
+    throw new Error(
       'Missing data in your request (body: { organization: { id(uuid) }, group: { name(string), users(array) } })'
     )
 }
@@ -54,15 +59,14 @@ const checkAddBody = (body: IAddBody): void => {
  * Check update body
  * @param body Body
  */
-const checkUpdateBody = (body: IUpdateBody): void => {
+const checkPUTBody = (body: IPUTBody): void => {
   if (
     !body?.group?.id ||
     typeof body.group.id !== 'string' ||
     !body.data ||
     !Array.isArray(body.data)
   )
-    throw error(
-      400,
+    throw new Error(
       'Missing data in your request (body: { group: { id(uuid) }, data(array) })'
     )
 }
@@ -71,9 +75,9 @@ const checkUpdateBody = (body: IUpdateBody): void => {
  * Check delete body
  * @param body Body
  */
-const checkDeleteBody = (body: IDeleteBody): void => {
+const checkDELETEBody = (body: IDELETEBody): void => {
   if (!body?.id || typeof body.id !== 'string')
-    throw error(400, 'Missing data in your request (body: { id(uuid) })')
+    throw new Error('Missing data in your request (body: { id(uuid) })')
 }
 
 /**
@@ -88,10 +92,10 @@ const checkOrganizationAuth = async (
   const organizationData = await OrganizationLib.get(organization.id, [
     'owners'
   ])
-  if (!organizationData) throw error(400, 'Invalid organization identifier')
+  if (!organizationData) throw new Error('Invalid organization identifier')
 
   if (!organizationData?.owners?.includes(user.id))
-    throw error(403, 'Access denied')
+    throw new Error('User is not in owners of organization')
 }
 
 /**
@@ -104,84 +108,117 @@ const checkGroupAuth = async (
   user: { id: string }
 ): Promise<void> => {
   const groupData = await GroupLib.get(group.id, ['organization'])
-  if (!groupData) throw error(400, 'Invalid group identifier')
+  if (!groupData) throw new Error('Invalid group identifier')
 
   const organizationData = await OrganizationLib.get(groupData.organization, [
     'owners'
   ])
 
   if (!organizationData?.owners?.includes(user.id))
-    throw error(403, 'Access denied')
+    throw new Error('User is not in owners of organization')
 }
 
-/**
- * Group API
- * @param req Request
- * @param res Result
- */
-const route = async (req: Request, res: Response) => {
+export const POST = async (request: NextRequest) => {
+  // Check session
+  let sessionId
   try {
-    // Check session
-    const sessionId = await session(req)
+    sessionId = await session()
+  } catch (err) {
+    return errorSession(err)
+  }
 
-    switch (req.method) {
-      case 'POST': {
-        // Check
-        checkAddBody(req.body)
+  // Check
+  const body = await request.json()
+  try {
+    checkPOSTBody(body)
+  } catch (err) {
+    return errorRequest(err)
+  }
 
-        const { organization, group } = req.body
+  const { organization, group } = body
 
-        // Check auth
-        await checkOrganizationAuth(organization, { id: sessionId })
+  // Check auth
+  try {
+    await checkOrganizationAuth(organization, { id: sessionId })
+  } catch (err) {
+    return errorAccessDenied(err)
+  }
 
-        // Add
-        try {
-          const newGroup = await GroupLib.add(organization, group)
-          res.status(200).json(newGroup)
-        } catch (err: any) {
-          throw error(500, err.message)
-        }
-        break
-      }
-      case 'PUT': {
-        // Check
-        checkUpdateBody(req.body)
-
-        // Check auth
-        await checkGroupAuth(req.body.group, { id: sessionId })
-
-        // Update
-        try {
-          await GroupLib.update(req.body.group, req.body.data)
-          res.status(200).end()
-        } catch (err: any) {
-          throw error(500, err.message)
-        }
-        break
-      }
-      case 'DELETE': {
-        // Check
-        checkDeleteBody(req.body)
-
-        // Check administrator
-        await checkGroupAuth({ id: req.body.id }, { id: sessionId })
-
-        // Delete
-        try {
-          await GroupLib.del(req.body)
-          res.status(200).end()
-        } catch (err: any) {
-          throw error(500, err.message)
-        }
-        break
-      }
-      default:
-        // Unauthorized method
-        throw error(402, 'Method ' + req.method + ' not allowed')
-    }
-  } catch (err: any) {
-    res.status(err.status).json({ error: true, message: err.message })
+  // Add
+  try {
+    const newGroup = await GroupLib.add(organization, group)
+    return NextResponse.json(newGroup, { status: 200 })
+  } catch (err) {
+    return errorInternal(err)
   }
 }
 
-export default route
+export const PUT = async (request: NextRequest) => {
+  // Check session
+  let sessionId
+  try {
+    sessionId = await session()
+  } catch (err) {
+    return errorSession(err)
+  }
+
+  // Body
+  const body = await request.json()
+  try {
+    checkPUTBody(body)
+  } catch (err) {
+    return errorRequest(err)
+  }
+
+  const { group, data } = body
+
+  // Check auth
+  try {
+    await checkGroupAuth(group, { id: sessionId })
+  } catch (err) {
+    return errorAccessDenied(err)
+  }
+
+  // Update
+  try {
+    await GroupLib.update(group, data)
+    return NextResponse.json(null, { status: 200 })
+  } catch (err) {
+    return errorInternal(err)
+  }
+}
+
+export const DELETE = async (request: NextRequest) => {
+  // Check session
+  let sessionId
+  try {
+    sessionId = await session()
+  } catch (err) {
+    return errorSession(err)
+  }
+
+  // Body
+  const body = await request.json()
+  try {
+    checkDELETEBody(body)
+  } catch (err) {
+    return errorRequest(err)
+  }
+
+  const { id } = body
+
+  // Check administrator
+  try {
+    await checkGroupAuth({ id }, { id: sessionId })
+  } catch (err) {
+    return errorAccessDenied(err)
+  }
+
+  // Delete
+  try {
+    await GroupLib.del(body)
+    return NextResponse.json(null, { status: 200 })
+  } catch (err) {
+    return errorInternal(err)
+  }
+}

@@ -89,7 +89,7 @@ describe('route/geometry/[id]/download', () => {
     expect(resStatus).toBe(400)
     expect(resJson).toEqual({
       error: true,
-      message: 'Missing data in your request (query: { id(string) })'
+      message: 'Missing data in your request (params: { id(string) })'
     })
   })
 

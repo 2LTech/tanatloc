@@ -1,3 +1,3 @@
-/** @module Pages.API.System */
+/** @module App.API.System */
 
 export { GET } from '@/route/system'

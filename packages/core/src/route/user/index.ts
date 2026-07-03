@@ -6,40 +6,47 @@ import { IDataBaseEntry } from '@/database/index.d'
 
 import UserLib from '@/lib/user'
 
-import { session } from '../session'
-import { errorInternal, errorRequest, errorSession } from '../error'
+import { session } from '@/route/session'
+import { errorInternal, errorRequest, errorSession } from '@/route/error'
 
-export interface IAddBody {
+// Interfaces
+export interface IPOSTBody {
   email: string
   password: string
 }
 
-export type IUpdateBody = IDataBaseEntry[]
+export type IPUTBody = IDataBaseEntry[]
 
 /**
- * Check add body
+ * Check POST body
  * @param body Body
  */
-const checkAddBody = (body: IAddBody): void => {
+const checkPOSTBody = (body: IPOSTBody): void => {
   if (
     !body?.email ||
     typeof body.email !== 'string' ||
     !body.password ||
     typeof body.password !== 'string'
   )
-    throw errorRequest(
+    throw new Error(
       'Missing data in your request (body: { email(string), password(string) })'
     )
 }
 
 /**
- * Check update body
+ * Check PUT body
  * @param body Body
  */
-const checkUpdateBody = (body: IUpdateBody): void => {
+const checkPUTBody = (body: IPUTBody): void => {
   if (!body || !Array.isArray(body))
-    throw errorRequest('Missing data in your request (body(array))')
+    throw new Error('Missing data in your request (body(array))')
 }
+
+/**
+ * Check DELETE body
+ * @param body Body
+ */
+const checkDELETEBody = checkPUTBody
 
 export const GET = async () => {
   // Check session
@@ -72,7 +79,11 @@ export const GET = async () => {
 export const POST = async (request: NextRequest) => {
   // Body
   const body = await request.json()
-  checkAddBody(body)
+  try {
+    checkPOSTBody(body)
+  } catch (err) {
+    return errorRequest(err)
+  }
 
   try {
     // Add
@@ -94,7 +105,11 @@ export const PUT = async (request: NextResponse) => {
 
   // Body
   const body = await request.json()
-  checkUpdateBody(body)
+  try {
+    checkPUTBody(body)
+  } catch (err) {
+    return errorRequest(err)
+  }
 
   try {
     // Update
@@ -116,7 +131,11 @@ export const DELETE = async (request: NextResponse) => {
 
   // Body
   const body = await request.json()
-  checkUpdateBody(body)
+  try {
+    checkDELETEBody(body)
+  } catch (err) {
+    return errorRequest(err)
+  }
 
   try {
     // Delete

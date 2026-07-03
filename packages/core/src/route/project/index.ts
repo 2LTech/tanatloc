@@ -4,22 +4,26 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import ProjectLib from '@/lib/project'
 
-import { session } from '../session'
-import { checkWorkspaceAuth } from '../auth'
+import { session } from '@/route/session'
+import { checkWorkspaceAuth } from '@/route/auth'
+import {
+  errorAccessDenied,
+  errorInternal,
+  errorRequest,
+  errorSession
+} from '../error'
 
-/**
- * Interfaces
- */
-export interface IAddBody {
+// Interfaces
+export interface IPOSTBody {
   workspace: { id: string }
   project: { title: string; description?: string }
 }
 
 /**
- * Check add body
+ * Check POST body
  * @param body Body
  */
-const checkAddBody = (body: IAddBody): void => {
+const checkPOSTBody = (body: IPOSTBody): void => {
   if (
     !body?.workspace?.id ||
     typeof body.workspace.id !== 'string' ||
@@ -42,21 +46,15 @@ export const POST = async (request: NextRequest) => {
   try {
     sessionId = await session()
   } catch (err: any) {
-    return NextResponse.json(
-      { error: true, message: err.message },
-      { status: 401 }
-    )
+    return errorSession(err)
   }
 
-  // Check
+  // Body
   const body = await request.json()
   try {
-    checkAddBody(body)
-  } catch (err: any) {
-    return NextResponse.json(
-      { err: true, message: err.message },
-      { status: 400 }
-    )
+    checkPOSTBody(body)
+  } catch (err) {
+    return errorRequest(err)
   }
 
   const { workspace, project } = body
@@ -64,11 +62,8 @@ export const POST = async (request: NextRequest) => {
   // Check auth
   try {
     await checkWorkspaceAuth({ id: sessionId }, workspace)
-  } catch (err: any) {
-    return NextResponse.json(
-      { error: true, message: err.message },
-      { status: 403 }
-    )
+  } catch (err) {
+    return errorAccessDenied(err)
   }
 
   // Add
@@ -80,9 +75,6 @@ export const POST = async (request: NextRequest) => {
     )
     return NextResponse.json(newProject, { status: 200 })
   } catch (err: any) {
-    return NextResponse.json(
-      { error: true, message: err.message },
-      { status: 500 }
-    )
+    return errorInternal(err)
   }
 }

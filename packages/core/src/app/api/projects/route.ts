@@ -1,3 +1,3 @@
-/** @module Pages.API.Projects */
+/** @module App.API.Projects */
 
 export { POST } from '@/route/projects'

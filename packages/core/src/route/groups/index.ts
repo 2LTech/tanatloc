@@ -1,15 +1,7 @@
 /** @module Route.Groups */
 
-import { Request, Response } from 'express'
+import { NextResponse } from 'next/server'
 
-/**
- * Empty groups list route
- * @param _ Request
- * @param res Response
- */
-const route = async (_: Request, res: Response) => {
-  // Empty route
-  res.status(200).json({ groups: [] })
+export const GET = async () => {
+  return NextResponse.json({ groups: [] }, { status: 200 })
 }
-
-export default route

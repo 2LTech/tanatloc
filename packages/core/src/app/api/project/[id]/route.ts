@@ -1,3 +1,3 @@
-/** @module Pages.API.Project.[id] */
+/** @module App.API.Project.[id] */
 
 export { GET, PUT, DELETE } from '@/route/project/[id]'

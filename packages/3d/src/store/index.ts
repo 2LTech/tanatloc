@@ -93,8 +93,7 @@ export interface Store {
  */
 const localStorageSettings = globalThis.window
   ? localStorage.getItem('tanatloc-3d-settings')
-  : /* istanbul ignore next (never happend) */
-    undefined
+  : undefined
 
 /**
  * Store

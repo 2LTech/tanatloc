@@ -1,62 +1,67 @@
 /** @module Route.Organization */
 
-import { Request, Response } from 'express'
+import { NextRequest, NextResponse } from 'next/server'
 
 import { IDataBaseEntry } from '@/database/index.d'
 
-import { session } from '../session'
-import { error } from '../error'
-
 import OrganizationLib from '@/lib/organization'
 
-export interface IAddBody {
+import { session } from '@/route/session'
+import {
+  errorAccessDenied,
+  errorInternal,
+  errorRequest,
+  errorSession
+} from '@/route/error'
+
+// Interfaces
+export interface IPOSTBody {
   name: string
 }
 
-export interface IUpdateBody {
+export interface IPUTBody {
   organization: {
     id: string
   }
   data: IDataBaseEntry[]
 }
 
-export interface IDeleteBody {
+export interface IDELETEBody {
   id: string
 }
 
 /**
- * Check add body
+ * Check POST body
  * @param body Body
  */
-const checkAddBody = (body: IAddBody): void => {
+const checkPOSTBody = (body: IPOSTBody): void => {
   if (!body?.name || typeof body.name !== 'string')
-    throw error(400, 'Missing data in your request (body: { name(string) })')
+    throw new Error('Missing data in your request (body: { name(string) })')
 }
 
 /**
- * Check update body
+ * Check PUT body
  * @param body Body
  */
-const checkUpdateBody = (body: IUpdateBody): void => {
+const checkPUTBody = (body: IPUTBody): void => {
   if (
     !body?.organization?.id ||
     typeof body.organization.id !== 'string' ||
     !body.data ||
     !Array.isArray(body.data)
   )
-    throw error(
-      400,
+    throw new Error(
       'Missing data in your request (body: { id(uuid), data(array) })'
     )
 }
 
 /**
- * Check delete body
+ * Check DELETE body
  * @param body Body
  */
-const checkDeleteBody = (body: IDeleteBody): void => {
+const checkDELETEBody = (body: IDELETEBody): void => {
   if (!body?.id || typeof body.id !== 'string')
-    throw error(400, 'Missing data in your request (body: { id(uuid) })')
+    throw new Error('Missing data in your request (body: { id(uuid) })')
 }
 
 /**
@@ -71,83 +76,104 @@ const checkOrganizationAdministrator = async (
   const organizationData = await OrganizationLib.get(organization.id, [
     'owners'
   ])
-  if (!organizationData) throw error(400, 'Invalid organization identifier')
+  if (!organizationData) throw new Error('Invalid organization identifier')
 
   if (!organizationData?.owners?.includes(user.id))
-    throw error(403, 'Access denied')
+    throw new Error('User is not in owners of organization')
 }
 
-/**
- * Organization API
- * @param req Request
- * @param res Response
- */
-const route = async (req: Request, res: Response): Promise<void> => {
+export const POST = async (request: NextRequest) => {
+  // Check session
+  let sessionId
   try {
-    // Check session
-    const sessionId = await session(req)
+    sessionId = await session()
+  } catch (err) {
+    return errorSession(err)
+  }
 
-    switch (req.method) {
-      case 'POST': {
-        // Check
-        checkAddBody(req.body)
+  // Body
+  const body = await request.json()
+  try {
+    checkPOSTBody(body)
+  } catch (err) {
+    return errorRequest(err)
+  }
 
-        // Add
-        try {
-          const organization = await OrganizationLib.add(
-            { id: sessionId },
-            req.body
-          )
-          res.status(200).json(organization)
-        } catch (err: any) {
-          throw error(500, err.message)
-        }
-        break
-      }
-      case 'PUT': {
-        // Check
-        checkUpdateBody(req.body)
-
-        // Check administrator
-        await checkOrganizationAdministrator(req.body.organization, {
-          id: sessionId
-        })
-
-        // Update
-        try {
-          await OrganizationLib.update(
-            req.body.organization,
-            req.body.data,
-            sessionId
-          )
-          res.status(200).end()
-        } catch (err: any) {
-          throw error(500, err.message)
-        }
-        break
-      }
-      case 'DELETE':
-        // Check
-        checkDeleteBody(req.body)
-
-        // Check administrator
-        await checkOrganizationAdministrator(req.body, { id: sessionId })
-
-        try {
-          // Delete
-          await OrganizationLib.del(req.body)
-          res.status(200).end()
-        } catch (err: any) {
-          throw error(500, err.message)
-        }
-        break
-      default:
-        // Unauthorized method
-        throw error(402, 'Method ' + req.method + ' not allowed')
-    }
-  } catch (err: any) {
-    res.status(err.status).json({ error: true, message: err.message })
+  // Add
+  try {
+    const organization = await OrganizationLib.add({ id: sessionId }, body)
+    return NextResponse.json(organization, { status: 200 })
+  } catch (err) {
+    return errorInternal(err)
   }
 }
 
-export default route
+export const PUT = async (request: NextRequest) => {
+  // Check session
+  let sessionId
+  try {
+    sessionId = await session()
+  } catch (err) {
+    return errorSession(err)
+  }
+
+  // Body
+  const body = await request.json()
+  try {
+    checkPUTBody(body)
+  } catch (err) {
+    return errorRequest(err)
+  }
+
+  const { organization, data } = body
+
+  // Check administrator
+  try {
+    await checkOrganizationAdministrator(organization, {
+      id: sessionId
+    })
+  } catch (err) {
+    return errorAccessDenied(err)
+  }
+
+  // Update
+  try {
+    await OrganizationLib.update(organization, data, sessionId)
+    return NextResponse.json(null, { status: 200 })
+  } catch (err) {
+    return errorInternal(err)
+  }
+}
+
+export const DELETE = async (request: NextRequest) => {
+  // Check session
+  let sessionId
+  try {
+    sessionId = await session()
+  } catch (err) {
+    return errorSession(err)
+  }
+
+  // Body
+  const body = await request.json()
+  try {
+    checkDELETEBody(body)
+  } catch (err) {
+    return errorRequest(err)
+  }
+
+  // Check administrator
+  try {
+    await checkOrganizationAdministrator(body, { id: sessionId })
+  } catch (err) {
+    return errorAccessDenied(err)
+  }
+
+  try {
+    // Delete
+    await OrganizationLib.del(body)
+    return NextResponse.json(null, { status: 200 })
+  } catch (err) {
+    return errorInternal(err)
+  }
+}

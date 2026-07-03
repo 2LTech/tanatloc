@@ -67,9 +67,9 @@ const update = async (): Promise<void> => {
         }
       ])
     }
-  } catch (err: any) {
+  } catch (err) {
     console.error('   ⚠ Update 1.3.0 failed')
-    console.error(err)
+    console.error(err instanceof Error ? err.message : String(err))
   }
 }
 

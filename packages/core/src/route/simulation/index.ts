@@ -1,16 +1,22 @@
 /** @module Route.Simulation */
 
-import { Request, Response } from 'express'
+import { NextRequest, NextResponse } from 'next/server'
 
 import { IModel } from '@/models/index.d'
 
-import { session } from '../session'
-import { checkProjectAuth } from '../auth'
-import { error } from '../error'
-
 import SimulationLib from '@/lib/simulation'
 
-export interface IAddBody {
+import { session } from '@/route/session'
+import { checkProjectAuth } from '@/route/auth'
+import {
+  errorAccessDenied,
+  errorInternal,
+  errorRequest,
+  errorSession
+} from '@/route/error'
+
+// Interfaces
+export interface IPOSTBody {
   project: {
     id: string
   }
@@ -21,10 +27,10 @@ export interface IAddBody {
 }
 
 /**
- * Check add body
+ * Check POST body
  * @param body Body
  */
-const checkAddBody = (body: IAddBody): void => {
+const checkPOSTBody = (body: IPOSTBody): void => {
   if (
     !body?.project?.id ||
     typeof body.project.id !== 'string' ||
@@ -33,53 +39,46 @@ const checkAddBody = (body: IAddBody): void => {
     !body.simulation.scheme ||
     typeof body.simulation.scheme !== 'object'
   )
-    throw error(
-      400,
+    throw new Error(
       'Missing data in your request (body: { project: { id(uuid) }, simulation: { name(string), scheme(object) } }'
     )
 }
 
-/**
- * Simulation API
- * @param req Request
- * @param res Response
- */
-const route = async (req: Request, res: Response): Promise<void> => {
-  try {
-    // Check session
-    const sessionId = await session(req)
-
-    switch (req.method) {
-      case 'GET': {
-        // Emty route
-        res.status(200).end()
-        break
-      }
-      case 'POST': {
-        // Check
-        checkAddBody(req.body)
-
-        const { project, simulation } = req.body
-
-        // Check auth
-        await checkProjectAuth({ id: sessionId }, { id: project.id })
-
-        // Add
-        try {
-          const newSimulation = await SimulationLib.add(project, simulation)
-          res.status(200).json(newSimulation)
-        } catch (err: any) {
-          throw error(500, err.message)
-        }
-        break
-      }
-      default:
-        // Unauthorized method
-        throw error(402, 'Method ' + req.method + ' not allowed')
-    }
-  } catch (err: any) {
-    res.status(err.status).json({ error: true, message: err.message })
-  }
+export const GET = async () => {
+  return NextResponse.json(null, { status: 200 })
 }
 
-export default route
+export const POST = async (request: NextRequest) => {
+  // Check session
+  let sessionId
+  try {
+    sessionId = await session()
+  } catch (err) {
+    return errorSession(err)
+  }
+
+  // Body
+  const body = await request.json()
+  try {
+    checkPOSTBody(body)
+  } catch (err) {
+    return errorRequest(err)
+  }
+
+  const { project, simulation } = body
+
+  // Check auth
+  try {
+    await checkProjectAuth({ id: sessionId }, { id: project.id })
+  } catch (err) {
+    return errorAccessDenied(err)
+  }
+
+  // Add
+  try {
+    const newSimulation = await SimulationLib.add(project, simulation)
+    return NextResponse.json(newSimulation, { status: 200 })
+  } catch (err) {
+    return errorInternal(err)
+  }
+}

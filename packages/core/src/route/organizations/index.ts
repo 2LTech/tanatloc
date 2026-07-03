@@ -4,7 +4,8 @@ import { NextResponse } from 'next/server'
 
 import OrganizationLib from '@/lib/organization'
 
-import { session } from '../session'
+import { session } from '@/route/session'
+import { errorInternal, errorSession } from '@/route/error'
 
 /**
  * Organizations API
@@ -16,11 +17,8 @@ export const GET = async () => {
   try {
     // Check session
     sessionId = await session()
-  } catch (err: any) {
-    return NextResponse.json(
-      { error: true, message: err.message },
-      { status: 401 }
-    )
+  } catch (err) {
+    return errorSession(err)
   }
 
   try {
@@ -33,10 +31,7 @@ export const GET = async () => {
       'groups'
     ])
     return NextResponse.json({ organizations }, { status: 200 })
-  } catch (err: any) {
-    return NextResponse.json(
-      { error: true, message: err.message },
-      { status: 500 }
-    )
+  } catch (err) {
+    return errorInternal(err)
   }
 }

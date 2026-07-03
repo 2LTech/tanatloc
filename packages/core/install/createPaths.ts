@@ -1,6 +1,6 @@
 /** @module Install.CreatePaths */
 
-import { promises as fs } from 'fs'
+import { promises as fs } from 'node:fs'
 
 import { STORAGE, AVATAR, GEOMETRY, SIMULATION } from '@/config/storage'
 
@@ -30,8 +30,8 @@ export const createPaths = async (): Promise<void> => {
 const createPath = async (path: string): Promise<void> => {
   try {
     await fs.mkdir(path)
-  } catch (err: any) {
-    if (err.code === 'EEXIST') {
+  } catch (err) {
+    if ((err as Error & { code: string }).code === 'EEXIST') {
       console.warn(' ⚠ ' + path + ' directory already exists')
     } else {
       console.error(' ⚠ Unable to create ' + path)

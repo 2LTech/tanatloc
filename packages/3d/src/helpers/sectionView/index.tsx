@@ -294,7 +294,6 @@ const _onPointerMove = (
 ): void => {
   if (!enabled || !camera) return
 
-  /* istanbul ignore else (never happend) */
   if (type === 'Dome') {
     const pointer = event.pointer
 
@@ -448,7 +447,6 @@ const SectionView: React.FunctionComponent = () => {
 
   // Intialization
   useEffect(() => {
-    /* istanbul ignore next (never happend) */
     if (sectionView.clippingPlane !== clippingPlane)
       useStore.setState({ sectionView: { ...sectionView, clippingPlane } })
   }, [sectionView])

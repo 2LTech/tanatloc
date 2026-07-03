@@ -195,8 +195,7 @@ export const createDatabase = async (): Promise<void> => {
     console.error(err)
     throw err
   } finally {
-    const globalAny: any = globalThis
-    Object.defineProperty(globalAny.tanatloc, 'complete', { value: true })
+    Object.defineProperty(globalThis.tanatloc, 'complete', { value: true })
   }
 }
 
@@ -648,8 +647,7 @@ const createModelTable = async (): Promise<void> => {
 const createAdmin = async (): Promise<void> => {
   const authorizedPlugins = ['local']
 
-  const globalAny: any = globalThis
-  if (!isElectron() || globalAny.electron?.fullBuild) {
+  if (!isElectron() || globalThis.electron?.fullBuild) {
     authorizedPlugins.push('airthium', 'denso', 'rescale', 'sharetask')
   }
 

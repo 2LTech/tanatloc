@@ -4,25 +4,26 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import UserLib from '@/lib/user'
 
-import { errorInternal, errorRequest } from '../../error'
+import { errorInternal, errorRequest } from '@/route/error'
 
-export interface ILoginBody {
+// Interfaces
+export interface IPOSTBody {
   email: string
   password: string
 }
 
 /**
- * Check login body
+ * Check POST body
  * @param body Body
  */
-const checkLoginBody = (body: ILoginBody): void => {
+const checkPOSTBody = (body: IPOSTBody): void => {
   if (
     !body?.email ||
     typeof body.email !== 'string' ||
     !body.password ||
     typeof body.password !== 'string'
   )
-    throw errorRequest(
+    throw new Error(
       'Missing data in your request (body: { email(string), password(string) })'
     )
 }
@@ -30,7 +31,11 @@ const checkLoginBody = (body: ILoginBody): void => {
 export const POST = async (request: NextRequest) => {
   // Body
   const body = await request.json()
-  checkLoginBody(body)
+  try {
+    checkPOSTBody(body)
+  } catch (err) {
+    return errorRequest(err)
+  }
 
   // Login
   try {

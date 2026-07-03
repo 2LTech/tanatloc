@@ -440,16 +440,13 @@ const findUser = async ({
     ['id', 'isvalidated', 'salt', 'hash'],
     'email'
   )
-  console.log(user)
   return user
 }
 
-const validatePassword = (
+const validatePassword = async (
   user: IUserCheck,
   { password }: { password: string }
 ) => {
-  console.log(user)
-  console.log(password)
   const hash = pbkdf2Sync(
     password,
     user.salt,

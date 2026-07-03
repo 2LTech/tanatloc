@@ -1,6 +1,6 @@
 /** @module Install.CopyAssets */
 
-import { promises as fs } from 'fs'
+import { promises as fs } from 'node:fs'
 
 /**
  * Copy templates
@@ -11,8 +11,8 @@ const copyTemplates = async (): Promise<void> => {
   // Create path
   try {
     await fs.mkdir('public/templates', { recursive: true })
-  } catch (err: any) {
-    if (err.code !== 'EEXIST') throw err
+  } catch (err) {
+    if ((err as Error & { code: string }).code !== 'EEXIST') throw err
   }
 
   // Copy
@@ -32,8 +32,8 @@ const copyMathjaxAssets = async (): Promise<void> => {
     await fs.mkdir('public/mathjax', {
       recursive: true
     })
-  } catch (err: any) {
-    if (err.code !== 'EEXIST') throw err
+  } catch (err) {
+    if ((err as Error & { code: string }).code !== 'EEXIST') throw err
   }
 
   // Copy

@@ -1,3 +1,3 @@
-/** @module Pages.API.Workspace */
+/** @module App.API.Workspace */
 
 export { GET, POST, PUT, DELETE } from '@/route/workspace'

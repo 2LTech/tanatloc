@@ -1,9 +1,16 @@
 /** @module App.API.Login */
 
-import { setLocaLStrategy } from '@2ltech/nextjs-app-passport'
+import {
+  APICreateLoginRoute,
+  FindUser,
+  ValidatePassword
+} from '@2ltech/nextjs-app-passport'
+
+import { IUserCheck } from '@/database/user'
 
 import User from '@/lib/user'
 
-setLocaLStrategy(User.findUser, User.validatePassword)
-
-export { APILoginRoute as POST } from '@2ltech/nextjs-app-passport'
+export const POST = APICreateLoginRoute(
+  User.findUser as FindUser<IUserCheck>,
+  User.validatePassword as ValidatePassword<IUserCheck>
+)

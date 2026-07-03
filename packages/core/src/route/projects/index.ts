@@ -1,15 +1,15 @@
 /** @module Route.Projects */
 
-import ProjectLib from '@/lib/project'
-
-import { session } from '../session'
-import { checkProjectAuth } from '../auth'
 import { NextRequest, NextResponse } from 'next/server'
 
-/**
- * Interfaces
- */
-export interface IPostBody {
+import ProjectLib from '@/lib/project'
+
+import { session } from '@/route/session'
+import { checkProjectAuth } from '@/route/auth'
+import { errorRequest, errorSession } from '@/route/error'
+
+// Interfaces
+export interface IPOSTBody {
   ids: string[]
 }
 
@@ -17,7 +17,7 @@ export interface IPostBody {
  * Check POST body
  * @param body Body
  */
-const checkPostBody = (body: IPostBody): void => {
+const checkPOSTBody = (body: IPOSTBody): void => {
   if (!body)
     throw new Error('Missing data in your request (body: { ids(?array) })')
 }
@@ -27,22 +27,16 @@ export const POST = async (request: NextRequest) => {
   let sessionId
   try {
     sessionId = await session()
-  } catch (err: any) {
-    return NextResponse.json(
-      { error: true, message: err.message },
-      { status: 401 }
-    )
+  } catch (err) {
+    return errorSession(err)
   }
 
   // Check
   const body = await request.json()
   try {
-    checkPostBody(body)
-  } catch (err: any) {
-    return NextResponse.json(
-      { err: true, message: err.message },
-      { status: 400 }
-    )
+    checkPOSTBody(body)
+  } catch (err) {
+    return errorRequest(err)
   }
 
   // Ids
