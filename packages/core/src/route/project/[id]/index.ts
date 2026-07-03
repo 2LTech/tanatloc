@@ -41,10 +41,10 @@ const checkDELETEBody = (body: IDELETEBody): void => {
 }
 
 /**
- * GET
+ * Project [id] GET
  * @param _request Request
- * @param params Params
- * @returns GET
+ * @param params { params }
+ * @returns Response
  */
 export const GET = async (
   _request: NextRequest,
@@ -88,10 +88,10 @@ export const GET = async (
 }
 
 /**
- * PUT
+ * Project [id] PUT
  * @param request Request
- * @param params Params
- * @returns PUT
+ * @param params { params }
+ * @returns Response
  */
 export const PUT = async (
   request: NextRequest,
@@ -133,10 +133,10 @@ export const PUT = async (
 }
 
 /**
- * DELETE
+ * Project [id] DELETE
  * @param request Request
- * @param params Params
- * @returns DELETE
+ * @param params { params }
+ * @returns Response
  */
 export const DELETE = async (
   request: NextRequest,

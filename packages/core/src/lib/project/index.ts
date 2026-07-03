@@ -1,7 +1,8 @@
 /** @module Lib.Project */
 
-import path from 'path'
-import { ReadStream } from 'fs'
+import path from 'node:path'
+import { promises as fs } from 'node:fs'
+import type { ReadStream } from 'node:fs'
 
 import { IDataBaseEntry } from '@/database/index.d'
 import {
@@ -30,6 +31,9 @@ import Workspace from '../workspace'
 import Geometry from '../geometry'
 import Simulation from '../simulation'
 import Tools from '../tools'
+
+export const ARCHIVE_FILE_NAME = (id: string, extension?: string) =>
+  `tanatloc-archive-${id}` + (extension ? `.${extension}` : '')
 
 /**
  * Add
@@ -282,7 +286,7 @@ const groupUpdate = async (
 
   // Added groups
   const added = toUpdate.value.filter(
-    (group) => !projectData.groups.find((g) => g === group)
+    (group) => !projectData.groups.includes(group)
   )
 
   for (const group of added) await addToGroup(group, project)
@@ -398,7 +402,9 @@ const del = async (
  * @param project Project
  * @returns Read stream
  */
-const archive = async (project: { id: string }): Promise<ReadStream> => {
+const archive = async (project: {
+  id: string
+}): Promise<{ size: number; stream: ReadStream }> => {
   // Data
   const data = await get(project.id, [
     'title',
@@ -410,8 +416,10 @@ const archive = async (project: { id: string }): Promise<ReadStream> => {
   if (!data) throw new Error('Project not found')
 
   // Create temporary path
-  const temporaryPath = path.join(STORAGE, '.archive-' + project.id)
+  const temporaryPath = path.join(STORAGE, ARCHIVE_FILE_NAME(project.id))
   await Tools.createPath(temporaryPath)
+
+  console.log(temporaryPath)
 
   // Create summary
   const content = 'Title: ' + data.title + '\nDescription: ' + data.description
@@ -424,7 +432,7 @@ const archive = async (project: { id: string }): Promise<ReadStream> => {
         { id: data.avatar },
         path.join(temporaryPath, AVATAR_RELATIVE)
       )
-    } catch (err) {}
+    } catch {}
 
   // Archive geometries
   for (const geometry of data.geometries) {
@@ -433,7 +441,7 @@ const archive = async (project: { id: string }): Promise<ReadStream> => {
         { id: geometry },
         path.join(temporaryPath, GEOMETRY_RELATIVE)
       )
-    } catch (err) {}
+    } catch {}
   }
 
   // Archive simulations
@@ -443,14 +451,14 @@ const archive = async (project: { id: string }): Promise<ReadStream> => {
         { id: simulation },
         path.join(temporaryPath, SIMULATION_RELATIVE)
       )
-    } catch (err) {}
+    } catch {}
   }
 
   // Create archive
   const archiveFileName = temporaryPath + '.tgz'
   await Tools.archive(archiveFileName, {
     C: STORAGE,
-    path: '.archive-' + project.id
+    path: ARCHIVE_FILE_NAME(project.id)
   })
 
   // Remove temporary path
@@ -464,8 +472,14 @@ const archive = async (project: { id: string }): Promise<ReadStream> => {
     }
   ])
 
+  // Stats (for file size)
+  const stats = await fs.stat(archiveFileName)
+
   // Create read strem
-  return Tools.readStream(archiveFileName)
+  return {
+    size: stats.size,
+    stream: Tools.readStream(archiveFileName)
+  }
 }
 
 /**
@@ -474,7 +488,7 @@ const archive = async (project: { id: string }): Promise<ReadStream> => {
  */
 const unarchiveFromServer = async (project: { id: string }): Promise<void> => {
   // Temporary path
-  const temporaryPath = path.join(STORAGE, '.archive-' + project.id)
+  const temporaryPath = path.join(STORAGE, ARCHIVE_FILE_NAME(project.id))
 
   // Archive file name
   const archiveFileName = temporaryPath + '.tgz'
@@ -484,11 +498,11 @@ const unarchiveFromServer = async (project: { id: string }): Promise<void> => {
   try {
     await Tools.unarchive(archiveFileName, {
       C: STORAGE,
-      path: '.archive-' + project.id
+      path: ARCHIVE_FILE_NAME(project.id)
     })
 
     directories = await Tools.listDirectories(temporaryPath)
-  } catch (err) {
+  } catch {
     throw new Error('Archive not found')
   }
 
@@ -564,7 +578,7 @@ const unarchiveFromServer = async (project: { id: string }): Promise<void> => {
  */
 const deleteArchiveFile = async (project: { id: string }): Promise<void> => {
   // Temporary path
-  const temporaryPath = path.join(STORAGE, '.archive-' + project.id)
+  const temporaryPath = path.join(STORAGE, ARCHIVE_FILE_NAME(project.id))
 
   // Archive file name
   const archiveFileName = temporaryPath + '.tgz'
@@ -572,8 +586,8 @@ const deleteArchiveFile = async (project: { id: string }): Promise<void> => {
   // Remove archive
   try {
     await Tools.removeFile(archiveFileName)
-  } catch (err: any) {
-    if (err.code !== 'ENOENT') throw err
+  } catch (err) {
+    if ((err as Error & { code: string }).code !== 'ENOENT') throw err
   }
 }
 
@@ -586,7 +600,7 @@ const unarchiveFromFile = async (project: { id: string }, buffer: Buffer) => {
   // Write archive
   await Tools.writeFile(
     STORAGE,
-    '.archive-' + project.id + '.tgz',
+    ARCHIVE_FILE_NAME(project.id, 'tgz'),
     Buffer.from(buffer)
   )
 

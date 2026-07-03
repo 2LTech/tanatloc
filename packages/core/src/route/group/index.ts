@@ -38,7 +38,7 @@ export interface IDELETEBody {
 }
 
 /**
- * Check add body
+ * Check POST body
  * @param body Body
  */
 const checkPOSTBody = (body: IPOSTBody): void => {
@@ -56,7 +56,7 @@ const checkPOSTBody = (body: IPOSTBody): void => {
 }
 
 /**
- * Check update body
+ * Check PUT body
  * @param body Body
  */
 const checkPUTBody = (body: IPUTBody): void => {
@@ -72,7 +72,7 @@ const checkPUTBody = (body: IPUTBody): void => {
 }
 
 /**
- * Check delete body
+ * Check DELETE body
  * @param body Body
  */
 const checkDELETEBody = (body: IDELETEBody): void => {
@@ -81,7 +81,7 @@ const checkDELETEBody = (body: IDELETEBody): void => {
 }
 
 /**
- * Check auth
+ * Check organization auth
  * @param organization Organization { id }
  * @param user User { id }
  */
@@ -99,7 +99,7 @@ const checkOrganizationAuth = async (
 }
 
 /**
- * Check auth
+ * Check group auth
  * @param group Group { id }
  * @param user User { id }
  */
@@ -118,6 +118,11 @@ const checkGroupAuth = async (
     throw new Error('User is not in owners of organization')
 }
 
+/**
+ * Group POST
+ * @param request Request
+ * @returns Response
+ */
 export const POST = async (request: NextRequest) => {
   // Check session
   let sessionId
@@ -153,6 +158,11 @@ export const POST = async (request: NextRequest) => {
   }
 }
 
+/**
+ * Group PUT
+ * @param request Request
+ * @returns Response
+ */
 export const PUT = async (request: NextRequest) => {
   // Check session
   let sessionId
@@ -188,6 +198,11 @@ export const PUT = async (request: NextRequest) => {
   }
 }
 
+/**
+ * Group DELETE
+ * @param request Request
+ * @returns Response
+ */
 export const DELETE = async (request: NextRequest) => {
   // Check session
   let sessionId

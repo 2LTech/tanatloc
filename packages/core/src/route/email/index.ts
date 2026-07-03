@@ -31,6 +31,11 @@ const checkPUTBody = (body: IPUTBody): void => {
     )
 }
 
+/**
+ * Email PUT
+ * @param request Request
+ * @returns Response
+ */
 export const PUT = async (request: NextRequest) => {
   const body = await request.json()
   try {

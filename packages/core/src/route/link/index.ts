@@ -47,6 +47,11 @@ const checkPUTBody = (body: IPUTBody): void => {
     )
 }
 
+/**
+ * Link POST
+ * @param request Request
+ * @returns Response
+ */
 export const POST = async (request: NextRequest) => {
   // Body
   const body = await request.json()

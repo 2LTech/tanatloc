@@ -45,11 +45,20 @@ const checkPOSTBody = (body: IPOSTBody): void => {
     )
 }
 
+/**
+ * Geometry GET
+ * @returns Response
+ */
 export const GET = async () => {
   // Empty route
   return NextResponse.json(null, { status: 200 })
 }
 
+/**
+ * Geometry POST
+ * @param request Request
+ * @returns Response
+ */
 export const POST = async (request: NextRequest) => {
   // Check session
   let sessionId
@@ -80,7 +89,7 @@ export const POST = async (request: NextRequest) => {
   try {
     const newGeometry = await GeometryLib.add(project, geometry)
     return NextResponse.json(newGeometry, { status: 200 })
-  } catch (err: any) {
+  } catch (err) {
     return errorInternal(err)
   }
 }

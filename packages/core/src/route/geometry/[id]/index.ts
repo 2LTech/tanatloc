@@ -27,6 +27,12 @@ const checkPUTBody = (body: IPUTBody): void => {
     throw new Error('Missing data in your request (body(array))')
 }
 
+/**
+ * Geometry [id] PUT
+ * @param request Request
+ * @param param { params }
+ * @returns Response
+ */
 export const PUT = async (
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -70,6 +76,12 @@ export const PUT = async (
   }
 }
 
+/**
+ * Geometry [id] DELETE
+ * @param _request Request
+ * @param param { params }
+ * @returns Response
+ */
 export const DELETE = async (
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }

@@ -8,6 +8,10 @@ import PluginsLib from '@/lib/plugins'
 import { session } from '@/route/session'
 import { errorInternal, errorSession } from '@/route/error'
 
+/**
+ * Plugins GET
+ * @returns Response
+ */
 export const GET = async () => {
   // Check session
   let sessionId
@@ -30,6 +34,10 @@ export const GET = async () => {
   }
 }
 
+/**
+ * Plugins POST
+ * @returns Response
+ */
 export const POST = async () => {
   // Get complete
   try {

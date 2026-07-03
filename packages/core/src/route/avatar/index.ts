@@ -35,13 +35,14 @@ const checkPOSTBody = (body: IPOSTBody): void => {
     (body.project && (!body.project.id || typeof body.project.id !== 'string'))
   )
     throw new Error(
-      'Missing data in your request (body: { file: { name(string), uid(uuid), data(string) }, ?project: { id(uuid) } })'
+      'Missing data in your request (body: { file: { name(string), uid(uuid), data(string) }, project?: { id(uuid) } })'
     )
 }
 
 /**
- * Avatar API
+ * Avatar POST
  * @param request Request
+ * @returns Response
  */
 export const POST = async (request: NextRequest) => {
   // Check session

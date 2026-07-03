@@ -23,9 +23,9 @@ const checkPOSTBody = (body: IPOSTBody): void => {
 }
 
 /**
- * GET
- * @param req Request
- * @param res Response
+ * Geometries POST
+ * @param request Request
+ * @returns res Response
  */
 export const POST = async (request: NextRequest) => {
   // Check session

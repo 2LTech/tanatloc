@@ -60,6 +60,10 @@ const checkDELETEBody = (body: IDELETEBody): void => {
     throw new Error('Missing data in your request (body: { uuid(uuid) } }')
 }
 
+/**
+ * Plugin GET
+ * @returns Response
+ */
 export const GET = async () => {
   // Check session
   let sessionId
@@ -77,6 +81,11 @@ export const GET = async () => {
   }
 }
 
+/**
+ * Plugin POST
+ * @param request Request
+ * @returns Response
+ */
 export const POST = async (request: NextRequest) => {
   // Check session
   let sessionId
@@ -115,6 +124,11 @@ export const POST = async (request: NextRequest) => {
   }
 }
 
+/**
+ * Plugin PUT
+ * @param request Request
+ * @returns Response
+ */
 export const PUT = async (request: NextRequest) => {
   // Check session
   let sessionId
@@ -141,6 +155,11 @@ export const PUT = async (request: NextRequest) => {
   }
 }
 
+/**
+ * Plugin DELETE
+ * @param request Request
+ * @returns Response
+ */
 export const DELETE = async (request: NextRequest) => {
   // Check session
   let sessionId

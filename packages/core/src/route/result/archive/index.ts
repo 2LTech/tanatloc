@@ -2,7 +2,7 @@
 
 import { NextRequest /*, NextResponse*/ } from 'next/server'
 
-// import ResultLib from '@/lib/result'
+import ResultLib from '@/lib/result'
 
 import { session } from '@/route/session'
 import { checkSimulationAuth } from '@/route/auth'
@@ -60,9 +60,9 @@ export const POST = async (request: NextRequest) => {
   try {
     // Archive
     // TODO
-    // res.setHeader('Content-Type', 'application/zip')
-    // const archiveStream = await ResultLib.archive(simulation)
-    // archiveStream.pipe(res)
+    res.setHeader('Content-Type', 'application/zip')
+    const archiveStream = await ResultLib.archive(simulation)
+    archiveStream.pipe(res)
   } catch (err) {
     return errorInternal(err)
   }

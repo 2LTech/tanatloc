@@ -1,6 +1,7 @@
 /** @module Route.Project.[id].Archive */
 
 import { NextRequest, NextResponse } from 'next/server'
+import { Readable } from 'node:stream'
 
 import ProjectLib from '@/lib/project'
 
@@ -28,10 +29,10 @@ const checkPOSTBody = (body: IPOSTBody) => {
 }
 
 /**
- * GET
+ * Project [id] archive GET
  * @param _request Request
- * @param params Params
- * @returns GET
+ * @param params { params }
+ * @returns Response
  */
 export const GET = async (
   _request: NextRequest,
@@ -59,24 +60,28 @@ export const GET = async (
   try {
     const archiveStream = await ProjectLib.archive({ id })
 
-    //TODO check if it works
-    const response = new NextResponse(archiveStream)
-    response.headers.set('Content-Type', 'application/x-tgz')
-
-    return response
-  } catch (err) {
-    return NextResponse.json(
-      { error: true, message: err.message },
-      { status: 500 }
+    return new NextResponse(
+      Readable.toWeb(archiveStream.stream) as ReadableStream,
+      {
+        status: 200,
+        headers: {
+          'content-type': 'application/x-tgz',
+          'content-disposition':
+            'attachment; filename="tanatloc-archive-${id}.tgz',
+          'content-length': archiveStream.size + ''
+        }
+      }
     )
+  } catch (err) {
+    return errorInternal(err)
   }
 }
 
 /**
- * POST
+ * Project [id] archive POST
  * @param request Request
- * @param params Params
- * @returns POST
+ * @param params { params }
+ * @returns Response
  */
 export const POST = async (
   request: NextRequest,
@@ -118,10 +123,10 @@ export const POST = async (
 }
 
 /**
- * PUT
+ * Project [id] archive  PUT
  * @param _request Request
- * @param params Params
- * @returns PUT
+ * @param params { params }
+ * @returns Response
  */
 export const PUT = async (
   _request: NextRequest,
@@ -155,10 +160,10 @@ export const PUT = async (
 }
 
 /**
- * DELETE
+ * Project [id] archive DELETE
  * @param _request Request
- * @param params Params
- * @returns DELETE
+ * @param params { params }
+ * @returns Response
  */
 export const DELETE = async (
   _request: NextRequest,

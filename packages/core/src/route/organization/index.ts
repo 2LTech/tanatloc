@@ -82,6 +82,11 @@ const checkOrganizationAdministrator = async (
     throw new Error('User is not in owners of organization')
 }
 
+/**
+ * Organization POST
+ * @param request Request
+ * @returns Response
+ */
 export const POST = async (request: NextRequest) => {
   // Check session
   let sessionId
@@ -108,6 +113,11 @@ export const POST = async (request: NextRequest) => {
   }
 }
 
+/**
+ * Organization PUT
+ * @param request Request
+ * @returns Response
+ */
 export const PUT = async (request: NextRequest) => {
   // Check session
   let sessionId
@@ -145,6 +155,11 @@ export const PUT = async (request: NextRequest) => {
   }
 }
 
+/**
+ * Organization DELETE
+ * @param request Request
+ * @returns Response
+ */
 export const DELETE = async (request: NextRequest) => {
   // Check session
   let sessionId

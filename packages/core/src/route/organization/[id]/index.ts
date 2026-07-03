@@ -7,6 +7,12 @@ import OrganizationLib from '@/lib/organization'
 import { session } from '@/route/session'
 import { errorInternal, errorRequest, errorSession } from '@/route/error'
 
+/**
+ * Organizations PUT
+ * @param _request Request
+ * @param param { params }
+ * @returns Response
+ */
 export const PUT = async (
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -35,6 +41,12 @@ export const PUT = async (
   }
 }
 
+/**
+ * Organizations POST
+ * @param _request Request
+ * @param param { params }
+ * @returns Response
+ */
 export const POST = async (
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -63,6 +75,12 @@ export const POST = async (
   }
 }
 
+/**
+ * Organizations DELETE
+ * @param _request Request
+ * @param param { params }
+ * @returns Response
+ */
 export const DELETE = async (
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }

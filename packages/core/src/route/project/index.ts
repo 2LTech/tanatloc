@@ -35,6 +35,10 @@ const checkPOSTBody = (body: IPOSTBody): void => {
     )
 }
 
+/**
+ * Project GET
+ * @returns Response
+ */
 export const GET = async () => {
   // Empty route
   return NextResponse.json(null, { status: 200 })
@@ -45,7 +49,7 @@ export const POST = async (request: NextRequest) => {
   let sessionId
   try {
     sessionId = await session()
-  } catch (err: any) {
+  } catch (err) {
     return errorSession(err)
   }
 
@@ -74,7 +78,7 @@ export const POST = async (request: NextRequest) => {
       project
     )
     return NextResponse.json(newProject, { status: 200 })
-  } catch (err: any) {
+  } catch (err) {
     return errorInternal(err)
   }
 }

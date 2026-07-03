@@ -13,6 +13,12 @@ import {
   errorSession
 } from '@/route/error'
 
+/**
+ * Geometry [id] part GET
+ * @param _request Request
+ * @param param { params }
+ * @returns Response
+ */
 export const GET = async (
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }

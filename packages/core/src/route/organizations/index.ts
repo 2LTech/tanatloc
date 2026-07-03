@@ -8,9 +8,8 @@ import { session } from '@/route/session'
 import { errorInternal, errorSession } from '@/route/error'
 
 /**
- * Organizations API
- * @param req Request
- * @param res Response
+ * Organizations GET
+ * @returns Response
  */
 export const GET = async () => {
   let sessionId

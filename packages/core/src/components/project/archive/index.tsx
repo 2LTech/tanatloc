@@ -63,10 +63,10 @@ export const _onArchive = async (
   const content = await archive.blob()
 
   // Download Folder
-  const url = window.URL.createObjectURL(new Blob([content]))
+  const url = globalThis.URL.createObjectURL(new Blob([content]))
   const link = document.createElement('a')
   link.href = url
-  link.setAttribute('download', project.id + '.tanatlocarchive')
+  link.setAttribute('download', 'tanatloc-archive-' + project.id + '.tgz')
   link.click()
 
   // Mutate project
@@ -77,6 +77,9 @@ export const _onArchive = async (
 
   // Mutate workspace
   await swr.mutateOneWorkspace(workspace)
+
+  // Revoke
+  globalThis.URL.revokeObjectURL(url)
 }
 
 /**

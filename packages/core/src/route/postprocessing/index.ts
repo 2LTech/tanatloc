@@ -43,6 +43,11 @@ const checkPOSTBody = (body: IPOSTBody): void => {
     )
 }
 
+/**
+ * Postprocessing POST
+ * @param request Request
+ * @returns Response
+ */
 export const POST = async (request: NextRequest) => {
   // Check session
   let sessionId
