@@ -163,14 +163,17 @@ const ProjectCard: React.FunctionComponent<ICardProps> = ({
    * @param project Project
    */
   const openProject = useCallback((): void => {
-    asyncFunctionExec(async () => {
-      if (project.archived) return
+    if (project.archived) return
 
-      await router.push({
-        pathname: '/project',
-        query: { page: page, workspaceId: workspace.id, projectId: project.id }
-      })
-    })
+    router.push(
+      `/project?page=${page}&workspaceId=${workspace.id}&projectId=${project.id}`
+    )
+    // TODO replace by context ???
+    //   {
+    //     pathname: '/project',
+    //     query: { page: page, workspaceId: workspace.id, projectId: project.id }
+    //   })
+    // })
   }, [router, workspace.id, page, project.id, project.archived])
 
   /**
