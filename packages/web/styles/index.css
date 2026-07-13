@@ -1,0 +1,134 @@
+@import 'tailwindcss';
+@import './fonts.css';
+@import './variables.css';
+
+/* Main */
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(241, 241, 241, 0.75);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(136, 136, 136, 0.75);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(85, 85, 85, 0.75);
+}
+
+.logo {
+  z-index: 1;
+  padding: 20px 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--colorPrimary);
+  height: 64px;
+}
+
+.displayNone {
+  display: none !important;
+}
+
+.displayFlex {
+  display: flex !important;
+}
+
+.fullWidth {
+  width: 100% !important;
+}
+
+.fullHeight {
+  height: 100% !important;
+}
+
+.noScroll {
+  max-height: 100% !important;
+  overflow: hidden !important;
+}
+
+.scroll {
+  max-height: 100% !important;
+  overflow: auto !important;
+}
+
+.noBackground {
+  background: none !important;
+  background-color: none !important;
+}
+
+.noBorder {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.noBorderBottom {
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+.textWhite {
+  color: #fff !important;
+}
+
+.textLight {
+  color: var(--textColorLight) !important;
+}
+
+.textDark {
+  color: var(--textColorDark) !important;
+}
+
+.textOrange {
+  color: orange !important;
+}
+
+.textGreen {
+  color: green !important;
+}
+
+.textAlignLeft {
+  text-align: left !important;
+}
+
+.textAlignCenter {
+  text-align: center !important;
+}
+
+.primaryColor {
+  color: var(--colorPrimary) !important;
+}
+
+.backgroundPrimary {
+  background: var(--colorPrimary) !important;
+}
+
+.imageShadow {
+  box-shadow:
+    0px 0px 6px -4px rgba(0, 0, 0, 0.12),
+    0px 0px 16px rgba(0, 0, 0, 0.08),
+    0px 0px 28px 8px rgba(0, 0, 0, 0.05);
+}
+
+.padding50 {
+  padding: 50px;
+}
+
+@media (max-width: 1100px) {
+  .padding50 {
+    padding: 20px;
+  }
+}

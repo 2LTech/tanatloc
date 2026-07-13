@@ -1,0 +1,180 @@
+.homeLayout {
+  width: 100%;
+  min-height: 100%;
+  padding: 0;
+  margin: 0;
+  overflow: auto;
+  overflow-x: hidden;
+}
+
+.homeContent {
+  max-width: 1200px;
+  margin: auto;
+}
+
+.homeFirstSection {
+  margin-top: 100px;
+}
+
+.homeSolveLeft {
+  padding-left: 50px !important;
+  padding-right: 50px !important;
+}
+
+.homeModels {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 20px;
+}
+
+.homeModels > div {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 20px;
+}
+
+.homeModels > div > label {
+  margin-top: 4px;
+}
+
+.homeModels :global(.ant-checkbox-inner) {
+  border-color: #fff;
+}
+
+.homePlugins {
+  display: flex;
+  justify-content: space-around;
+  column-width: 160px;
+  column-gap: 0;
+  margin-top: 40px !important;
+}
+
+.homePlugins > div {
+  break-inside: avoid-column;
+  page-break-inside: avoid;
+  width: 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.homePlugins .ant-avatar {
+  background: colorPrimary;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.homePlugins .ant-avatar > img {
+  object-fit: contain !important;
+  margin: auto;
+}
+
+.homeElectron {
+  display: flex;
+  flex-direction: column;
+}
+
+.homElectron img {
+  max-width: 80%;
+  align-self: center;
+}
+
+.homeCaseStudy {
+  box-shadow:
+    0px 0px 6px -4px rgba(0, 0, 0, 0.12),
+    0px 0px 16px rgba(0, 0, 0, 0.08),
+    0px 0px 28px 8px rgba(0, 0, 0, 0.05);
+  justify-items: space-around !important;
+}
+
+.homeCaseStudyLeft {
+  width: 70%;
+}
+
+.homeCaseStudyLeft h3 {
+  margin-top: -0.5em !important;
+}
+
+.homeSteps {
+  margin: auto;
+  display: grid !important;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr;
+  column-gap: 25px;
+}
+
+.homeSteps .ant-steps-item-title {
+  font-weight: bold;
+  margin-top: -8px;
+}
+
+.homeSteps .ant-steps-item-icon {
+  margin-top: 10px;
+  width: 64px;
+  height: 64px;
+  line-height: 64px;
+  font-size: 32px;
+}
+
+.homeSteps .ant-steps-item-rail {
+  display: none !important;
+}
+
+.homeSteps button.download {
+  height: 40px;
+  margin: 5px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.homeSteps img {
+  height: 30px;
+  margin-right: 3px;
+}
+
+.homeAbout {
+  box-shadow:
+    0px 0px 6px -4px rgba(0, 0, 0, 0.12),
+    0px 0px 16px rgba(0, 0, 0, 0.08),
+    0px 0px 28px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 200px;
+  padding: 50px 0;
+}
+
+@media (max-width: 1100px) {
+  .homeSolveLeft {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  .homeModels {
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 20px !important;
+  }
+
+  .homePlugins {
+    margin: auto;
+    margin-top: 20px;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .homePlugins > div {
+    height: unset !important;
+    margin-bottom: 20px !important;
+  }
+
+  .homeCaseStudyRight img {
+    height: 250px;
+  }
+
+  .homeSteps {
+    width: unset !important;
+    grid-template-columns: 1fr;
+  }
+}

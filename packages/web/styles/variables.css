@@ -1,0 +1,9 @@
+:root {
+  --colorPrimary: #fad114;
+  --colorPrimary22: #fad11422;
+  --colorPrimary55: #fad11455;
+  --colorLink: #ee9817;
+  --textColor: #1f1f1f;
+  --textColorDark: rgba(0, 0, 0, 0.65);
+  --textColorLight: rgba(0, 0, 0, 0.45);
+}
