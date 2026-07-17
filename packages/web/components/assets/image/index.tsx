@@ -1,6 +1,8 @@
 import NextImage from 'next/image'
 
-const Image = (props) => (
+type Props = (typeof NextImage)['arguments']
+
+const Image = (props: Props) => (
   <NextImage
     {...props}
     style={{

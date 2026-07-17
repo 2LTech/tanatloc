@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import {
   ReactNode,
+  Suspense,
   useCallback,
   useEffect,
   useMemo,
@@ -468,4 +469,10 @@ const Doc: React.FunctionComponent = () => {
   )
 }
 
-export default Doc
+const DocWithSearchParams = () => (
+  <Suspense>
+    <Doc />
+  </Suspense>
+)
+
+export default DocWithSearchParams

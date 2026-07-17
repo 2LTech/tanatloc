@@ -1,6 +1,6 @@
 'use client'
 
-import { ChangeEvent, useCallback, useMemo, useState } from 'react'
+import { ChangeEvent, Suspense, useCallback, useMemo, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import {
   Button,
@@ -274,4 +274,10 @@ const Blog: React.FunctionComponent = () => {
   )
 }
 
-export default Blog
+const BlogWithSearchParams = () => (
+  <Suspense>
+    <Blog />
+  </Suspense>
+)
+
+export default BlogWithSearchParams
