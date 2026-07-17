@@ -11,6 +11,13 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@main
 
+      - name: Corepack
+        run: corepack enable
+
+      - uses: actions/setup-node@master
+        with:
+          node-version: '24'
+
       - name: Install
         run: yarn install
 
@@ -20,6 +27,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Corepack
+        run: corepack enable
+
+      - uses: actions/setup-node@master
+        with:
+          node-version: '24'
+
       - name: Depcheck
         run: yarn workspace @tanatloc/web run depcheck
 
