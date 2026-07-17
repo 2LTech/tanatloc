@@ -3,27 +3,14 @@ name: Check all
 on: push
 
 jobs:
-  prepare:
-    name: Checkout
+  web:
+    name: Web
     runs-on: ubuntu-latest
 
     steps:
       - name: Check out Git repository
         uses: actions/checkout@main
 
-      - name: Corepack
-        run: corepack enable
-
-      - uses: actions/setup-node@master
-        with:
-          node-version: '24'
-
-  web:
-    needs: prepare
-    name: Web
-    runs-on: ubuntu-latest
-
-    steps:
       - name: Corepack
         run: corepack enable
 
