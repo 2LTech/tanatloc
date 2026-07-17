@@ -1,13 +1,14 @@
-/** @module Components.Doc.Installation */
-
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { Button, Collapse, Spin, Table, Tabs, Typography } from 'antd'
 
-import { asyncFunctionExec } from '@/components/utils/asyncFunction'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Collapse, Table, Tabs, Typography } from 'antd'
 
-import style from '../index.module.css'
+import { createQueryString } from '@/components/tools/createQueryString'
+
+import Releases from '@/components/assets/releases'
+
+import '../index.css'
 
 // Local interfaces
 export interface IRelease {
@@ -22,94 +23,33 @@ export interface IRelease {
  * @returns Desktop
  */
 const Desktop: React.FunctionComponent = () => {
-  const [release, setRelease] = useState<IRelease>()
-  const [releaseError, setReleaseError] = useState<string>('')
-
-  // Release
-  useEffect(() => {
-    asyncFunctionExec(async () => {
-      try {
-        const releaseResponse = await fetch(
-          'https://api.github.com/repos/Airthium/tanatloc-electron/releases'
-        )
-        const releases = await releaseResponse.json()
-        const latestRelease = releases.find(
-          (r: any) => !r.name.includes('-beta') && !r.name.includes('-alpha')
-        )
-
-        const assetsResponse = await fetch(latestRelease.assets_url)
-        const assets = await assetsResponse.json()
-
-        const appImage = assets.find((a: any) =>
-          a.name.includes('.AppImage')
-        )?.browser_download_url
-
-        const dmg = assets.find((a: any) =>
-          a.name.includes('.dmg')
-        )?.browser_download_url
-
-        const exe = assets.find((a: any) =>
-          a.name.includes('.exe')
-        )?.browser_download_url
-
-        setRelease({
-          version: latestRelease.name,
-          appImage,
-          dmg,
-          exe
-        })
-      } catch (err: any) {
-        setReleaseError(err.message)
-      }
-    })
-  }, [])
-
-  /**
-   * On download Windows
-   */
-  const onDownloadWindows = useCallback((): void => {
-    window.open(release?.exe)
-  }, [release])
-
-  /**
-   * On download MacOS
-   */
-  const onDownloadMacOS = useCallback((): void => {
-    window.open(release?.dmg)
-  }, [release])
-
-  /**
-   * On download Linux
-   */
-  const onDownloadLinux = useCallback((): void => {
-    window.open(release?.appImage)
-  }, [release])
-
   /**
    * Render
    */
   return (
     <>
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Title level={4}>Description</Typography.Title>
         <Typography.Text>
           The Tanatloc desktop application is built using{' '}
           <Link href="https://www.electronjs.org/fr/" target="_blank">
             Electron
           </Link>
+          .
         </Typography.Text>
         <Typography.Text>
           The source code of the electron build is available on{' '}
           <Link
-            href="https://github.com/Airthium/tanatloc-electron"
+            href="https://github.com/2LTech/tanatloc/tree/main/packages/electron"
             target="_blank"
           >
-            tanatloc-electron Github repository
-          </Link>
+            @tanatloc/electron
+          </Link>{' '}
+          Github repository.
         </Typography.Text>
       </Typography>
 
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Title level={4}>Docker Desktop</Typography.Title>
         <Typography.Text>
           The first step is to install{' '}
@@ -119,69 +59,33 @@ const Desktop: React.FunctionComponent = () => {
           >
             Docker Desktop
           </Link>
+          .
         </Typography.Text>
         <Typography.Text>
           Ensure all is working fine before continuing, sometimes Docker Desktop
           needs to install Linux kernel, WSL2 backend, ... and reboot the
-          computer
+          computer.
         </Typography.Text>
-        <Typography.Text className={style.tips}>
+        <Typography.Text className="docTips">
           On Linux, you can activate Docker Desktop autostart using
           <Typography.Text code copyable>
             systemctl --user enable docker-desktop.service
           </Typography.Text>
         </Typography.Text>
-        <Typography.Text className={style.tips}>
+        <Typography.Text className="docTips">
           Docker Desktop must display &apos;Docker Desktop Running&apos;
         </Typography.Text>
       </Typography>
 
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Title level={4}>Download the app</Typography.Title>
         <Typography.Text>
-          Download the latest app version for your OS, and run it
+          Download the latest app version for your OS, and run it.
         </Typography.Text>
 
-        {releaseError}
-        {release ? (
-          <>
-            {release.exe ? (
-              <Button
-                type="primary"
-                onClick={onDownloadWindows}
-                className={style.downloadButton}
-              >
-                <img src="/images/indexpage/windows.svg" alt="" />
-                {/**/}Windows
-              </Button>
-            ) : null}
-            {release.dmg ? (
-              <Button
-                type="primary"
-                onClick={onDownloadMacOS}
-                className={style.downloadButton}
-              >
-                <img src="/images/indexpage/MacOS.svg" alt="" />
-                {/**/}MacOS
-              </Button>
-            ) : null}
-            {release.appImage ? (
-              <Button
-                type="primary"
-                onClick={onDownloadLinux}
-                className={style.downloadButton}
-              >
-                <img src="/images/indexpage/Linux.svg" alt="" />
-                {/**/}Linux
-              </Button>
-            ) : null}
-            <Typography.Text>Version: {release.version}</Typography.Text>
-          </>
-        ) : (
-          <Spin />
-        )}
+        <Releases />
 
-        <Typography.Text className={style.tips}>
+        <Typography.Text className="docTips">
           On Linux, you must allow execution of the AppImage file.
           <br />
           Right-click, Properties, Permissions, Allow executing file as program
@@ -189,18 +93,18 @@ const Desktop: React.FunctionComponent = () => {
           <strong>Or</strong>
           <br />
           <Typography.Text code copyable>
-            chmod +x ./Tanatloc-{release?.version.replace('v', '')}.AppImage
+            chmod +x ./Tanatloc-[VERSION].AppImage
           </Typography.Text>
         </Typography.Text>
 
-        <Typography.Text className={style.tips}>
+        <Typography.Text className="docTips">
           If you want to try a beta version, you can directly look at{' '}
           <Link
-            href="https://github.com/Airthium/tanatloc-electron/releases"
+            href="https://github.com/2LTech/tanatloc/releases"
             target="_blank"
             rel="noreferrer"
           >
-            tanatloc-electron Github releases
+            tanatloc Github releases
           </Link>
         </Typography.Text>
       </Typography>
@@ -233,62 +137,75 @@ const Server: React.FunctionComponent = () => {
 
   const setData = [
     {
+      key: 'tanatloc_tag',
       variable: 'tanatloc_tag',
       description: 'Tanatloc Docker tag',
       default: 'latest'
     },
     {
+      key: 'database_password',
       variable: 'database_password',
       description: 'Database password',
       default: 'password'
     },
     {
+      key: 'database_backup',
       variable: 'database_backup',
       description: 'Database backup path, must be absolute',
       default: '/media/tanatloc-backup/database'
     },
     {
+      key: 'domain',
       variable: 'domain',
       description: 'Custom domaine name, must start with http:// or https://'
     },
     {
+      key: 'ipv6',
       variable: 'ipv6',
       description: 'ON or OFF',
       default: 'ON'
     },
     {
+      key: 'http_port',
       variable: 'http_port',
       description: 'HTTP port',
       default: '80'
     },
     {
+      key: 'https_port',
       variable: 'https_port',
       description: 'HTTPS port',
       default: '443'
     },
     {
+      key: 'http_proxy',
       variable: 'http_proxy',
       description: 'HTTP proxy url'
     },
     {
+      key: 'https_proxy',
       variable: 'https_proxy',
       description: 'HTTPS proxy url'
     },
     {
+      key: 'storage',
       variable: 'storage',
       description: 'Storage path, must be absolute',
       default: 'docker volume'
     },
     {
+      key: 'storage_backup',
       variable: 'storage_backup',
       description: 'Storage backup path, must be absolute',
       default: '/media/tanatloc-backup/storage'
     },
     {
+      key: 'additional_path',
       variable: 'additional_path',
       description: 'Additional $PATH'
     },
     {
+      key: 'sharetask_jvm',
       variable: 'sharetask_jvm',
       description: 'SHARETASK_JVM environment variable'
     }
@@ -315,16 +232,19 @@ const Server: React.FunctionComponent = () => {
 
   const addData = [
     {
+      key: 'volume',
       variable: 'volume',
       description: 'Add a volume in Tanatloc service',
       parameters: 'type, source, target'
     },
     {
+      key: 'dns',
       variable: 'dns',
       description: 'Add a DNS in Tanatloc service',
       parameters: 'dns'
     },
     {
+      key: 'extra_host',
       variable: 'extra_host',
       description: 'Add an extra host in Tanatloc service',
       parameters: 'extra_host'
@@ -336,7 +256,7 @@ const Server: React.FunctionComponent = () => {
    */
   return (
     <>
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Title level={4}>Description</Typography.Title>
         <Typography.Text>
           The Tanatloc server runs through a Docker, with Docker Compose.
@@ -344,25 +264,27 @@ const Server: React.FunctionComponent = () => {
         <Typography.Text>
           The source code of the Docker build is available on{' '}
           <Link
-            href="https://github.com/Airthium/tanatloc-docker"
+            href="https://github.com/2LTech/tanatloc/tree/main/packages/docker"
             target="_blank"
           >
-            tanatloc-docker Github repository
-          </Link>
+            @tanatloc/docker
+          </Link>{' '}
+          Github repository
         </Typography.Text>
         <Typography.Text>
           The Docker Compose configuration, and a deployment script are
           available on{' '}
           <Link
-            href="https://github.com/Airthium/tanatloc-deploy"
+            href="https://github.com/2LTech/tanatloc/tree/main/packages/deploy"
             target="_blank"
           >
-            tanatloc-deploy Github repository
-          </Link>
+            @tanatloc/deploy
+          </Link>{' '}
+          Github repository
         </Typography.Text>
       </Typography>
 
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Title level={4}>Docker</Typography.Title>
         <Typography.Text>
           Install{' '}
@@ -373,10 +295,11 @@ const Server: React.FunctionComponent = () => {
           <Link href="https://docs.docker.com/compose/install/" target="_blank">
             Docker Compose
           </Link>
+          .
         </Typography.Text>
       </Typography>
 
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Title level={4}>Certbot</Typography.Title>
         <Typography.Text>
           If you need an HTTPS certificate, install{' '}
@@ -386,10 +309,11 @@ const Server: React.FunctionComponent = () => {
           >
             Certbot
           </Link>
+          .
         </Typography.Text>
       </Typography>
 
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Title level={4}>Deployment script</Typography.Title>
         <Typography.Text>
           <strong>Clone</strong> the tanatloc-deploy repository
@@ -436,15 +360,15 @@ const Server: React.FunctionComponent = () => {
           <strong>Start</strong> Tanatloc
         </Typography.Text>
         <Typography.Text code>./tanatloc.sh start</Typography.Text>
-        <Typography.Text className={style.warnings}>
+        <Typography.Text className="docWarnings">
           The first start can take time, you will not have access to Tanatloc
           before the start process ends.
         </Typography.Text>
-        <Typography.Text className={style.tips}>
+        <Typography.Text className="docTips">
           You can have a look on the log using{' '}
           <Typography.Text code>./tanatloc.sh log</Typography.Text>
         </Typography.Text>
-        <Typography.Text className={style.tips}>
+        <Typography.Text className="docTips">
           You can display all available commands of{' '}
           <Typography.Text code>./tanatloc.sh</Typography.Text> using{' '}
           <Typography.Text code>./tanatloc.sh help</Typography.Text>
@@ -463,7 +387,7 @@ const Server: React.FunctionComponent = () => {
         <Typography.Text code copyable>
           ./tanatloc.sh set database_backup /existing/path/to/backup
         </Typography.Text>
-        <Typography.Text className={style.tips}>
+        <Typography.Text className="docTips">
           The default backup path is{' '}
           <Typography.Text code>
             /media/tanatloc-backup/database
@@ -554,7 +478,8 @@ const tabs = [
 const Installation: React.FunctionComponent = () => {
   // Data
   const router = useRouter()
-  const query = router.query
+  const searchParams = useSearchParams()
+  const tab = searchParams.get('tab')
 
   /**
    * On change
@@ -562,17 +487,15 @@ const Installation: React.FunctionComponent = () => {
    */
   const onChange = useCallback(
     (key: string) => {
-      asyncFunctionExec(async () => {
-        await router.push({
-          pathname: '/doc',
-          query: {
-            section: 'installation',
-            tab: key
-          }
-        })
-      })
+      router.push(
+        '/doc?' +
+          createQueryString(searchParams, [
+            { name: 'section', value: 'installation' },
+            { name: 'tab', value: key }
+          ])
+      )
     },
-    [router]
+    [router, searchParams]
   )
 
   /**
@@ -582,7 +505,8 @@ const Installation: React.FunctionComponent = () => {
     <>
       <Typography.Title level={3}>Installation</Typography.Title>
       <Tabs
-        defaultActiveKey={(query.tab as string) ?? 'desktop'}
+        className="docTabs"
+        activeKey={tab ?? 'desktop'}
         items={tabs}
         onChange={onChange}
       />

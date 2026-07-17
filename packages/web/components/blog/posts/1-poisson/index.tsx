@@ -1,5 +1,3 @@
-/** @module Components.Blog.Posts.1Poisson */
-
 import { Typography } from 'antd'
 
 import MathJax from '@/components/assets/mathjax'
@@ -11,7 +9,7 @@ const key = '1-poisson'
 const title = "Poisson's problem"
 const description = "First example, the Poisson's problem"
 const date = '2023-01-30'
-const image = '/images/Poisson.png'
+const image = '/img/blog/1-poisson.png'
 const keywords = ['Tutorial', 'Academic']
 const author = {
   name: 'Simon Garnotel',
@@ -36,7 +34,7 @@ const Post: React.FunctionComponent = () => {
         <p>
           Here we will solve a really simple equation, the{' '}
           <strong>Poisson&apos;s equation</strong>:
-          <MathJax.Formula text={'\\Delta u = f'} />
+          <MathJax.Formula text={String.raw`\Delta u = f`} />
           Where <MathJax.Inline text={'u'} /> is our unknow function and{' '}
           <MathJax.Inline text={'f'} /> is an external force
         </p>
@@ -55,7 +53,7 @@ const Post: React.FunctionComponent = () => {
         <p>
           We will solve our problem on a cube geometry{' '}
           <MathJax.Inline
-            text={'[-0.16, 0.14]\\times[-0.14, 0.16]\\times[0, 0.3]'}
+            text={String.raw`[-0.16, 0.14]\times[-0.14, 0.16]\times[0, 0.3]`}
           />
         </p>
       </section>
@@ -67,17 +65,17 @@ const Post: React.FunctionComponent = () => {
           items={[
             {
               key: 'workspace1',
-              src: '/blog/1-poisson/workspace1.jpg',
+              src: '/img/blog/1-poisson/workspace1.jpg',
               alt: 'Workspace creation'
             },
             {
               key: 'workspace2',
-              src: '/blog/1-poisson/workspace2.jpg',
+              src: '/img/blog/1-poisson/workspace2.jpg',
               alt: 'Workspace creation'
             },
             {
               key: 'workspace3',
-              src: '/blog/1-poisson/workspace3.jpg',
+              src: '/img/blog/1-poisson/workspace3.jpg',
               alt: 'Workspace creation'
             }
           ]}
@@ -91,12 +89,12 @@ const Post: React.FunctionComponent = () => {
           items={[
             {
               key: 'project1',
-              src: '/blog/1-poisson/project1.jpg',
+              src: '/img/blog/1-poisson/project1.jpg',
               alt: 'Project creation'
             },
             {
               key: 'project2',
-              src: '/blog/1-poisson/project2.jpg',
+              src: '/img/blog/1-poisson/project2.jpg',
               alt: 'Project creation'
             }
           ]}
@@ -127,17 +125,17 @@ const Post: React.FunctionComponent = () => {
           items={[
             {
               key: 'project2',
-              src: '/blog/1-poisson/project2.jpg',
+              src: '/img/blog/1-poisson/project2.jpg',
               alt: 'Geometry import'
             },
             {
               key: 'geometry1',
-              src: '/blog/1-poisson/geometry1.jpg',
+              src: '/img/blog/1-poisson/geometry1.jpg',
               alt: 'Geometry import'
             },
             {
               key: 'geometry2',
-              src: '/blog/1-poisson/geometry2.jpg',
+              src: '/img/blog/1-poisson/geometry2.jpg',
               alt: 'Geometry import'
             }
           ]}
@@ -154,12 +152,12 @@ const Post: React.FunctionComponent = () => {
           items={[
             {
               key: 'simulation1',
-              src: '/blog/1-poisson/simulation1.jpg',
+              src: '/img/blog/1-poisson/simulation1.jpg',
               alt: 'Simulation creation'
             },
             {
               key: 'simulation2',
-              src: '/blog/1-poisson/simulation2.jpg',
+              src: '/img/blog/1-poisson/simulation2.jpg',
               alt: 'Simulation creation'
             }
           ]}
@@ -180,7 +178,7 @@ const Post: React.FunctionComponent = () => {
           items={[
             {
               key: 'geometry',
-              src: '/blog/1-poisson/simulation_param_geometry.jpg',
+              src: '/img/blog/1-poisson/simulation_param_geometry.jpg',
               alt: 'Simulation parametrization geometry'
             }
           ]}
@@ -199,12 +197,12 @@ const Post: React.FunctionComponent = () => {
           items={[
             {
               key: 'parameters1',
-              src: '/blog/1-poisson/simulation_param_parameters1.jpg',
+              src: '/img/blog/1-poisson/simulation_param_parameters1.jpg',
               alt: 'Simulation parametrization parameters'
             },
             {
               key: 'parameters2',
-              src: '/blog/1-poisson/simulation_param_parameters2.jpg',
+              src: '/img/blog/1-poisson/simulation_param_parameters2.jpg',
               alt: 'Simulation parametrization parameters'
             }
           ]}
@@ -214,28 +212,28 @@ const Post: React.FunctionComponent = () => {
         <p>Click on Boundary conditions</p>
         <p>
           We will add a Dirichlet boundary condition:
-          <MathJax.Formula text={'u = 1\\text{ on }\\{2\\}'} />
+          <MathJax.Formula text={String.raw`u = 1\text{ on }\{2\}`} />
         </p>
         <Carousel
           items={[
             {
               key: 'boundaryConditions1',
-              src: '/blog/1-poisson/simulation_param_boundaryconditions1.jpg',
+              src: '/img/blog/1-poisson/simulation_param_boundaryconditions1.jpg',
               alt: 'Simulation parametrization boundary conditions'
             },
             {
               key: 'boundaryConditions2',
-              src: '/blog/1-poisson/simulation_param_boundaryconditions2.jpg',
+              src: '/img/blog/1-poisson/simulation_param_boundaryconditions2.jpg',
               alt: 'Simulation parametrization boundary conditions'
             },
             {
               key: 'boundaryConditions3',
-              src: '/blog/1-poisson/simulation_param_boundaryconditions3.jpg',
+              src: '/img/blog/1-poisson/simulation_param_boundaryconditions3.jpg',
               alt: 'Simulation parametrization boundary conditions'
             },
             {
               key: 'boudnaryConditions4',
-              src: '/blog/1-poisson/simulation_param_boundaryconditions4.jpg',
+              src: '/img/blog/1-poisson/simulation_param_boundaryconditions4.jpg',
               alt: 'Simulation parametrization boundary conditions'
             }
           ]}
@@ -256,27 +254,27 @@ const Post: React.FunctionComponent = () => {
           items={[
             {
               key: 'run1',
-              src: '/blog/1-poisson/simulation_param_run1.jpg',
+              src: '/img/blog/1-poisson/simulation_param_run1.jpg',
               alt: 'Simulation parametrization run'
             },
             {
               key: 'run2',
-              src: '/blog/1-poisson/simulation_param_run2.jpg',
+              src: '/img/blog/1-poisson/simulation_param_run2.jpg',
               alt: 'Simulation parametrization run'
             },
             {
               key: 'run3',
-              src: '/blog/1-poisson/simulation_param_run3.jpg',
+              src: '/img/blog/1-poisson/simulation_param_run3.jpg',
               alt: 'Simulation parametrization run'
             },
             {
               key: 'run4',
-              src: '/blog/1-poisson/simulation_param_run4.jpg',
+              src: '/img/blog/1-poisson/simulation_param_run4.jpg',
               alt: 'Simulation parametrization run'
             },
             {
               key: 'run5',
-              src: '/blog/1-poisson/simulation_param_run5.jpg',
+              src: '/img/blog/1-poisson/simulation_param_run5.jpg',
               alt: 'Simulation parametrization run'
             }
           ]}
@@ -291,7 +289,7 @@ const Post: React.FunctionComponent = () => {
           items={[
             {
               key: 'mesh',
-              src: '/blog/1-poisson/simulation_param_run_mesh.jpg',
+              src: '/img/blog/1-poisson/simulation_param_run_mesh.jpg',
               alt: 'Simulation parametrization run mesh'
             }
           ]}
@@ -311,12 +309,12 @@ const Post: React.FunctionComponent = () => {
           items={[
             {
               key: 'result1',
-              src: '/blog/1-poisson/simulation_param_run_result1.jpg',
+              src: '/img/blog/1-poisson/simulation_param_run_result1.jpg',
               alt: 'Simulation parametrization run result'
             },
             {
               key: 'result2',
-              src: '/blog/1-poisson/simulation_param_run_result2.jpg',
+              src: '/img/blog/1-poisson/simulation_param_run_result2.jpg',
               alt: 'Simulation parametrization run result'
             }
           ]}
@@ -337,7 +335,7 @@ const Post: React.FunctionComponent = () => {
           items={[
             {
               key: 'sensor',
-              src: '/blog/1-poisson/simulation_param_run_sensor.jpg',
+              src: '/img/blog/1-poisson/simulation_param_run_sensor.jpg',
               alt: 'Simulation parametrization run sensor'
             }
           ]}

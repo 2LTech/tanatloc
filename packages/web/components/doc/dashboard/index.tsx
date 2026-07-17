@@ -1,10 +1,8 @@
-/** @module Components.Doc.Dashboard */
-
 import { useCallback } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Tabs, Typography } from 'antd'
-import { useRouter } from 'next/navigation'
 
-import { asyncFunctionExec } from '@/components/utils/asyncFunction'
+import { createQueryString } from '@/components/tools/createQueryString'
 
 import Workspace from './workspace'
 import Account from './account'
@@ -13,7 +11,7 @@ import Administration from './administration'
 import Editor from './editor'
 import Help from './help'
 
-import style from '../index.module.css'
+import '../index.css'
 
 /**
  * Tabs
@@ -45,7 +43,7 @@ const tabs = [
     children: <Editor />
   },
   {
-    key: 'Help',
+    key: 'help',
     label: 'Help',
     children: <Help />
   }
@@ -58,7 +56,8 @@ const tabs = [
 const Dashboard: React.FunctionComponent = () => {
   // Data
   const router = useRouter()
-  const query = router.query
+  const searchParams = useSearchParams()
+  const tab = searchParams.get('tab')
 
   /**
    * On change
@@ -66,17 +65,16 @@ const Dashboard: React.FunctionComponent = () => {
    */
   const onChange = useCallback(
     (key: string): void => {
-      asyncFunctionExec(async () => {
-        await router.push({
-          pathname: '/doc',
-          query: {
-            section: 'dashboard',
-            tab: key
-          }
-        })
-      })
+      router.push(
+        '/doc' +
+          '?' +
+          createQueryString(searchParams, [
+            { name: 'section', value: 'dashboard' },
+            { name: 'tab', value: key }
+          ])
+      )
     },
-    [router]
+    [router, searchParams]
   )
 
   /**
@@ -85,7 +83,7 @@ const Dashboard: React.FunctionComponent = () => {
   return (
     <>
       <Typography.Title level={3}>Dashboard</Typography.Title>
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Text>
           The dashboard is the main place where you can manage your workspaces
           and projects, your account, your organizations and get help. There is
@@ -98,7 +96,8 @@ const Dashboard: React.FunctionComponent = () => {
       </Typography>
 
       <Tabs
-        defaultActiveKey={(query.tab as string) ?? 'workspaces'}
+        className="docTabs"
+        activeKey={tab ?? 'workspaces'}
         items={tabs}
         onChange={onChange}
       />

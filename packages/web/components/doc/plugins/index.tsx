@@ -1,14 +1,13 @@
-/** @module Components.Doc.Plugins */
-
 import { useCallback } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Tabs, Typography } from 'antd'
 
-import { asyncFunctionExec } from '@/components/utils/asyncFunction'
+import { createQueryString } from '@/components/tools/createQueryString'
+
 import Carousel from '@/components/assets/carousel'
 
-import style from '../index.module.css'
+import '../index.css'
 
 /**
  * HPC
@@ -22,14 +21,14 @@ const Hpc: React.FunctionComponent = () => {
     <>
       <Typography.Title level={4}>HPC Plugins</Typography.Title>
 
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Text>
           HPC plugins availability depends on your installation. Some plugins
           are part of a paid feature
         </Typography.Text>
       </Typography>
 
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Title level={4}>Local plugin</Typography.Title>
         <Typography.Text>
           Allow to compute a simulation directly on your computer with the
@@ -49,13 +48,13 @@ const Hpc: React.FunctionComponent = () => {
         items={[
           {
             key: 'local',
-            src: 'doc/plugins_local.jpg',
+            src: '/img/doc/plugins_local.jpg',
             caption: 'Local plugin'
           }
         ]}
       />
 
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Title level={4}>
           Rescale plugin (Pay-feature)
         </Typography.Title>
@@ -86,13 +85,13 @@ const Hpc: React.FunctionComponent = () => {
         items={[
           {
             key: 'rescale',
-            src: 'doc/plugins_rescale.jpg',
+            src: '/img/doc/plugins_rescale.jpg',
             caption: 'Rescale plugin'
           }
         ]}
       />
 
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Title level={4}>
           Sharetask plugin (Pay-feature)
         </Typography.Title>
@@ -121,7 +120,7 @@ const Hpc: React.FunctionComponent = () => {
         items={[
           {
             key: 'sharetask',
-            src: 'doc/plugins_sharetask.jpg',
+            src: '/img/doc/plugins_sharetask.jpg',
             caption: 'Sharetask plugin'
           }
         ]}
@@ -142,7 +141,7 @@ const Model: React.FunctionComponent = () => {
     <>
       <Typography.Title level={4}>Model Plugins</Typography.Title>
 
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Text>
           Model plugins allow to add specific algorithms to the already existing
           Tanatloc algorithms. It is a pay feature
@@ -175,7 +174,8 @@ const tabs = [
 const Plugins: React.FunctionComponent = () => {
   // Data
   const router = useRouter()
-  const query = router.query
+  const searchParams = useSearchParams()
+  const tab = searchParams.get('tab')
 
   /**
    * On change
@@ -183,17 +183,16 @@ const Plugins: React.FunctionComponent = () => {
    */
   const onChange = useCallback(
     (key: string) => {
-      asyncFunctionExec(async () => {
-        await router.push({
-          pathname: '/doc',
-          query: {
-            section: 'plugins',
-            tab: key
-          }
-        })
-      })
+      router.push(
+        '/doc' +
+          '?' +
+          createQueryString(searchParams, [
+            { name: 'section', value: 'plugins' },
+            { name: 'tab', value: key }
+          ])
+      )
     },
-    [router]
+    [router, searchParams]
   )
 
   /**
@@ -204,7 +203,8 @@ const Plugins: React.FunctionComponent = () => {
       <Typography.Title level={3}>Plugins</Typography.Title>
 
       <Tabs
-        defaultActiveKey={(query.tab as string) ?? 'hpc'}
+        className="docTabs"
+        activeKey={tab ?? 'hpc'}
         items={tabs}
         onChange={onChange}
       />

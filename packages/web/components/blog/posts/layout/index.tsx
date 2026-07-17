@@ -1,17 +1,15 @@
-/** @module Components.Blog.Posts.Layout */
-
 import { useCallback } from 'react'
-import { Tag, Typography } from 'antd'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { Tag, Typography } from 'antd'
 
-import { asyncFunctionExec } from '@/components/utils/asyncFunction'
+import { stringToColor } from '@/components/tools/stringToColor'
+
 import { GoBack } from '@/components/assets/button'
 
-import Utils from '@/lib/utils'
+import Image from '@/components/assets/image'
 
-import globalStyle from '@/styles/index.module.css'
-import style from '../../index.module.css'
+import '../../index.css'
 
 // Local interface
 export interface IReference {
@@ -36,7 +34,7 @@ export interface IProps {
     url: string
   }
   version: string
-  children: any
+  children: React.ReactElement | React.ReactElement[] | string
   references?: IReference[]
 }
 
@@ -75,20 +73,18 @@ const PostLayout: React.FunctionComponent<IProps> = ({
    * On go back
    */
   const onGoBack = useCallback(() => {
-    asyncFunctionExec(async () => {
-      await router.push('/blog')
-    })
+    router.push('/blog')
   }, [router])
 
   /**
    * Render
    */
   return (
-    <div className={style.postLayout}>
+    <div className="blogPostLayout">
       <div>
         <GoBack onClick={onGoBack} />
       </div>
-      <div className={style.postTitle}>
+      <div className="blogPostTitle">
         <div>
           <Typography.Title level={2}>{title}</Typography.Title>
           <Typography.Text>
@@ -98,23 +94,23 @@ const PostLayout: React.FunctionComponent<IProps> = ({
           <a href={author.url} target="_blank" rel="noreferrer">
             <Typography.Text>{author.name}</Typography.Text>
           </a>
-          <br />
-          {keywords.map((keyword) => (
-            <Tag color={Utils.stringToColor(keyword)} key={keyword}>
-              {keyword}
-            </Tag>
-          ))}
-          <br />
-          <Typography.Text className={globalStyle.textLight}>
+          <div className="blogPostTitleTags">
+            {keywords.map((keyword) => (
+              <Tag color={stringToColor(keyword)} key={keyword}>
+                {keyword}
+              </Tag>
+            ))}
+          </div>
+          <Typography.Text className="textLight">
             Tanatloc version {version}
           </Typography.Text>
         </div>
         <div>
-          <img src={image} alt={title} />
+          <Image src={image} width={200} height={200} alt={title} />
         </div>
       </div>
 
-      <div className={style.postContent}>{children}</div>
+      <div className="blogPostContent">{children}</div>
 
       {references?.length ? (
         <section>

@@ -1,8 +1,6 @@
-/** @module Components.Doc.Project */
-
 import { useCallback } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Button, Switch, Tabs, Typography } from 'antd'
 import {
   BorderlessTableOutlined,
@@ -26,11 +24,12 @@ import {
   ZoomOutOutlined
 } from '@ant-design/icons'
 
-import { asyncFunctionExec } from '@/components/utils/asyncFunction'
-import { AddButton } from '@/components/assets/button'
+import { createQueryString } from '@/components/tools/createQueryString'
+
+import { AddButton } from '@/components/assets/fakeButton'
 import Carousel from '@/components/assets/carousel'
 
-import style from '../index.module.css'
+import '../index.css'
 
 /**
  * Geometry
@@ -43,7 +42,7 @@ const Geometry: React.FunctionComponent = () => {
   return (
     <>
       <Typography.Title level={4}>Geometry</Typography.Title>
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Text>
           The first step when you open a new project is to import a geometry
         </Typography.Text>
@@ -70,18 +69,18 @@ const Geometry: React.FunctionComponent = () => {
         items={[
           {
             key: 'upload',
-            src: '/doc/project_geometry1.jpg',
+            src: '/img/doc/project_geometry1.jpg',
             caption: 'Upload a geometry'
           },
           {
             key: 'geometry',
-            src: '/doc/project_geometry2.jpg',
+            src: '/img/doc/project_geometry2.jpg',
             caption: 'Geometry display'
           }
         ]}
       />
-      <Typography className={style.text}>
-        <Typography.Text className={style.warnings}>
+      <Typography className="docText">
+        <Typography.Text className="docWarnings">
           For the DXF upload, make sure your geometry is in the X-Y plane
         </Typography.Text>
       </Typography>
@@ -100,12 +99,10 @@ const Simulation: React.FunctionComponent = () => {
   return (
     <>
       <Typography.Title level={4}>Simulation</Typography.Title>
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Text>
           You can create a new simulation using{' '}
-          <AddButton primary={false} onAdd={() => undefined}>
-            New Simulation
-          </AddButton>
+          <AddButton primary={false}>New Simulation</AddButton>
         </Typography.Text>
         <Typography.Text>
           Here we select a linear elasticity time dependant problem
@@ -115,23 +112,23 @@ const Simulation: React.FunctionComponent = () => {
         items={[
           {
             key: 'list',
-            src: '/doc/project_simulation_list.jpg',
+            src: '/img/doc/project_simulation_list.jpg',
             caption: 'Simulations list'
           },
           {
             key: 'create',
-            src: '/doc/project_simulation_create.jpg',
+            src: '/img/doc/project_simulation_create.jpg',
             caption: 'Create simulation'
           },
           {
             key: 'show',
-            src: '/doc/project_simulation_show.jpg',
+            src: '/img/doc/project_simulation_show.jpg',
             caption: 'Simulation'
           }
         ]}
       />
 
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Title level={5}>Geometry</Typography.Title>
         <Typography.Text>
           You have to click on the Geometry menu to select the geometry
@@ -165,22 +162,20 @@ const Simulation: React.FunctionComponent = () => {
         items={[
           {
             key: 'geometry',
-            src: '/doc/project_simulation_geometry.jpg',
+            src: '/img/doc/project_simulation_geometry.jpg',
             caption: 'Simulation geometry'
           }
         ]}
       />
 
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Title level={5}>Materials</Typography.Title>
         <Typography.Text>
           Depending on your simulation, you may have to choose a material
         </Typography.Text>
         <Typography.Text>
           Click on the Material menu, and{' '}
-          <AddButton primary={false} onAdd={() => undefined}>
-            Add material
-          </AddButton>
+          <AddButton primary={false}>Add material</AddButton>
         </Typography.Text>
         <Typography.Text>
           Select a material using the database (Pick a material) and by directly
@@ -193,33 +188,33 @@ const Simulation: React.FunctionComponent = () => {
         items={[
           {
             key: 'materials',
-            src: '/doc/project_simulation_materials.jpg',
+            src: '/img/doc/project_simulation_materials.jpg',
             caption: 'Simulation materials'
           },
           {
             key: 'create',
-            src: '/doc/project_simulation_materials_create.jpg',
+            src: '/img/doc/project_simulation_materials_create.jpg',
             caption: 'Material create'
           },
           {
             key: 'database',
-            src: '/doc/project_simulation_materials_database.jpg',
+            src: '/img/doc/project_simulation_materials_database.jpg',
             caption: 'Material database'
           },
           {
             key: 'select',
-            src: '/doc/project_simulation_materials_select.jpg',
+            src: '/img/doc/project_simulation_materials_select.jpg',
             caption: 'Material solid selection'
           },
           {
             key: 'list',
-            src: '/doc/project_simulation_materials_list.jpg',
+            src: '/img/doc/project_simulation_materials_list.jpg',
             caption: 'Materials list'
           }
         ]}
       />
-      <Typography className={style.text}>
-        <Typography.Text className={style.tips}>
+      <Typography className="docText">
+        <Typography.Text className="docTips">
           Selector buttons:
           <ul>
             <li>
@@ -233,13 +228,13 @@ const Simulation: React.FunctionComponent = () => {
             </li>
           </ul>
         </Typography.Text>
-        <Typography.Text className={style.tips}>
+        <Typography.Text className="docTips">
           If you design your STEP file with color, you will be able to select by
           group of color with the selector
         </Typography.Text>
       </Typography>
 
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Title level={5}>Parameters</Typography.Title>
         <Typography.Text>Click on the Parameters menu</Typography.Text>
         <Typography.Text>Parameters depends on your simulation</Typography.Text>
@@ -251,25 +246,22 @@ const Simulation: React.FunctionComponent = () => {
         items={[
           {
             key: 'parameters',
-            src: '/doc/project_simulation_parameters.jpg',
+            src: '/img/doc/project_simulation_parameters.jpg',
             caption: 'Simulation parameters'
           },
           {
             key: 'adanced',
-            src: '/doc/project_simulation_parameters_advanced.jpg',
+            src: '/img/doc/project_simulation_parameters_advanced.jpg',
             caption: 'Simulation advanced parameters'
           }
         ]}
       />
 
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Title level={5}>Boundary Conditions</Typography.Title>
         <Typography.Text>Click on Boundary conditions menu</Typography.Text>
         <Typography.Text>
-          Click on{' '}
-          <AddButton primary={false} onAdd={() => undefined}>
-            Add boundary condition
-          </AddButton>
+          Click on <AddButton primary={false}>Add boundary condition</AddButton>
         </Typography.Text>
         <Typography.Text>
           Select the type of boundary condition, fill the values if necessary
@@ -281,33 +273,33 @@ const Simulation: React.FunctionComponent = () => {
         items={[
           {
             key: 'boundaryConditions',
-            src: '/doc/project_simulation_boundaryConditions.jpg',
+            src: '/img/doc/project_simulation_boundaryConditions.jpg',
             caption: 'Boundary conditions'
           },
           {
             key: 'create',
-            src: '/doc/project_simulation_boundaryConditions_create.jpg',
+            src: '/img/doc/project_simulation_boundaryConditions_create.jpg',
             caption: 'Create boundary condition'
           },
           {
             key: 'add',
-            src: '/doc/project_simulation_boundaryConditions_add.jpg',
+            src: '/img/doc/project_simulation_boundaryConditions_add.jpg',
             caption: 'Add boundary condition'
           },
           {
             key: 'list',
-            src: '/doc/project_simulation_boundaryConditions_list.jpg',
+            src: '/img/doc/project_simulation_boundaryConditions_list.jpg',
             caption: 'Boundary conditions list'
           }
         ]}
       />
 
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Title level={5}>Run</Typography.Title>
         <Typography.Text>
           You can add a sensor before running the computation to extract data
           during the simulation process using{' '}
-          <AddButton onAdd={() => undefined}>Add a sensor</AddButton>
+          <AddButton>Add a sensor</AddButton>
         </Typography.Text>
         <Typography.Text>
           You have to select a computational resource. The local plugin is
@@ -326,32 +318,32 @@ const Simulation: React.FunctionComponent = () => {
         items={[
           {
             key: 'run',
-            src: '/doc/project_simulation_run.jpg',
+            src: '/img/doc/project_simulation_run.jpg',
             caption: 'Run'
           },
           {
             key: 'sensor',
-            src: '/doc/project_simulation_run_sensor.jpg',
+            src: '/img/doc/project_simulation_run_sensor.jpg',
             caption: 'Sensor'
           },
           {
             key: 'resource',
-            src: '/doc/project_simulation_run_resource.jpg',
+            src: '/img/doc/project_simulation_run_resource.jpg',
             caption: 'Computational resource'
           },
           {
             key: 'ready',
-            src: '/doc/project_simulation_run_ready.jpg',
+            src: '/img/doc/project_simulation_run_ready.jpg',
             caption: 'Ready to run'
           },
           {
             key: 'results',
-            src: '/doc/project_simulation_run_results.jpg',
+            src: '/img/doc/project_simulation_run_results.jpg',
             caption: 'Results'
           }
         ]}
       />
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Text>
           You can have a look on the output log of meshing and simulation using{' '}
           <Button icon={<FileTextOutlined />} />
@@ -361,13 +353,13 @@ const Simulation: React.FunctionComponent = () => {
         items={[
           {
             key: 'log',
-            src: 'doc/project_simulation_run_log.jpg',
+            src: '/img/doc/project_simulation_run_log.jpg',
             caption: 'Run log'
           }
         ]}
       />
 
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Title level={5}>Run summary</Typography.Title>
         <Typography.Text>
           You can download the simulation run summary using{' '}
@@ -382,13 +374,13 @@ const Simulation: React.FunctionComponent = () => {
         items={[
           {
             key: 'summary',
-            src: 'doc/project_simulation_summary.jpg',
+            src: '/img/doc/project_simulation_summary.jpg',
             caption: 'Simulation run summary'
           }
         ]}
       />
 
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Title level={5}>Mesh</Typography.Title>
         <Typography.Text>
           To display the mesh, click on{' '}
@@ -403,13 +395,13 @@ const Simulation: React.FunctionComponent = () => {
         items={[
           {
             key: 'mesh',
-            src: 'doc/project_simulation_mesh.jpg',
+            src: '/img/doc/project_simulation_mesh.jpg',
             caption: 'Mesh'
           }
         ]}
       />
 
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Title level={5}>Result</Typography.Title>
         <Typography.Text>
           To display a result, click on{' '}
@@ -425,13 +417,13 @@ const Simulation: React.FunctionComponent = () => {
         items={[
           {
             key: 'result',
-            src: 'doc/project_simulation_result.jpg',
+            src: '/img/doc/project_simulation_result.jpg',
             caption: 'Simulation result'
           }
         ]}
       />
 
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Title level={5}>Data</Typography.Title>
         <Typography.Text>
           To display the data, click on{' '}
@@ -446,18 +438,18 @@ const Simulation: React.FunctionComponent = () => {
         items={[
           {
             key: 'button',
-            src: 'doc/project_simulation_data_button.jpg',
+            src: '/img/doc/project_simulation_data_button.jpg',
             caption: 'Data visualization button'
           },
           {
             key: 'data',
-            src: 'doc/project_simulation_data.jpg',
+            src: '/img/doc/project_simulation_data.jpg',
             caption: 'Data'
           }
         ]}
       />
 
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Title level={5}>Post-processing</Typography.Title>
         <Typography.Text>
           To display the post-processing tools, click on{' '}
@@ -472,17 +464,17 @@ const Simulation: React.FunctionComponent = () => {
         items={[
           {
             key: 'button',
-            src: 'doc/project_simulation_postprocessing_button.jpg',
+            src: '/img/doc/project_simulation_postprocessing_button.jpg',
             caption: 'Post-processing button'
           },
           {
             key: 'postprocessing',
-            src: 'doc/project_simulation_postprocessing.jpg',
+            src: '/img/doc/project_simulation_postprocessing.jpg',
             caption: 'Post-processing'
           },
           {
             key: 'result',
-            src: 'doc/project_simulation_postprocessing_view.jpg',
+            src: '/img/doc/project_simulation_postprocessing_view.jpg',
             caption: 'Post-processing result'
           }
         ]}
@@ -499,7 +491,7 @@ const View: React.FunctionComponent = () => {
   return (
     <>
       <Typography.Title level={4}>View Tools</Typography.Title>
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Text>
           There are some visualization tools on the right of the project screen
         </Typography.Text>
@@ -584,17 +576,17 @@ const View: React.FunctionComponent = () => {
         items={[
           {
             key: 'view',
-            src: 'doc/project_view.jpg',
+            src: '/img/doc/project_view.jpg',
             caption: 'Default view'
           },
           {
             key: 'section',
-            src: 'doc/project_view_section.jpg',
+            src: '/img/doc/project_view_section.jpg',
             caption: 'Section view'
           },
           {
             key: 'result',
-            src: 'doc/project_view_result.jpg',
+            src: '/img/doc/project_view_result.jpg',
             caption: 'Results tools'
           }
         ]}
@@ -631,7 +623,8 @@ const tabs = [
 const Project: React.FunctionComponent = () => {
   // Data
   const router = useRouter()
-  const query = router.query
+  const searchParams = useSearchParams()
+  const tab = searchParams.get('tab')
 
   /**
    * On change
@@ -639,17 +632,15 @@ const Project: React.FunctionComponent = () => {
    */
   const onChange = useCallback(
     (key: string) => {
-      asyncFunctionExec(async () => {
-        await router.push({
-          pathname: '/doc',
-          query: {
-            section: 'project',
-            tab: key
-          }
-        })
-      })
+      router.push(
+        '/doc?' +
+          createQueryString(searchParams, [
+            { name: 'section', value: 'project' },
+            { name: 'tab', value: key }
+          ])
+      )
     },
-    [router]
+    [router, searchParams]
   )
 
   /**
@@ -659,13 +650,13 @@ const Project: React.FunctionComponent = () => {
     <>
       <Typography.Title level={3}>Project</Typography.Title>
 
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Text>
           The project is used to manage geometries, simulation and results.
         </Typography.Text>
       </Typography>
 
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Title level={4}>Open a project</Typography.Title>
         <Typography.Text>
           Just click on the project card to open it
@@ -675,14 +666,15 @@ const Project: React.FunctionComponent = () => {
         items={[
           {
             key: 'project',
-            src: '/doc/project_show.jpg',
+            src: '/img/doc/project_show.jpg',
             caption: 'Open a project'
           }
         ]}
       />
 
       <Tabs
-        defaultActiveKey={(query.tab as string) ?? 'geometry'}
+        className="docTabs"
+        activeKey={tab ?? 'geometry'}
         items={tabs}
         onChange={onChange}
       />

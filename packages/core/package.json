@@ -36,7 +36,7 @@
     "modelValidator": "ts-json-schema-generator --path models/index.d.ts --type 'IModel' --tsconfig ./tsconfig.json --no-type-check --out src/components/editor/steps/model.json"
   },
   "dependencies": {
-    "electron": "43.1.0",
+    "electron": "43.1.1",
     "electron-serve": "3.0.1",
     "electron-store": "11.0.2"
   },
@@ -78,7 +78,7 @@
     "@types/url-join": "5.0.0",
     "@types/uuid": "11.0.0",
     "ajv": "8.20.0",
-    "antd": "6.5.0",
+    "antd": "6.5.1",
     "archiver": "8.0.0",
     "babel-jest": "30.4.1",
     "cookie": "2.0.1",
@@ -118,7 +118,7 @@
     "swr": "2.4.2",
     "tar": "7.5.20",
     "ts-json-schema-generator": "2.9.0",
-    "tsx": "4.23.0",
+    "tsx": "4.23.1",
     "typedoc": "0.28.20",
     "typescript": "6.0.3",
     "url-join": "5.0.0",

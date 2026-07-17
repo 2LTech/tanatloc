@@ -1,331 +1,92 @@
-/** @module Components.Index */
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
   Avatar,
   Button,
   Checkbox,
-  Collapse,
-  Drawer,
   Layout,
   Space,
-  Spin,
   Steps,
   Typography
 } from 'antd'
-import { BugOutlined, SettingOutlined } from '@ant-design/icons'
+import { SettingOutlined } from '@ant-design/icons'
 
-import packageJson from '@/package.json'
-
-import Side from '@/components/side'
-
-import Menu from '@/components/menu'
-import Footer from '@/components/footer'
+import Header from '@/components/assets/header'
+import Footer from '@/components/assets/footer'
+import Side from '@/components/assets/side'
+import Image from '@/components/assets/image'
+import Releases from '@/components/assets/releases'
 
 import './index.css'
 
 // Local interfaces
-export interface IRelease {
-  version: string
-  appImage: string
-  dmg: string
-  exe: string
+export interface IPluginDisplayBase {
+  key: string
+  title: string
+  subTitle: string
 }
+
+export interface IPluginDisplayImg extends IPluginDisplayBase {
+  img: string
+}
+
+export interface IPluginDisplayIcon extends IPluginDisplayBase {
+  icon: React.ReactElement
+}
+
+export type IPluginDisplay = IPluginDisplayImg | IPluginDisplayIcon
+
+const pluginsDisplay: IPluginDisplay[] = [
+  {
+    key: 'rescale',
+    img: '/img/home/logo-rescale.svg',
+    title: 'Rescale',
+    subTitle: 'Paid feature'
+  },
+  {
+    key: 'ancl',
+    img: '/img/home/logo-ancl.jpg',
+    title: 'ANCL Sharetask',
+    subTitle: 'Paid feature'
+  },
+  {
+    key: 'slurm',
+    img: '/img/home/logo-slurm.svg',
+    title: 'Slurm',
+    subTitle: 'On request'
+  },
+  {
+    key: 'qarnot',
+    img: '/img/home/logo-qarnot.svg',
+    title: 'Qarnot HPC',
+    subTitle: 'On request'
+  },
+  {
+    key: 'own',
+    title: 'Your own plugin',
+    subTitle: 'Paid feature',
+    icon: <SettingOutlined />
+  }
+]
 
 /**
  * Index
  * @returns Index
  */
 const Index: React.FunctionComponent = () => {
-  // State
-  const [dockerOpen, setDockerOpen] = useState<boolean>(false)
-  const [troubleshootingOpen, setTroubleshootingOpen] = useState<boolean>(false)
-  const [release, setRelease] = useState<IRelease>()
-  const [releaseError, setReleaseError] = useState<string>('')
-
-  // Data
-  const router = useRouter()
-
-  // Release
-  useEffect(() => {
-    // asyncFunctionExec(async () => {
-    //   try {
-    //     const releaseResponse = await fetch(
-    //       'https://api.github.com/repos/Airthium/tanatloc-electron/releases'
-    //     )
-    //     const releases = await releaseResponse.json()
-    //     const latestRelease = releases.find(
-    //       (r: any) => !r.name.includes('-beta') && !r.name.includes('-alpha')
-    //     )
-    //     const assetsResponse = await fetch(latestRelease.assets_url)
-    //     const assets = await assetsResponse.json()
-    //     const appImage = assets.find((a: any) =>
-    //       a.name.includes('.AppImage')
-    //     )?.browser_download_url
-    //     const dmg = assets.find((a: any) =>
-    //       a.name.includes('.dmg')
-    //     )?.browser_download_url
-    //     const exe = assets.find((a: any) =>
-    //       a.name.includes('.exe')
-    //     )?.browser_download_url
-    //     setRelease({
-    //       version: latestRelease.name,
-    //       appImage,
-    //       dmg,
-    //       exe
-    //     })
-    //   } catch (err: any) {
-    //     setReleaseError(err.message)
-    //   }
-    // })
-  }, [])
-
-  /**
-   * On router
-   * @param route Route
-   */
-  const onRouter = useCallback(
-    (route: string): void => {
-      router.push(route)
-    },
-    [router]
-  )
-
-  /**
-   * On download
-   * @param key Key
-   */
-  const onDownload = useCallback(
-    (key: string): void => {
-      switch (key) {
-        case 'Windows':
-          onRouter(release!.exe)
-          break
-        case 'MacOS':
-          onRouter(release!.dmg)
-          break
-        case 'Linux':
-          onRouter(release!.appImage)
-          break
-      }
-    },
-    [release, onRouter]
-  )
-
-  /**
-   * Set docker open true
-   */
-  const setDockerOpenTrue = useCallback((): void => setDockerOpen(true), [])
-
-  /**
-   * Set docker open false
-   */
-  const setDockerOpenFalse = useCallback((): void => setDockerOpen(false), [])
-
-  /**
-   * Set troubleshooting open true
-   */
-  const setTroubleshootingOpenTrue = useCallback(
-    (): void => setTroubleshootingOpen(true),
-    []
-  )
-
-  /**
-   * Set troubleshooting open false
-   */
-  const setTroubleshootingOpenFalse = useCallback(
-    (): void => setTroubleshootingOpen(false),
-    []
-  )
-
-  /**
-   * Switch to docker
-   */
-  const switchToDocker = useCallback((): void => {
-    setTroubleshootingOpen(false)
-    setDockerOpen(true)
-  }, [])
-
-  /**
-   * On download Windows
-   */
-  const onDownloadWindows = useCallback(
-    (): void => onDownload('Windows'),
-    [onDownload]
-  )
-
-  /**
-   * On download MacOS
-   */
-  const onDownloadMacOS = useCallback(
-    (): void => onDownload('MacOS'),
-    [onDownload]
-  )
-
-  /**
-   * On download Linux
-   */
-  const onDownloadLinux = useCallback(
-    (): void => onDownload('Linux'),
-    [onDownload]
-  )
-
   /**
    * Render
    */
   return (
-    <Layout id="index" className="homeLayout">
-      <Drawer
-        open={dockerOpen}
-        title="Docker Desktop installation instruction"
-        styles={{ body: { marginTop: 16 } }}
-        onClose={setDockerOpenFalse}
-      >
-        <Typography>
-          Once Docker Desktop is installed and you have reboooted your computer,
-          open Docker Desktop.
-        </Typography>
-        <br />
-        <div>
-          <div>
-            <Collapse
-              items={[
-                {
-                  key: 'access',
-                  label: 'If you have "Docker Desktop - Access denied"',
-                  children: (
-                    <>
-                      <Typography>
-                        You must add the{' '}
-                        <Typography.Text code>docker-users</Typography.Text>{' '}
-                        group to the current user.
-                      </Typography>
-                      <Typography>
-                        Run <strong>Computer Management</strong> as an
-                        administrator and navigate to{' '}
-                        <strong>Local Users and Groups</strong> &gt;{' '}
-                        <strong>Groups</strong> &gt;{' '}
-                        <strong>docker-users</strong>. Then, right-click to add
-                        user to the group.
-                      </Typography>
-                      <Typography>Log out and log back in.</Typography>
-                      <Typography>You can now start Docker Desktop</Typography>
-                      <Link
-                        href="https://docs.docker.com/desktop/faqs/windowsfaqs/#why-do-i-see-the-docker-desktop-access-denied-error-message-when-i-try-to-start-docker-desktop"
-                        target="_blank"
-                      >
-                        Source
-                      </Link>
-                    </>
-                  )
-                }
-              ]}
-            />
-          </div>
-          <div>Accept the terms and conditions</div>
-          <div>Install missing dependencies if needed (WSL2 backend)</div>
-          <div>
-            Docker Desktop should display &quot;Docker Desktop running&quot;
-          </div>
-        </div>
-        <br />
-        <Typography>
-          In case of trouble, you can have a look on the{' '}
-          <Link
-            href="https://docs.docker.com/desktop/faqs/general/"
-            target="_blank"
-          >
-            Docker Desktop FAQ
-          </Link>{' '}
-          or on the Tanatloc electron{' '}
-          <Link
-            href="https://github.com/Airthium/tanatloc-electron/issues"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Github Issues
-          </Link>
-          .
-        </Typography>
-      </Drawer>
-      <Drawer
-        open={troubleshootingOpen}
-        title="Troubleshooting"
-        styles={{ body: { marginTop: 16 } }}
-        onClose={setTroubleshootingOpenFalse}
-      >
-        <Collapse
-          items={[
-            {
-              key: 'appiamge',
-              label: 'Linux AppImage',
-              children: (
-                <>
-                  <Typography>
-                    Allow execution of the AppImage using:
-                  </Typography>
-                  <Typography.Text code>
-                    chmod +x ./Tanatloc-{packageJson.version}.AppImage
-                  </Typography.Text>
-                  <Typography>
-                    Or right-click{' '}
-                    <strong>Tanatloc-{packageJson.version}.AppImage</strong>{' '}
-                    &gt;
-                    <strong>Properties</strong> &gt;{' '}
-                    <strong>Permissions</strong> and check Allow executing file
-                    as program
-                  </Typography>
-                </>
-              )
-            },
-            {
-              key: 'docker',
-              label: '"There is an error with your Docker installation." error',
-              children: (
-                <>
-                  {' '}
-                  <Typography>
-                    Open Docker Desktop and check all is working fine.
-                  </Typography>
-                  <Typography>
-                    Have a look at the{' '}
-                    <Button size="small" onClick={switchToDocker}>
-                      Docker Desktop instructions
-                    </Button>
-                    .
-                  </Typography>
-                </>
-              )
-            },
-            {
-              key: 'postgres',
-              label:
-                '"There is an error with your PostgreSQL installation." error',
-              children: (
-                <>
-                  <Typography>Open Docker Desktop &gt; Containers</Typography>
-                  <Typography>
-                    You should see a container named
-                    &quot;tanatloc-postgres&quot;, if not try to restart the
-                    Tanatloc app.
-                  </Typography>
-                </>
-              )
-            }
-          ]}
-        />
-      </Drawer>
-
-      <Menu />
+    <Layout id="index" className="layout">
+      <Header type="home" />
 
       <Layout.Content className="homeContent">
         <Space
           orientation="vertical"
           size={90}
-          className="homeFirstSection fullWidth"
+          className="homeFirstSection fullWidth padding50"
         >
           <Side
             left={
@@ -346,17 +107,19 @@ const Index: React.FunctionComponent = () => {
               </Space>
             }
             right={
-              <img
-                src="images/indexpage/capture1.png"
-                alt="tanatloc"
+              <Image
+                src="/img/home/capture1.png"
+                alt="Tanatloc Boundary Conditions Selector"
                 className="imageShadow"
+                width={1920}
+                height={1080}
               />
             }
-            leftClassName="homeSolveLeft"
-            leftStyle={{ marginBottom: '50px' }}
+            leftClassName="padding50TB"
           />
 
           <Side
+            id="features"
             left={
               <Typography.Title level={2}>
                 The most common multi-physics models at your fingertips
@@ -365,41 +128,35 @@ const Index: React.FunctionComponent = () => {
             right={
               <>
                 <div>
-                  <Checkbox checked={true} />
+                  <Checkbox checked />
                   Linear elasticity
                 </div>
                 <div>
-                  <Checkbox checked={true} />
+                  <Checkbox checked />
                   Linear elasticity over time
                 </div>
                 <div>
-                  <Checkbox checked={true} />
+                  <Checkbox checked />
                   Poisson
                 </div>
                 <div>
-                  <Checkbox checked={true} />
+                  <Checkbox checked />
                   Stokes
                 </div>
                 <div>
-                  <Checkbox checked={true} />
+                  <Checkbox checked />
                   Navier-Stokes over time
                 </div>
                 <div>
-                  <Checkbox checked={true} />
+                  <Checkbox checked />
                   Thermal diffusion
                 </div>
                 <div>
-                  <Checkbox
-                    checked
-                    style={{ pointerEvents: 'none', fontSize: '20px' }}
-                  />
+                  <Checkbox checked />
                   Modal analysis
                 </div>
                 <div>
-                  <Checkbox
-                    checked
-                    style={{ pointerEvents: 'none', fontSize: '20px' }}
-                  />
+                  <Checkbox checked />
                   ...
                 </div>
               </>
@@ -407,92 +164,51 @@ const Index: React.FunctionComponent = () => {
             sideClassName="backgroundPrimary"
             rightClassName="homeModels padding50"
             leftClassName="padding50"
-            id="features"
           />
 
-          <div id="developers">
-            <div className="padding50">
-              <Typography.Title level={2}>
-                Solve your numerical problems locally or in the cloud, using
-                dedicated plugins
-              </Typography.Title>
-              <div className="homePlugins">
-                <div>
+          <div>
+            <Typography.Title level={2}>
+              Solve your numerical problems locally or in the cloud, using
+              dedicated plugins
+            </Typography.Title>
+            <div className="homePlugins">
+              {pluginsDisplay.map((plugin) => (
+                <div key={plugin.key}>
                   <Avatar
                     size={64}
                     shape="square"
-                    src="images/indexpage/logo-rescale.svg"
+                    src={(plugin as IPluginDisplayImg).img}
+                    icon={(plugin as IPluginDisplayIcon).icon}
                   />
-                  <Typography.Title level={4}>Rescale</Typography.Title>
-                  <Typography.Text className={'textLight'}>
-                    Paid feature
-                  </Typography.Text>
-                  <Link href="mailto:contact@airthium.com">
-                    <Button type="link">Contact us</Button>
-                  </Link>
-                </div>
-                <div>
-                  <Avatar
-                    size={64}
-                    shape="square"
-                    src="images/indexpage/logo-ancl.jpg"
-                  />
-                  <Typography.Title level={4}>ANCL Sharetask</Typography.Title>
-                  <Typography.Text className={'textLight'}>
-                    Paid feature
-                  </Typography.Text>
-                  <Link href="mailto:contact@airthium.com">
-                    <Button type="link">Contact us</Button>
-                  </Link>
-                </div>
-                <div>
-                  <Avatar
-                    size={64}
-                    shape="square"
-                    src="images/indexpage/logo-slurm.svg"
-                  />
-                  <Typography.Title level={4}>Slurm</Typography.Title>
-                  <Typography.Text className={'textLight'}>
-                    On request
+                  <Typography.Title level={4}>{plugin.title}</Typography.Title>
+                  <Typography.Text className="textLight">
+                    {plugin.subTitle}
                   </Typography.Text>
                 </div>
-                <div>
-                  <Avatar
-                    size={64}
-                    shape="square"
-                    src="images/indexpage/logo-qarnot.svg"
-                  />
-                  <Typography.Title level={4}>Qarnot HPC</Typography.Title>
-                  <Typography.Text className={'textLight'}>
-                    On request
-                  </Typography.Text>
-                </div>
-                <div>
-                  <Avatar size={64} shape="square" icon={<SettingOutlined />} />
-                  <Typography.Title level={4}>Your own plugin</Typography.Title>
-                  <Typography.Text className={'textLight'}>
-                    Paid feature
-                  </Typography.Text>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
 
-          <div id="electron" className="homeElectron">
+          <div className="homeElectron">
             <Typography.Title level={2}>
               Tanatloc is an FEA software based on FreeFEM, an extremely
               powerful and versatile open-source PDE solver. It runs locally
               using an electron build.
             </Typography.Title>
-            <img
-              src="images/indexpage/capture2.png"
-              alt="tanatloc"
-              className="imageShadow textAlignCenter"
-              style={{ marginTop: '40px' }}
-            />
+            <div className="padding50TB">
+              <Image
+                src="/img/home/capture2.png"
+                alt="tanatloc"
+                className="imageShadow textAlignCenter"
+                width={1920}
+                height={1080}
+                style={{ marginTop: '40px' }}
+              />
+            </div>
           </div>
 
           <Side
+            id="caseStudy"
             left={
               <Space orientation="vertical" size={20}>
                 <div>
@@ -525,20 +241,19 @@ const Index: React.FunctionComponent = () => {
               </Space>
             }
             right={
-              <img
-                src="images/indexpage/denso.jpg"
+              <Image
+                src="/img/home/denso.jpg"
                 alt="tanatloc"
+                width={1275}
+                height={1644}
                 className="padding50"
               />
             }
             sideClassName="homeCaseStudy"
-            sideStyle={{ marginTop: '50px', marginBottom: '50px' }}
             leftClassName="homeCaseStudyLeft fullWidth padding50"
-            rightClassName="homeCaseStudyRight"
-            id="caseStudy"
           />
 
-          <div id="getStarted" style={{ marginBottom: '50px' }}>
+          <div>
             <Typography.Title level={2}>Get started</Typography.Title>
             <Typography.Text>
               Complete description in the{' '}
@@ -568,11 +283,8 @@ const Index: React.FunctionComponent = () => {
                         and reboot your computer.
                       </Typography>
                       <Typography>
-                        Start Docker Desktop and make sure{' '}
-                        <Button size="small" onClick={setDockerOpenTrue}>
-                          everything is working
-                        </Button>
-                        .
+                        Start Docker Desktop and make sure everything is
+                        working.
                       </Typography>
                     </>
                   ),
@@ -585,51 +297,7 @@ const Index: React.FunctionComponent = () => {
                       <Typography>
                         Download the latest app for Linux, MacOS or Windows.
                       </Typography>
-                      {releaseError}
-                      {release ? (
-                        <>
-                          <Button
-                            type="primary"
-                            className="download"
-                            onClick={onDownloadWindows}
-                          >
-                            <img src="/images/indexpage/windows.svg" alt="" />
-                            {/**/}Windows
-                          </Button>
-                          <Button
-                            type="primary"
-                            className="download"
-                            onClick={onDownloadMacOS}
-                          >
-                            <img src="/images/indexpage/MacOS.svg" alt="" />
-                            {/**/}MacOS
-                          </Button>
-                          <Button
-                            type="primary"
-                            className="download"
-                            onClick={onDownloadLinux}
-                          >
-                            <img src="/images/indexpage/Linux.svg" alt="" />
-                            {/**/}Linux
-                          </Button>
-                          <br />
-                        </>
-                      ) : (
-                        <>
-                          <Spin />
-                          <br />
-                        </>
-                      )}
-                      <span style={{ marginRight: '10px' }}>
-                        Version: {release ? release.version : <Spin />}
-                      </span>
-                      <Button
-                        size="small"
-                        icon={<BugOutlined />}
-                        onClick={setTroubleshootingOpenTrue}
-                      >
-                        Troubleshooting
-                      </Button>
+                      <Releases />
                     </>
                   ),
                   status: 'process'
@@ -640,17 +308,46 @@ const Index: React.FunctionComponent = () => {
 
           <Side
             left={
-              <img
-                src="images/indexpage/TanatlocByAirthium.png"
+              <Space orientation="vertical" size={20}>
+                <Typography.Text>
+                  TANATLOC is now developed and maintained by 2LTech, a France
+                  based company. We will always keep it free and open for
+                  everybody, and continue to provide technical support.
+                </Typography.Text>
+
+                <Link href="https://2ltech.fr/" target="_blank">
+                  <Button type="primary">Discover</Button>
+                </Link>
+              </Space>
+            }
+            right={
+              <Image
+                src="/img/home/TanatlocBy2LTech.png"
+                width={2831}
+                height={700}
+                alt="airthium"
+              />
+            }
+            sideClassName="homeNewAbout"
+            leftClassName="padding50"
+            rightClassName="padding50"
+            id="aboutUs"
+          />
+          <Side
+            left={
+              <Image
+                src="/img/home/TanatlocByAirthium.png"
+                width={422}
+                height={157}
                 alt="airthium"
               />
             }
             right={
               <Space orientation="vertical" size={20}>
                 <Typography.Text>
-                  TANATLOC is maintained by Airthium, a US/France based deeptech
-                  startup. We build a very robust and highly efficient electric
-                  heat engine to decarbonise the planet.
+                  TANATLOC was previously maintained by Airthium, a US/France
+                  based deeptech startup. We build a very robust and highly
+                  efficient electric heat engine to decarbonise the planet.
                 </Typography.Text>
 
                 <Link href="https://airthium.com/" target="_blank">
@@ -665,7 +362,7 @@ const Index: React.FunctionComponent = () => {
           />
         </Space>
       </Layout.Content>
-      <Footer />
+      <Footer type="home" />
     </Layout>
   )
 }

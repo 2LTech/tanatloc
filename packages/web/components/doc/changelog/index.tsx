@@ -1,9 +1,9 @@
-/** @module Components.Doc.Changelog */
-
-import { useEffect, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Spin, Typography } from 'antd'
 
-import { asyncFunctionExec } from '@/components/utils/asyncFunction'
+// CHANGELOG URL
+const changelogURL =
+  'https://raw.githubusercontent.com/Airthium/tanatloc/master/CHANGELOG.md'
 
 /**
  * Changelog
@@ -13,23 +13,25 @@ const Changelog: React.FunctionComponent = () => {
   // State
   const [content, setContent] = useState<string>()
 
-  // Load
-  useEffect(() => {
-    asyncFunctionExec(async () => {
-      try {
-        const res = await fetch(
-          'https://raw.githubusercontent.com/Airthium/tanatloc/master/CHANGELOG.md'
-        )
-        const changelog = await res.text()
-        setContent(changelog)
-      } catch (err: any) {
-        setContent(
-          'Unable to fetch CHANGELOG at https://github.com/Airthium/tanatloc/blob/master/CHANGELOG.md\n' +
-            err.message
-        )
-      }
-    })
+  const load = useCallback(async () => {
+    try {
+      const res = await fetch(changelogURL)
+      const changelog = await res.text()
+      setContent(changelog)
+    } catch (err: unknown) {
+      setContent(
+        'Unable to fetch CHANGELOG at ' +
+          changelogURL +
+          '\n' +
+          (err instanceof Error ? err.message : String(err))
+      )
+    }
   }, [])
+
+  // Load
+  useMemo(() => {
+    load()
+  }, [load])
 
   /**
    * Render

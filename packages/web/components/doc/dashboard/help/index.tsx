@@ -1,10 +1,8 @@
-/** @module Components.Doc.Dashboard.Help */
-
 import { Typography } from 'antd'
 
 import Carousel from '@/components/assets/carousel'
 
-import style from '../../index.module.css'
+import '../../index.css'
 
 /**
  * Help
@@ -18,7 +16,7 @@ const Help: React.FunctionComponent = () => {
     <>
       <Typography.Title level={4}>Help</Typography.Title>
 
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Text>
           You will find the link to this documentation, and to Github Issues
         </Typography.Text>
@@ -27,7 +25,7 @@ const Help: React.FunctionComponent = () => {
         items={[
           {
             key: 'help',
-            src: '/doc/help.jpg',
+            src: '/img/doc/help.jpg',
             caption: 'Help'
           }
         ]}

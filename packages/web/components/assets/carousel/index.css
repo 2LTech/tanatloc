@@ -1,0 +1,129 @@
+.carouselContainer {
+  position: relative;
+}
+
+.carousel {
+  position: relative;
+  margin: 20px auto;
+  width: 50%;
+}
+
+.fullCaroussel {
+  position: absolute;
+  width: 100%;
+  top: 0;
+}
+
+.carouselFigure {
+  box-shadow: 2px 2px 5px #ccc;
+}
+
+.carouselFigure img {
+  width: 100%;
+  height: 100%;
+}
+
+.carouselFigure figcaption {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  background: #ccc;
+}
+
+.carouselFigure figcaption::before {
+  margin: 0 10px;
+  color: #fff;
+  content: 'Figure:';
+}
+
+.carouselOneImage {
+  position: relative;
+}
+
+.carouselDisplayCount {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  color: #ccc;
+  opacity: 1;
+  transition: all 2s linear;
+}
+
+.carouselNoDisplayCount {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  color: #ccc;
+  opacity: 0;
+  transition: all 2s linear;
+}
+
+.carouselZoom {
+  position: absolute !important;
+  width: 100% !important;
+  height: 100%;
+  top: calc(50% - 20px);
+  left: 0;
+  background: none;
+  border: none;
+  box-shadow: none;
+  opacity: 0.1;
+}
+
+.carouselZoom:hover {
+  opacity: 1;
+}
+
+.carouselZoom svg {
+  color: var(--colorPrimary);
+  font-size: 40px;
+}
+
+.carouselPrevious {
+  position: absolute !important;
+  top: calc(50% - 20px);
+  left: -32px;
+  height: 100%;
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.carouselPrevious svg {
+  color: var(--colorPrimary);
+  font-size: 40px;
+}
+
+.carouselNext {
+  position: absolute !important;
+  top: calc(50% - 20px);
+  right: -30px;
+  height: 100%;
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.carouselNext svg {
+  color: var(--colorPrimary);
+  font-size: 40px;
+}
+
+@media (max-width: 1100px) {
+  .carousel {
+    width: 90%;
+    margin: auto;
+  }
+
+  .carouselZoom {
+    display: none;
+  }
+}

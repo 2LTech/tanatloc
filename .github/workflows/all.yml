@@ -1,0 +1,33 @@
+name: Check all
+
+on: push
+
+jobs:
+  prepare:
+    name: Checkout & Install
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@main
+
+      - name: Install
+        run: yarn install
+
+  web:
+    needs: prepare
+    name: Web
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Depcheck
+        run: yarn workspace @tanatloc/web run depcheck
+
+      - name: Prettier
+        run: yarn workspace @tanatloc/web run prettier
+
+      - name: Lint
+        run: yarn workspace @tanatloc/web run lint
+
+      - name: Build
+        run: yarn workspace @tanatloc/web run build

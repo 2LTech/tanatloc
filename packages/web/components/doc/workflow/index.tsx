@@ -1,8 +1,6 @@
-/** @module Components.Doc.Workflow */
-
 import { Steps, Typography } from 'antd'
 
-import style from '../index.module.css'
+import '../index.css'
 
 /**
  * Workflow
@@ -16,9 +14,10 @@ const Workflow: React.FunctionComponent = () => {
     <>
       <Typography.Title level={3}>Workflow</Typography.Title>
 
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Steps
           orientation="vertical"
+          current={-1}
           items={[
             {
               title: <strong>Login</strong>,

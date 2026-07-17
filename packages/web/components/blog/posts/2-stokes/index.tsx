@@ -1,5 +1,3 @@
-/** @module Components.Blog.Posts.2Stokes */
-
 import { Typography } from 'antd'
 
 import PostLayout from '../layout'
@@ -10,7 +8,7 @@ import Carousel from '@/components/assets/carousel'
 const key = '2-stokes'
 const title = "Stokes's problem"
 const description = 'A simple Stokes problem example'
-const image = '/images/Stokes.png'
+const image = '/img/blog/2-stokes.png'
 const date = '2023-01-31'
 const keywords = ['Tutorial', 'Fluid']
 const author = {
@@ -36,12 +34,12 @@ const Post: React.FunctionComponent = () => {
         <p>
           Here we will solve the Stokes equation:
           <MathJax.Formula
-            text={'\\mu\\Delta\\mathbf{u} - \\nabla p = \\mathbf{f}'}
+            text={String.raw`\mu\Delta\mathbf{u} - \nabla p = \mathbf{f}`}
           />
-          <MathJax.Formula text={'\\text{div}(\\mathbf{u}) = 0'} />
-          Where <MathJax.Inline text={'\\mathbf{u}'} /> is the unknow velocity,{' '}
-          <MathJax.Inline text={'p'} /> is the unknow pressure and{' '}
-          <MathJax.Inline text={'\\mathbf{f}'} /> an external force
+          <MathJax.Formula text={String.raw`\text{div}(\mathbf{u}) = 0`} />
+          Where <MathJax.Inline text={String.raw`\mathbf{u}`} /> is the unknow
+          velocity, <MathJax.Inline text={'p'} /> is the unknow pressure and{' '}
+          <MathJax.Inline text={String.raw`\mathbf{f}`} /> an external force
         </p>
         <p>
           <a
@@ -57,7 +55,8 @@ const Post: React.FunctionComponent = () => {
       <section>
         <p>
           We will solve our problem on a 2D pipe geometry{' '}
-          <MathJax.Inline text={'[0, 0.1]\\times[0, 0.03]'} /> with a step
+          <MathJax.Inline text={String.raw`[0, 0.1]\times[0, 0.03]`} /> with a
+          step
         </p>
       </section>
 
@@ -69,12 +68,12 @@ const Post: React.FunctionComponent = () => {
           items={[
             {
               key: 'creation',
-              src: '/blog/2-stokes/project1.jpg',
+              src: '/img/blog/2-stokes/project1.jpg',
               alt: 'Project creation'
             },
             {
               key: 'creation2',
-              src: '/blog/2-stokes/project2.jpg',
+              src: '/img/blog/2-stokes/project2.jpg',
               alt: 'Project creation'
             }
           ]}
@@ -101,12 +100,12 @@ const Post: React.FunctionComponent = () => {
           items={[
             {
               key: 'geometry',
-              src: '/blog/2-stokes/geometry1.jpg',
+              src: '/img/blog/2-stokes/geometry1.jpg',
               alt: 'Geometry import'
             },
             {
               key: 'geometry2',
-              src: '/blog/2-stokes/geometry2.jpg',
+              src: '/img/blog/2-stokes/geometry2.jpg',
               alt: 'Geometry import'
             }
           ]}
@@ -122,12 +121,12 @@ const Post: React.FunctionComponent = () => {
           items={[
             {
               key: 'simulation',
-              src: '/blog/2-stokes/simulation1.jpg',
+              src: '/img/blog/2-stokes/simulation1.jpg',
               alt: 'Simulation creation'
             },
             {
               key: 'simulation2',
-              src: '/blog/2-stokes/simulation2.jpg',
+              src: '/img/blog/2-stokes/simulation2.jpg',
               alt: 'Simulation creation'
             }
           ]}
@@ -148,7 +147,7 @@ const Post: React.FunctionComponent = () => {
           items={[
             {
               key: 'geoemtry',
-              src: '/blog/2-stokes/simulation_param_geometry.jpg',
+              src: '/img/blog/2-stokes/simulation_param_geometry.jpg',
               alt: 'Simulation parametrization geometry'
             }
           ]}
@@ -164,27 +163,27 @@ const Post: React.FunctionComponent = () => {
           items={[
             {
               key: 'material',
-              src: '/blog/2-stokes/simulation_param_material1.jpg',
+              src: '/img/blog/2-stokes/simulation_param_material1.jpg',
               alt: 'Simulation parameterization material'
             },
             {
               key: 'material2',
-              src: '/blog/2-stokes/simulation_param_material2.jpg',
+              src: '/img/blog/2-stokes/simulation_param_material2.jpg',
               alt: 'Simulation parameterization material'
             },
             {
               key: 'material3',
-              src: '/blog/2-stokes/simulation_param_material3.jpg',
+              src: '/img/blog/2-stokes/simulation_param_material3.jpg',
               alt: 'Simulation parameterization material'
             },
             {
               key: 'material4',
-              src: '/blog/2-stokes/simulation_param_material4.jpg',
+              src: '/img/blog/2-stokes/simulation_param_material4.jpg',
               alt: 'Simulation parameterization material'
             },
             {
               key: 'material5',
-              src: '/blog/2-stokes/simulation_param_material5.jpg',
+              src: '/img/blog/2-stokes/simulation_param_material5.jpg',
               alt: 'Simulation parameterization material'
             }
           ]}
@@ -197,12 +196,12 @@ const Post: React.FunctionComponent = () => {
           items={[
             {
               key: 'parameters1',
-              src: '/blog/2-stokes/simulation_param_parameters1.jpg',
+              src: '/img/blog/2-stokes/simulation_param_parameters1.jpg',
               alt: 'Simulation parametrization parameters'
             },
             {
               key: 'parameters2',
-              src: '/blog/2-stokes/simulation_param_parameters2.jpg',
+              src: '/img/blog/2-stokes/simulation_param_parameters2.jpg',
               alt: 'Simulation parametrization parameters'
             }
           ]}
@@ -213,37 +212,35 @@ const Post: React.FunctionComponent = () => {
         <p>
           We will add a Wall boundary condition:
           <MathJax.Formula
-            text={'\\mathbf{u} = \\mathbf{0}\\text{ on }\\{2,3,4,5,6,8\\}'}
+            text={String.raw`\mathbf{u} = \mathbf{0}\text{ on }\{2,3,4,5,6,8\}`}
           />
         </p>
         <p>
           And a velocity boundary condition:
           <MathJax.Formula
-            text={
-              '\\mathbf{u} = \\left(1 - \\left(\\frac{(y-0.015)^2}{0.015^2}\\right)\\right)\\mathbf{e}_x\\text{ on }\\{1\\}'
-            }
+            text={String.raw`\mathbf{u} = \left(1 - \left(\frac{(y-0.015)^2}{0.015^2}\right)\right)\mathbf{e}_x\text{ on }\{1\}`}
           />
         </p>
         <Carousel
           items={[
             {
               key: 'bc1',
-              src: '/blog/2-stokes/simulation_param_boundaryconditions1.jpg',
+              src: '/img/blog/2-stokes/simulation_param_boundaryconditions1.jpg',
               alt: 'Simulation parametrization boundary conditions'
             },
             {
               key: 'bc2',
-              src: '/blog/2-stokes/simulation_param_boundaryconditions2.jpg',
+              src: '/img/blog/2-stokes/simulation_param_boundaryconditions2.jpg',
               alt: 'Simulation parametrization boundary conditions'
             },
             {
               key: 'bc3',
-              src: '/blog/2-stokes/simulation_param_boundaryconditions3.jpg',
+              src: '/img/blog/2-stokes/simulation_param_boundaryconditions3.jpg',
               alt: 'Simulation parametrization boundary conditions'
             },
             {
               key: 'bc4',
-              src: '/blog/2-stokes/simulation_param_boundaryconditions4.jpg',
+              src: '/img/blog/2-stokes/simulation_param_boundaryconditions4.jpg',
               alt: 'Simulation parametrization boundary conditions'
             }
           ]}
@@ -259,22 +256,22 @@ const Post: React.FunctionComponent = () => {
           items={[
             {
               key: 'run1',
-              src: '/blog/2-stokes/simulation_param_run1.jpg',
+              src: '/img/blog/2-stokes/simulation_param_run1.jpg',
               alt: 'Simulation parametrization run'
             },
             {
               key: 'run2',
-              src: '/blog/2-stokes/simulation_param_run2.jpg',
+              src: '/img/blog/2-stokes/simulation_param_run2.jpg',
               alt: 'Simulation parametrization run'
             },
             {
               key: 'run3',
-              src: '/blog/2-stokes/simulation_param_run3.jpg',
+              src: '/img/blog/2-stokes/simulation_param_run3.jpg',
               alt: 'Simulation parametrization run'
             },
             {
               key: 'run4',
-              src: '/blog/2-stokes/simulation_param_run4.jpg',
+              src: '/img/blog/2-stokes/simulation_param_run4.jpg',
               alt: 'Simulation parametrization run'
             }
           ]}
@@ -289,7 +286,7 @@ const Post: React.FunctionComponent = () => {
           items={[
             {
               key: 'mesh',
-              src: '/blog/2-stokes/simulation_param_run_mesh.jpg',
+              src: '/img/blog/2-stokes/simulation_param_run_mesh.jpg',
               alt: 'Simulation parametrization run mesh'
             }
           ]}
@@ -310,12 +307,12 @@ const Post: React.FunctionComponent = () => {
           items={[
             {
               key: 'result1',
-              src: '/blog/2-stokes/simulation_param_run_result1.jpg',
+              src: '/img/blog/2-stokes/simulation_param_run_result1.jpg',
               alt: 'Simulation parametrization run result'
             },
             {
               key: 'result2',
-              src: '/blog/2-stokes/simulation_param_run_result2.jpg',
+              src: '/img/blog/2-stokes/simulation_param_run_result2.jpg',
               alt: 'Simulation parametrization run result'
             }
           ]}

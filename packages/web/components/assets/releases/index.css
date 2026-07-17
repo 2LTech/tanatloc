@@ -1,0 +1,14 @@
+.releasesButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.releases button {
+  padding: 24px;
+}
+
+.releases button img {
+  height: 30px;
+  width: auto;
+}

@@ -1,4 +1,4 @@
-import { DocComponent } from '@/components/doc'
+import DocComponent from '@/components/doc'
 
 const Doc = () => <DocComponent />
 

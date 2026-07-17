@@ -1,0 +1,103 @@
+.docMenu {
+  background: none !important;
+  height: unset !important;
+  margin-top: 80px;
+  margin-bottom: 20px;
+}
+
+.docMenu .ant-menu {
+  border-bottom: none !important;
+}
+
+.docLogo {
+  padding: 20px 8px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--colorPrimary);
+  text-align: center;
+}
+
+.docLogo h3 {
+  margin: 0 20px !important;
+}
+
+.docTabs .ant-tabs-nav::before {
+  border-bottom: none !important;
+}
+
+.docText {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.docText img {
+  display: inline;
+  max-height: 16px;
+  width: auto;
+}
+
+.docText h3 {
+  margin: 20px 0;
+}
+
+.docText h4 {
+  margin: 15px 0 !important;
+}
+
+.docText .ant-typography:has(code) {
+  line-height: 30px;
+}
+
+.docText .ant-typography:has(code) > code {
+  padding: 10px;
+}
+
+.docTips {
+  display: inline-block;
+  width: 100%;
+  position: relative;
+  background-color: var(--colorPrimary22);
+  box-shadow: 2px 2px 5px var(--colorPrimary);
+  margin-top: 10px;
+  padding: 40px 20px 20px 20px;
+  margin-right: auto;
+}
+
+.docTips::before {
+  position: absolute;
+  top: 10px;
+  font-weight: bold;
+  color: colorPrimary;
+  content: 'Tips';
+}
+
+.docWarnings {
+  display: inline-block;
+  width: 100%;
+  position: relative;
+  background-color: #fc8c7922;
+  box-shadow: 2px 2px 5px #fc8c79;
+  margin-top: 10px;
+  padding: 40px 20px 20px 20px;
+  margin-right: auto;
+}
+
+.docWarnings::before {
+  position: absolute;
+  top: 10px;
+  font-weight: bold;
+  color: #fc8c79;
+  content: 'Warning';
+}
+
+@media (max-width: 1100px) {
+  .docMenu {
+    padding: 10px 10px 10px !important;
+    padding-inline: unset !important;
+    margin-bottom: 0;
+  }
+}

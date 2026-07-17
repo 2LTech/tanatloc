@@ -1,4 +1,4 @@
-import { BlogComponent } from '@/components/blog'
+import BlogComponent from '@/components/blog'
 
 const Blog = () => <BlogComponent />
 

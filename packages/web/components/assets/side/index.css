@@ -1,0 +1,41 @@
+.side {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  justify-items: center;
+}
+
+.side img {
+  max-width: 90%;
+}
+
+.sideLeft {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.sideRight {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.sideTop {
+  position: absolute;
+  width: 80%;
+  top: calc(100% - 40px);
+}
+
+@media (max-width: 1100px) {
+  .side {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sideLeft,
+  .sideRight {
+    justify-content: center;
+  }
+}

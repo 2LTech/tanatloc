@@ -1,5 +1,3 @@
-/** @module Components.Blog.Posts.4ModalAnalysis */
-
 import { Table, Typography } from 'antd'
 
 import MathJax from '@/components/assets/mathjax'
@@ -11,7 +9,7 @@ const key = '2-ModalAnalysis'
 const title = 'Modal Analysis problems'
 const description = 'Validation tests, modal analysis'
 const date = '2023-02-17'
-const image = '/images/modalAnalysis.jpeg'
+const image = '/img/blog/4-modalAnalysis.jpeg'
 const keywords = ['Modal', 'Validation', 'Theory']
 const author = {
   name: 'Houssam Houssein',
@@ -178,22 +176,23 @@ const Post: React.FunctionComponent = () => {
           Let <MathJax.Inline text={'K'} /> be the rigidity matrix of the
           structure and <MathJax.Inline text={'M'} /> its mass matrix. The
           eigenvalue problem reads as follows
-          <MathJax.Formula text={'(K -\\lambda M) x =0'} />
-          where <MathJax.Inline text={'\\lambda'} /> is the eigenvalue related
-          to the natural frequency <MathJax.Inline text={'f'} /> by the
+          <MathJax.Formula text={String.raw`(K - \lambda M) x = 0`} />
+          where <MathJax.Inline text={String.raw`\lambda`} /> is the eigenvalue
+          related to the natural frequency <MathJax.Inline text={'f'} /> by the
           following
-          <MathJax.Formula text={'\\lambda=(2\\pi f)^{2}'} />
+          <MathJax.Formula text={String.raw`\lambda=(2\pi f)^{2}`} />
           and <MathJax.Inline text={'x'} /> the eigenvector for the mode of the
           frequency <MathJax.Inline text={'f'} />.
         </p>
         <p>
           Moreover the eigenvalue problem can be transformed as follows
-          <MathJax.Formula text={'(A -\\sigma M)^{-1}Mx  = \\nu x'} />
+          <MathJax.Formula text={String.raw`(A - \sigma M)^{-1}Mx  = \nu x`} />
           where
-          <MathJax.Formula text={'\\nu  = \\frac{1}{\\lambda-\\sigma}'} />
-          and <MathJax.Inline text={'\\sigma'} /> the shift of the method which
-          helps to find eigenvalues near <MathJax.Inline text={'\\sigma'} />. By
-          default <MathJax.Inline text={'\\sigma=0'} />.
+          <MathJax.Formula text={String.raw`\nu  = \frac{1}{\lambda-\sigma}`} />
+          and <MathJax.Inline text={String.raw`\sigma`} /> the shift of the
+          method which helps to find eigenvalues near{' '}
+          <MathJax.Inline text={String.raw`\sigma`} />. By default{' '}
+          <MathJax.Inline text={String.raw`\sigma=0`} />.
         </p>
         <p>
           You can see{' '}
@@ -211,21 +210,22 @@ const Post: React.FunctionComponent = () => {
         <Typography.Title level={4}>Problem</Typography.Title>
         <p>
           Consider an elastic ring of height{' '}
-          <MathJax.Inline text={'H=50 \\, mm'} />, the inner and the outer
-          radius are respectively{' '}
-          <MathJax.Inline text={'R_{inner}=345 \\, mm'} /> and{' '}
-          <MathJax.Inline text={'R_{outer}=393 \\, mm'} />, see the figure
-          above. We consider a Young&apos;s modulus{' '}
-          <MathJax.Inline text={'E=185000 \\, MPa'} /> , a Poisson&apos;s ratio{' '}
-          <MathJax.Inline text={'\\nu= 0.3'} /> and a density{' '}
-          <MathJax.Inline text={'\\rho=7800 \\, kg.m^{-3} '} />. There is no
-          boundary conditions, the ring is free.
+          <MathJax.Inline text={String.raw`H=50 \, mm`} />, the inner and the
+          outer radius are respectively{' '}
+          <MathJax.Inline text={String.raw`R_{inner}=345 \, mm`} /> and{' '}
+          <MathJax.Inline text={String.raw`R_{outer}=393 \, mm`} />, see the
+          figure above. We consider a Young&apos;s modulus{' '}
+          <MathJax.Inline text={String.raw`E=185000 \, MPa`} /> , a
+          Poisson&apos;s ratio <MathJax.Inline text={String.raw`\nu= 0.3`} />{' '}
+          and a density{' '}
+          <MathJax.Inline text={String.raw`\rho=7800 \, kg.m^{-3}`} />. There is
+          no boundary conditions, the ring is free.
         </p>
         <Carousel
           items={[
             {
               key: 'Geoproblem',
-              src: '/blog/4-modalAnalysis/geometryRing.jpg',
+              src: '/img/blog/4-modalAnalysis/geometryRing.jpg',
               caption: 'Geometry of the problem'
             }
           ]}
@@ -237,7 +237,7 @@ const Post: React.FunctionComponent = () => {
         </p>
         <Table pagination={false} dataSource={dataAster} columns={columns} />
         <p>
-          Note that the modes <MathJax.Inline text={'0, \\ldots, 5'} />{' '}
+          Note that the modes <MathJax.Inline text={String.raw`0, \ldots, 5`} />{' '}
           correspond to the rigid body modes and the corresponding frequencies
           are zeros.
         </p>
@@ -253,17 +253,17 @@ const Post: React.FunctionComponent = () => {
           items={[
             {
               key: 'MeshGeometry',
-              src: '/blog/4-modalAnalysis/meshRing.jpg',
+              src: '/img/blog/4-modalAnalysis/meshRing.jpg',
               caption: 'Geometry and Mesh'
             },
             {
               key: 'linearElastDisp',
-              src: '/blog/4-modalAnalysis/mode6.jpg',
+              src: '/img/blog/4-modalAnalysis/mode6.jpg',
               caption: 'Mode 6'
             },
             {
               key: 'stressZz',
-              src: '/blog/4-modalAnalysis/mode13.jpg',
+              src: '/img/blog/4-modalAnalysis/mode13.jpg',
               caption: 'Mode 13'
             }
           ]}

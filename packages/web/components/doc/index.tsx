@@ -1,4 +1,3 @@
-/** @module Components.Doc */
 'use client'
 
 import Link from 'next/link'
@@ -10,14 +9,17 @@ import {
   useRef,
   useState
 } from 'react'
-import { useRouter } from 'next/navigation'
-import { Button, Layout, Menu, Typography } from 'antd'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Layout, Menu, Typography } from 'antd'
 
-import { asyncFunctionExec } from '../utils/asyncFunction'
+import packageJson from '@/package.json'
 
-import Utils from '@/lib/utils'
+import { getGitVersion } from '@/components/tools/getGitVersion'
+import { createQueryString } from '@/components/tools/createQueryString'
 
-import packageJson from '../../../package.json'
+import Header from '@/components/assets/header'
+import Footer from '@/components/assets/footer'
+import Image from '@/components/assets/image'
 
 import Installation from './installation'
 import Changelog from './changelog'
@@ -27,8 +29,7 @@ import Project from './project'
 import Editor from './editor'
 import Plugins from './plugins'
 
-import style from './index.module.css'
-import globalStyle from '@/styles/index.module.css'
+import './index.css'
 
 /**
  * Doc
@@ -36,23 +37,19 @@ import globalStyle from '@/styles/index.module.css'
  */
 const Doc: React.FunctionComponent = () => {
   // Ref
-  const navRef = useRef<{ section: string; tab: string }>(undefined)
+  const navRef = useRef<{ section: string | null; tab: string | null }>({
+    section: null,
+    tab: null
+  })
 
   // State
   const [content, setContent] = useState<ReactNode>()
 
   // Data
   const router = useRouter()
-  const query = router.query
-
-  /**
-   * On tanatloc
-   */
-  const onTanatloc = useCallback(() => {
-    asyncFunctionExec(async () => {
-      await router.push('/')
-    })
-  }, [router])
+  const searchParams = useSearchParams()
+  const section = searchParams.get('section')
+  const tab = searchParams.get('tab')
 
   /**
    * On router
@@ -61,13 +58,20 @@ const Doc: React.FunctionComponent = () => {
   const onRouter = useCallback(
     (route: {
       pathname: string
-      query?: { section: string; tab?: string }
+      query?: { section: string; tab?: string | null }
     }): void => {
-      asyncFunctionExec(async () => {
-        await router.push(route)
-      })
+      let newRoute = route.pathname
+      if (route.query) {
+        newRoute += '?'
+
+        const queries = [{ name: 'section', value: route.query.section }]
+        if (route.query.tab)
+          queries.push({ name: 'tab', value: route.query.tab })
+        newRoute += createQueryString(searchParams, queries)
+      }
+      router.push(newRoute)
     },
-    [router]
+    [router, searchParams]
   )
 
   /**
@@ -75,7 +79,7 @@ const Doc: React.FunctionComponent = () => {
    * @param param { keyPath }
    */
   const onMenuClick = useCallback(
-    ({ keyPath }: { keyPath: string[] }): void => {
+    ({ keyPath }: { keyPath: (string | null)[] }): void => {
       let key = keyPath.pop()
       if (key === 'rc-menu-more') key = keyPath.pop()
       const subKey = keyPath.pop()
@@ -162,17 +166,14 @@ const Doc: React.FunctionComponent = () => {
 
   // Init
   useEffect(() => {
-    if (
-      query.section !== navRef.current?.section ||
-      query.tab !== navRef.current?.tab
-    ) {
+    if (section !== navRef.current?.section || tab !== navRef.current?.tab) {
       navRef.current = {
-        section: query.section as string,
-        tab: query.tab as string
+        section,
+        tab
       }
-      onMenuClick({ keyPath: [query.tab as string, query.section as string] })
+      onMenuClick({ keyPath: [tab, section] })
     }
-  }, [query, onMenuClick])
+  }, [section, tab, onMenuClick])
 
   // Menu items
   const menuItems = useMemo(
@@ -230,7 +231,7 @@ const Doc: React.FunctionComponent = () => {
             label: 'Model Editor'
           },
           {
-            key: 'Help',
+            key: 'help',
             label: 'Help'
           }
         ]
@@ -281,45 +282,44 @@ const Doc: React.FunctionComponent = () => {
    * Render
    */
   return (
-    <Layout className={globalStyle.noScroll}>
-      <Layout.Header className={style.header}>
-        <Button className={style.logo} onClick={onTanatloc} />
-        <Typography.Title level={1}>Doc</Typography.Title>
-
-        <Link
-          href="https://github.com/Airthium/tanatloc"
-          target="_blank"
-          className={style.github}
-        >
-          <img src="/images/github-mark.svg" alt="Github Airthium/tanatloc" />
-        </Link>
-      </Layout.Header>
+    <Layout className="layout">
+      <Header type="doc" />
       <Layout>
-        <Layout.Header className={style.menu}>
+        <Layout.Header className="docMenu">
+          <Typography.Text className="docWarnings">
+            The current documentation is for Tanatloc v1, an updated
+            documentation will be available soon.
+          </Typography.Text>
+
           <Menu
             mode="horizontal"
-            selectedKeys={[(query.section as string) ?? 'introduction']}
+            selectedKeys={[section ?? 'introduction']}
             onClick={onMenuClick}
             items={menuItems}
           />
         </Layout.Header>
-        <Layout.Content className={`${globalStyle.scroll} ${style.content}`}>
+        <Layout.Content className="padding50LR">
           {content ?? (
             <>
-              <div
-                className={globalStyle.logo}
-                style={{ display: 'inline-flex' }}
-              >
-                <img src="/images/logo.svg" alt="Tanatloc" />
+              <div className="docLogo">
+                <Image
+                  src="/img/logo.png"
+                  alt="Tanatloc"
+                  width={165}
+                  height={21}
+                />
+                <Typography.Title level={3}>
+                  See the world the way it really is!
+                </Typography.Title>
               </div>
-              <Typography.Title level={3}>
-                See the world the way it really is!
-              </Typography.Title>
 
-              <Typography className={style.text}>
+              <Typography className="docText">
                 <Typography.Text>
-                  Tanatloc is a graphical interface for FreeFEM, a powerful PDE
-                  solver.
+                  Tanatloc is a graphical interface for{' '}
+                  <Link href="https://freefem.org/" target="_blank">
+                    FreeFEM
+                  </Link>
+                  , a powerful PDE solver.
                 </Typography.Text>
                 <Typography.Text>
                   Run your numerical simulations locally using the provided
@@ -332,18 +332,28 @@ const Doc: React.FunctionComponent = () => {
                 </Typography.Text>
               </Typography>
 
-              <Typography className={style.text}>
+              <Typography className="docText">
                 <Typography.Text>
                   Tanatloc is an open-source project by{' '}
+                  <Link href="https://2ltech.fr/" target="_blank">
+                    2LTech
+                  </Link>
+                  , previously{' '}
                   <Link href="https://airthium.com" target="_blank">
                     Airthium
                   </Link>
                   , a deeptech startup working on decarbonizing the planet{' '}
-                  <img src="/images/earth.png" alt="earth" />.
+                  <Image
+                    src="/img/doc/earth.png"
+                    width={64}
+                    height={64}
+                    alt=""
+                  />
+                  .
                 </Typography.Text>
               </Typography>
 
-              <Typography className={style.text}>
+              <Typography className="docText">
                 <Typography.Title level={3}>
                   Local app - Electron
                 </Typography.Title>
@@ -364,10 +374,11 @@ const Doc: React.FunctionComponent = () => {
                   <Link href="/doc?section=installation&tab=desktop">
                     Installation
                   </Link>
+                  .
                 </Typography.Text>
               </Typography>
 
-              <Typography className={style.text}>
+              <Typography className="docText">
                 <Typography.Title level={3}>
                   Server deployment - Docker
                 </Typography.Title>
@@ -396,10 +407,11 @@ const Doc: React.FunctionComponent = () => {
                   <Link href="/doc?section=installation&tab=server">
                     Installation
                   </Link>
+                  .
                 </Typography.Text>
               </Typography>
 
-              <Typography className={style.text}>
+              <Typography className="docText">
                 <Typography.Title level={3}>
                   Bug report / Feature request
                 </Typography.Title>
@@ -410,11 +422,11 @@ const Doc: React.FunctionComponent = () => {
                   >
                     Open an issue
                   </Link>{' '}
-                  on Github
+                  on Github.
                 </Typography.Text>
               </Typography>
 
-              <Typography className={style.text}>
+              <Typography className="docText">
                 <Typography.Title level={3}>About</Typography.Title>
                 <Typography.Text>
                   Version:{' '}
@@ -422,13 +434,11 @@ const Doc: React.FunctionComponent = () => {
                 </Typography.Text>
                 <Typography.Text>
                   Git version:{' '}
-                  <Typography.Text code>
-                    {Utils.getGitVersion()}
-                  </Typography.Text>
+                  <Typography.Text code>{getGitVersion()}</Typography.Text>
                 </Typography.Text>
               </Typography>
 
-              <Typography className={style.text}>
+              <Typography className="docText">
                 <Typography.Title level={3}>Development</Typography.Title>
                 <Typography.Text>
                   See{' '}
@@ -453,6 +463,7 @@ const Doc: React.FunctionComponent = () => {
           )}
         </Layout.Content>
       </Layout>
+      <Footer type="doc" />
     </Layout>
   )
 }

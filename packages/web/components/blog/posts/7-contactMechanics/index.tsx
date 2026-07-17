@@ -1,5 +1,3 @@
-/** @module Components.Blog.Posts.7ContactMechanics */
-
 import { Typography } from 'antd'
 
 import MathJax from '@/components/assets/mathjax'
@@ -11,7 +9,7 @@ const key = '1-ContactMechanics'
 const title = 'Contact mechanics problems'
 const description = 'Validation tests, linear elasticity'
 const date = '2023-05-16'
-const image = '/images/contactProblem.png'
+const image = '/img/blog/7-contactProblem.png'
 const keywords = ['Mechanics', 'Validation', 'Theory']
 const author = {
   name: 'Houssam Houssein',
@@ -64,81 +62,76 @@ const Post: React.FunctionComponent = () => {
         <Typography.Title level={3}>Theory</Typography.Title>
 
         <p>
-          Let <MathJax.Inline text={'\\Omega^{i}'} /> , with{' '}
-          <MathJax.Inline text={'i\\in\\{1,2\\}'} />, be a domain of{' '}
-          <MathJax.Inline text={'\\mathbb{R}^{d}'} /> representing the body{' '}
-          <MathJax.Inline text={'i'} /> with{' '}
-          <MathJax.Inline text={'d \\in \\{2,3\\}'} />. The domain{' '}
-          <MathJax.Inline text={'\\Omega^{i}'} /> is bounded by{' '}
+          Let <MathJax.Inline text={String.raw`\Omega^{i}`} /> , with{' '}
+          <MathJax.Inline text={String.raw`i\in\{1,2\}`} />, be a domain of{' '}
+          <MathJax.Inline text={String.raw`\mathbb{R}^{d}`} /> representing the
+          body <MathJax.Inline text={'i'} /> with{' '}
+          <MathJax.Inline text={String.raw`d \in \{2,3\}`} />. The domain{' '}
+          <MathJax.Inline text={String.raw`\Omega^{i}`} /> is bounded by{' '}
           <MathJax.Inline
-            text={
-              '\\Gamma^{i} = \\Gamma^{i}_D \\cup \\Gamma^{i}_N \\cup \\Gamma^{i}_C '
-            }
+            text={String.raw`\Gamma^{i} = \Gamma^{i}_D \cup \Gamma^{i}_N \cup \Gamma^{i}_C`}
           />
-          , where <MathJax.Inline text={'\\Gamma^{i}_D'} /> is where a
-          displacement is imposed, <MathJax.Inline text={'\\Gamma^{i}_N'} /> is
-          where a load is applied and <MathJax.Inline text={'\\Gamma^{i}_C'} />{' '}
-          is the potential contact area. Let <MathJax.Inline text={'u^{i}'} />{' '}
-          be the displacement field of <MathJax.Inline text={'\\Omega^{i}'} />,
-          the contact problem between the two bodies{' '}
-          <MathJax.Inline text={'\\Omega^{1}'} /> and{' '}
-          <MathJax.Inline text={'\\Omega^{2}'} /> is the set of the linear
-          elasticity equations
+          , where <MathJax.Inline text={String.raw`\Gamma^{i}_D`} /> is where a
+          displacement is imposed,{' '}
+          <MathJax.Inline text={String.raw`\Gamma^{i}_N`} /> is where a load is
+          applied and <MathJax.Inline text={String.raw`\Gamma^{i}_C`} /> is the
+          potential contact area. Let <MathJax.Inline text={'u^{i}'} /> be the
+          displacement field of <MathJax.Inline text={String.raw`\Omega^{i}`} />
+          , the contact problem between the two bodies{' '}
+          <MathJax.Inline text={String.raw`\Omega^{1}`} /> and{' '}
+          <MathJax.Inline text={String.raw`\Omega^{2}`} /> is the set of the
+          linear elasticity equations
           <MathJax.Formula
-            text={`         
-            \\begin{align}
-              -\\text{div}(\\sigma^{i}) &= f^{i} &\\text{on }\\Omega^{i}\\\\
-              u^{i} &= u^{i}_D&\\text{on }\\Gamma^{i}_D\\\\
-              \\sigma^{i}\\cdot n &= \\sigma^{i}_N&\\text{on }\\Gamma^{i}_N
-            \\end{align}
+            text={String.raw`
+            \begin{align}
+              -\text{div}(\sigma^{i}) &= f^{i} &\text{on }\Omega^{i}\\
+              u^{i} &= u^{i}_D&\text{on }\Gamma^{i}_D\\
+              \sigma^{i}\cdot n &= \sigma^{i}_N&\text{on }\Gamma^{i}_N
+            \end{align}
           `}
           />
           and the contact conditions. One of these conditions is the
           non-penetration conditions between the two bodies, otherwise speaking
           if <MathJax.Inline text={'x= X^{i}+u^{i} '} /> is the actual position
-          on <MathJax.Inline text={'\\Gamma^{i}_C '} /> then
+          on <MathJax.Inline text={String.raw`\Gamma^{i}_C`} /> then
           <MathJax.Formula
-            text={`         
-            (x-\\bar{x}).n \\geq 0 \\text{ on }\\Gamma^{i}_C
+            text={String.raw`
+            (x-\bar{x}).n \geq 0 \text{ on }\Gamma^{i}_C
           `}
           />
           where <MathJax.Inline text={'X^{i}'} /> is the initial position,{' '}
-          <MathJax.Inline text={'\\bar{x}'} /> the projection of{' '}
+          <MathJax.Inline text={String.raw`\bar{x}`} /> the projection of{' '}
           <MathJax.Inline text={'x'} /> on the second body,{' '}
           <MathJax.Inline text={'n'} /> the normal at{' '}
-          <MathJax.Inline text={'\\bar{x} '} /> and{' '}
+          <MathJax.Inline text={String.raw`\bar{x}`} /> and{' '}
           <MathJax.Inline
-            text={
-              '\\sigma^{i}_{kj}(u) = \\lambda\\delta_{kj}\\nabla\\cdot u^{i} + 2\\mu\\epsilon_{kj}(u^{i})'
-            }
+            text={String.raw`\sigma^{i}_{kj}(u) = \lambda\delta_{kj}\nabla\cdot u^{i} + 2\mu\epsilon_{kj}(u^{i})`}
           />
-          . <MathJax.Inline text={'\\lambda'} /> and{' '}
-          <MathJax.Inline text={'\\mu'} /> are the Lamé coefficients.
+          . <MathJax.Inline text={String.raw`\lambda`} /> and{' '}
+          <MathJax.Inline text={String.raw`\mu`} /> are the Lamé coefficients.
         </p>
 
         <p>
           At the discretization stage, the contact problem is formulated as the
           following minimization problem
           <MathJax.Formula
-            text={`         
-            \\begin{cases}
-              \\text{min} \\, E_{1}(u^{1})+E_{2}(u^{2}) \\text{  s.t }\\\\
-              \\int_{\\Gamma^{1}_C}\\phi_{k}.(x-\\bar{x}).n \\, ds \\geq 0  \\text{  } \\forall k=1,...,n_{C1}\\\\
-              \\int_{\\Gamma^{2}_C}\\phi_{k}.(x-\\bar{x}).n \\, ds \\geq 0  \\text{  } \\forall k=1,...,n_{C2}
-            \\end{cases}
+            text={String.raw`
+            \begin{cases}
+              \text{min} \, E_{1}(u^{1})+E_{2}(u^{2}) \text{  s.t }\\
+              \int_{\Gamma^{1}_C}\phi_{k}.(x-\bar{x}).n \, ds \geq 0  \text{  } \forall k=1,...,n_{C1}\\
+              \int_{\Gamma^{2}_C}\phi_{k}.(x-\bar{x}).n \, ds \geq 0  \text{  } \forall k=1,...,n_{C2}
+            \end{cases}
           `}
           />
           where{' '}
           <MathJax.Inline
-            text={
-              'E_{i}(u^{i}) = \\int_{\\Omega^{i}} \\sigma^{i}:\\epsilon^{i} \\, dx'
-            }
+            text={String.raw`E_{i}(u^{i}) = \int_{\Omega^{i}} \sigma^{i}:\epsilon^{i} \, dx`}
           />{' '}
           is the body <MathJax.Inline text={'i'} /> potential energy.{' '}
           <MathJax.Inline text={'n_{Ci}'} /> is the number of nodes in{' '}
-          <MathJax.Inline text={'\\Gamma^{i}_C'} /> and{' '}
-          <MathJax.Inline text={'\\phi_{k}'} /> is the shape function at the
-          mesh node <MathJax.Inline text={'k'} />.
+          <MathJax.Inline text={String.raw`\Gamma^{i}_C`} /> and{' '}
+          <MathJax.Inline text={String.raw`\phi_{k}`} /> is the shape function
+          at the mesh node <MathJax.Inline text={'k'} />.
         </p>
 
         <p>
@@ -158,25 +151,26 @@ const Post: React.FunctionComponent = () => {
         <p>
           A first elastic rectangular block is posed on a second one (see
           Figures below). The two blocks have the same properties, a width{' '}
-          <MathJax.Inline text={'L = 0.5 \\, mm'} />, a height{' '}
-          <MathJax.Inline text={'H = 1 \\, mm'} />, a Young&apos;s modulus{' '}
-          <MathJax.Inline text={'E = 210 \\, mPa'} /> , and a Poisson&apos;s
-          ratio <MathJax.Inline text={' \\nu = 0.'} /> The study is done under
-          the plan strain hypothesis (2D).
+          <MathJax.Inline text={String.raw`L = 0.5 \, mm`} />, a height{' '}
+          <MathJax.Inline text={String.raw`H = 1 \, mm`} />, a Young&apos;s
+          modulus <MathJax.Inline text={String.raw`E = 210 \, mPa`} /> , and a
+          Poisson&apos;s ratio <MathJax.Inline text={String.raw`\nu = 0`} />.
+          The study is done under the plan strain hypothesis (2D).
         </p>
         <p>
           The frictionless case is supposed, and a surface load{' '}
-          <MathJax.Inline text={'f = -10 \\, mPa'} /> is applied on the upper
-          face of the first block. The lower face of the second body is fixed in
-          the direction <MathJax.Inline text={'y'} /> and the left sides of the
-          two blocks are fixed in the direction <MathJax.Inline text={'x'} />.
+          <MathJax.Inline text={String.raw`f = -10 \, mPa`} /> is applied on the
+          upper face of the first block. The lower face of the second body is
+          fixed in the direction <MathJax.Inline text={'y'} /> and the left
+          sides of the two blocks are fixed in the direction{' '}
+          <MathJax.Inline text={'x'} />.
         </p>
         <p>
           Theoretically all components of the stress tensor are zero except{' '}
-          <MathJax.Inline text={'\\sigma_{yy}'} /> which is equal to{' '}
-          <MathJax.Inline text={'\\sigma_{zz}=-10 \\, mPa'} />, so the von Mises
-          stress is constant and is equal to{' '}
-          <MathJax.Inline text={'\\sigma_{vM}=10 \\, mPa'} />.
+          <MathJax.Inline text={String.raw`\sigma_{yy}`} /> which is equal to{' '}
+          <MathJax.Inline text={String.raw`\sigma_{zz}=-10 \, mPa`} />, so the
+          von Mises stress is constant and is equal to{' '}
+          <MathJax.Inline text={String.raw`\sigma_{vM}=10 \, mPa`} />.
         </p>
       </section>
 
@@ -191,12 +185,12 @@ const Post: React.FunctionComponent = () => {
           items={[
             {
               key: 'stressyy',
-              src: '/blog/7-contactMechanics/validation1_stressyy.png',
+              src: '/img/blog/7-contactMechanics/validation1_stressyy.png',
               caption: 'Stress yy'
             },
             {
               key: 'linearElastvM',
-              src: '/blog/7-contactMechanics/validation1_vMStress.png',
+              src: '/img/blog/7-contactMechanics/validation1_vMStress.png',
               caption: 'von Mises stress'
             }
           ]}
@@ -219,17 +213,19 @@ const Post: React.FunctionComponent = () => {
         <Typography.Title level={4}>Problem</Typography.Title>
         <p>
           This example consider the contact between an elastic cylinder (
-          <MathJax.Inline text={'E_1 = 210 \\, mPa'} />,{' '}
-          <MathJax.Inline text={'\\nu_{1}=0.3'} />) and an elastic block (
-          <MathJax.Inline text={'E_2 = 70 \\, mPa'} />,{' '}
-          <MathJax.Inline text={'\\nu_{2}=0.3'} />
+          <MathJax.Inline text={String.raw`E_1 = 210 \, mPa`} />,{' '}
+          <MathJax.Inline text={String.raw`\nu_{1}=0.3`} />) and an elastic
+          block (
+          <MathJax.Inline text={String.raw`E_2 = 70 \, mPa`} />,{' '}
+          <MathJax.Inline text={String.raw`\nu_{2}=0.3`} />
           ), the cylinder is posed on the block and a force of{' '}
-          <MathJax.Inline text={'P = 7 \\, N/mm'} /> is applied on the top of
-          the cylinder, the block is fixed in the direction{' '}
+          <MathJax.Inline text={String.raw`P = 7 \, N/mm`} /> is applied on the
+          top of the cylinder, the block is fixed in the direction{' '}
           <MathJax.Inline text={'y'} /> at its base. The study is done under the
           plane strain hypothesis, therefore the cylinder is modeled by a disc
-          of radius <MathJax.Inline text={'R1 = 50 \\, mm'} /> and the block by
-          a square of dimension <MathJax.Inline text={'L = 100 \\, mm'} />.
+          of radius <MathJax.Inline text={String.raw`R1 = 50 \, mm`} /> and the
+          block by a square of dimension{' '}
+          <MathJax.Inline text={String.raw`L = 100 \, mm`} />.
         </p>
         <p>
           Due to the symmetry of the problem only the half of the problem is
@@ -238,7 +234,7 @@ const Post: React.FunctionComponent = () => {
         </p>
         <p>
           Theoretically the maximum pressure at the contact zone is equal to{' '}
-          <MathJax.Inline text={'p_{max} = 1.6 \\, mPa'} />.
+          <MathJax.Inline text={String.raw`p_{max} = 1.6 \, mPa`} />.
         </p>
       </section>
 
@@ -248,24 +244,24 @@ const Post: React.FunctionComponent = () => {
           Using Tanatloc, we create our geometry with the corresponding mesh
           (see Figures below) and we use P1 linear finite elements. We can see
           in the Figures below that we obtain the theoretical results,
-          especially in the Figure where <MathJax.Inline text={'\\sigma_y'} />{' '}
-          is presented.
+          especially in the Figure where{' '}
+          <MathJax.Inline text={String.raw`\sigma_y`} /> is presented.
         </p>
         <Carousel
           items={[
             {
               key: 'meshHertz',
-              src: '/blog/7-contactMechanics/validation2_mesh.png',
+              src: '/img/blog/7-contactMechanics/validation2_mesh.png',
               caption: 'Mesh quality'
             },
             {
               key: 'stressyHertz',
-              src: '/blog/7-contactMechanics/validation2_stressyy.png',
+              src: '/img/blog/7-contactMechanics/validation2_stressyy.png',
               caption: 'Stress yy'
             },
             {
               key: 'linearElastvMHertz',
-              src: '/blog/7-contactMechanics/validation2_vMStress.png',
+              src: '/img/blog/7-contactMechanics/validation2_vMStress.png',
               caption: 'von Mises stress'
             }
           ]}

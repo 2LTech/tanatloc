@@ -1,5 +1,3 @@
-/** @module Components.Blog.Posts */
-
 import Poisson from './1-poisson'
 import Stokes from './2-stokes'
 import LinearElasticity from './3-linearElasticity'

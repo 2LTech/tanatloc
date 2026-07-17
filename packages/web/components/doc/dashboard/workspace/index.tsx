@@ -1,7 +1,5 @@
-/** @module Components.Doc.Dashboard.Workspace */
-
 import Link from 'next/link'
-import { Button, Typography } from 'antd'
+import { Button, Tooltip, Typography } from 'antd'
 import {
   HddOutlined,
   ImportOutlined,
@@ -10,10 +8,13 @@ import {
 } from '@ant-design/icons'
 
 import Carousel from '@/components/assets/carousel'
-import { AddButton, DeleteButton, EditButton } from '@/components/assets/button'
+import {
+  AddButton,
+  DeleteButton,
+  EditButton
+} from '@/components/assets/fakeButton'
 
-import style from '../../index.module.css'
-import globalStyle from '@/styles/index.module.css'
+import '../../index.css'
 
 /**
  * Workspace
@@ -27,7 +28,7 @@ const Workspace: React.FunctionComponent = () => {
     <>
       <Typography.Title level={4}>Workspaces & Projects</Typography.Title>
 
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Text>
           The workspace is the place where all the projects are. You can create
           several workspaces to sort your different projects.
@@ -44,14 +45,14 @@ const Workspace: React.FunctionComponent = () => {
         items={[
           {
             key: 'empty',
-            src: '/doc/workspace_empty.jpg',
+            src: '/img/doc/workspace_empty.jpg',
             alt: 'Empty workspace',
             caption: 'First start'
           }
         ]}
       />
 
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Title level={4}>Workspace creation</Typography.Title>
         <Typography.Text>
           In order to create a workspace:
@@ -71,38 +72,40 @@ const Workspace: React.FunctionComponent = () => {
         items={[
           {
             key: 'first',
-            src: '/doc/workspace_create.jpg',
+            src: '/img/doc/workspace_create.jpg',
             caption: 'First workspace'
           },
           {
             key: 'plus',
-            src: '/doc/workspace_plus.jpg',
+            src: '/img/doc/workspace_plus.jpg',
             caption: 'Add workspace'
           }
         ]}
       />
 
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Title level={4}>
           Workspace edit, share, delete
         </Typography.Title>
         <Typography.Text>
           You can edit the workspace&apos;s name using the{' '}
-          <EditButton bordered onEdit={() => undefined} />
+          <EditButton bordered />
         </Typography.Text>
         <Typography.Text>
           You can share the workspace with organizations groups and members
-          using the <Button icon={<ShareAltOutlined />} />
+          using the{' '}
+          <Tooltip title="Share">
+            <Button icon={<ShareAltOutlined />} />
+          </Tooltip>
         </Typography.Text>
-        <Typography.Text className={style.tips}>
+        <Typography.Text className="docTips">
           You must create an organization with users and groups before sharing a
           workspace
         </Typography.Text>
         <Typography.Text>
-          You can delete the workspace using the{' '}
-          <DeleteButton bordered onDelete={async () => undefined} />
+          You can delete the workspace using the <DeleteButton bordered />
         </Typography.Text>
-        <Typography.Text className={style.warnings}>
+        <Typography.Text className="docWarnings">
           Deleting a workspace will delete all workspace&apos;s projects
         </Typography.Text>
       </Typography>
@@ -110,30 +113,30 @@ const Workspace: React.FunctionComponent = () => {
         items={[
           {
             key: 'edit',
-            src: '/doc/workspace_edit.jpg',
+            src: '/img/doc/workspace_edit.jpg',
             caption: 'Edit workspace'
           },
           {
             key: 'share',
-            src: '/doc/workspace_share.jpg',
+            src: '/img/doc/workspace_share.jpg',
             caption: 'Share workspace'
           },
           {
             key: 'delete',
-            src: '/doc/workspace_delete.jpg',
+            src: '/img/doc/workspace_delete.jpg',
             caption: 'Delete workspace'
           }
         ]}
       />
 
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Title level={4}>Project creation</Typography.Title>
         <Typography.Text>
           The project is used to manage geometries, simulation and results.
         </Typography.Text>
         <Typography.Text>
           Once the workspace is created, yan can create a new project using{' '}
-          <AddButton primary={false} dark onAdd={() => undefined}>
+          <AddButton primary={false} dark>
             Create a new project
           </AddButton>
         </Typography.Text>
@@ -146,34 +149,30 @@ const Workspace: React.FunctionComponent = () => {
         items={[
           {
             key: 'create',
-            src: '/doc/project_create.jpg',
+            src: '/img/doc/project_create.jpg',
             caption: 'First project'
           },
           {
             key: 'show',
-            src: '/doc/project_show.jpg',
+            src: '/img/doc/project_show.jpg',
             caption: 'Project display'
           }
         ]}
       />
 
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Title level={4}>
           Project edit, share, archive, delete
         </Typography.Title>
         <Typography.Text>
           You can edit the project&apos;s name and description using the{' '}
-          <EditButton onEdit={() => undefined} />
+          <EditButton />
         </Typography.Text>
         <Typography.Text>
           You can share the project with organizations groups and members using
-          the{' '}
-          <Button
-            icon={<ShareAltOutlined />}
-            className={globalStyle.noBorder}
-          />
+          the <Button icon={<ShareAltOutlined />} className="noBorder" />
         </Typography.Text>
-        <Typography.Text className={style.tips}>
+        <Typography.Text className="docTips">
           You must create an organization with users and groups before sharing a
           project
         </Typography.Text>
@@ -189,10 +188,9 @@ const Workspace: React.FunctionComponent = () => {
           also delete the server backup.
         </Typography.Text>
         <Typography.Text>
-          You can delete the project using the{' '}
-          <DeleteButton bordered onDelete={async () => undefined} />
+          You can delete the project using the <DeleteButton bordered />
         </Typography.Text>
-        <Typography.Text className={style.warnings}>
+        <Typography.Text className="docWarnings">
           Deleting a project will delete all project&apos;s geometries,
           simulations and results
         </Typography.Text>
@@ -201,33 +199,33 @@ const Workspace: React.FunctionComponent = () => {
         items={[
           {
             key: 'edit',
-            src: '/doc/project_edit.jpg',
+            src: '/img/doc/project_edit.jpg',
             caption: 'Edit project'
           },
           {
             key: 'share',
-            src: '/doc/project_share.jpg',
+            src: '/img/doc/project_share.jpg',
             caption: 'Share project'
           },
           {
             key: 'archive',
-            src: '/doc/project_archive.jpg',
+            src: '/img/doc/project_archive.jpg',
             caption: 'Archive project'
           },
 
           {
             key: 'archived',
-            src: '/doc/project_archived.jpg',
+            src: '/img/doc/project_archived.jpg',
             caption: 'Archived project'
           },
           {
             key: 'restore',
-            src: '/doc/project_restore.jpg',
+            src: '/img/doc/project_restore.jpg',
             caption: 'Restore project'
           },
           {
             key: 'delete',
-            src: '/doc/project_delete.jpg',
+            src: '/img/doc/project_delete.jpg',
             caption: 'Delete project'
           }
         ]}

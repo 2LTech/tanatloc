@@ -6,16 +6,9 @@ export const scrollToView = (id: string): void => {
   const header = document.getElementById('header')
   const target = document.getElementById(id)
 
-  console.log(header)
-  console.log(target)
-
-  const index = document.getElementById('index')
-  console.log(index)
   if (target && header) {
-    const y = target?.offsetTop - header?.offsetHeight - 10
-    console.log(y)
-    console.log(index?.scrollTo)
-    index?.scrollTo?.({ top: y, behavior: 'smooth' })
+    const y = target?.offsetTop - header?.offsetHeight - 30
+    scrollTo({ top: y, behavior: 'smooth' })
   }
 }
 
@@ -33,7 +26,7 @@ export const scrollToGetStarted = () => scrollToView('get-started')
  * Scroll to developers
  */
 export const scrollToDevelopers = () =>
-  window.open('https://github.com/Airthium', '_blank', 'noopener')
+  window.open('https://github.com/2LTech/tanatloc', '_blank', 'noopener')
 
 /**
  * Scroll to blog

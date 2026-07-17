@@ -1,5 +1,3 @@
-/** @module Components.Blog.Posts.5ThermalDiffusion */
-
 import { Table, Typography } from 'antd'
 
 import MathJax from '@/components/assets/mathjax'
@@ -11,7 +9,7 @@ const key = '3-ThermalDiffusion'
 const title = 'Thermal diffusion problems'
 const description = 'Validation tests, thermal diffusion'
 const date = '2023-02-22'
-const image = '/images/thermalDiffusion.png'
+const image = '/img/blog/5-thermalDiffusion.png'
 const keywords = ['Thermic', 'Validation', 'Theory']
 const author = {
   name: 'Houssam Houssein',
@@ -84,27 +82,27 @@ const Post: React.FunctionComponent = () => {
           physical domain.
         </p>
         <p>
-          Let <MathJax.Inline text={'\\Omega'} /> be a domain of{' '}
-          <MathJax.Inline text={'\\mathbb{R}^{d}'} />, with{' '}
-          <MathJax.Inline text={'d\\in\\{2,3\\}'} />, bounded by{' '}
-          <MathJax.Inline text={'\\Gamma = \\Gamma_D \\cup \\Gamma_N'} />. Let{' '}
-          <MathJax.Inline text={'T'} /> be the temperature in the physical
-          domain <MathJax.Inline text={'\\Omega'} />, then the heat equation
-          reads as follows
+          Let <MathJax.Inline text={String.raw`\Omega`} /> be a domain of{' '}
+          <MathJax.Inline text={String.raw`\mathbb{R}^{d}`} />, with{' '}
+          <MathJax.Inline text={String.raw`d\in\{2,3\}`} />, bounded by{' '}
+          <MathJax.Inline text={String.raw`\Gamma = \Gamma_D \cup \Gamma_N`} />.
+          Let <MathJax.Inline text={'T'} /> be the temperature in the physical
+          domain <MathJax.Inline text={String.raw`\Omega`} />, then the heat
+          equation reads as follows
           <MathJax.Formula
-            text={`         
-            \\begin{align}
-              \\rho C_p \\frac{\\partial T}{\\partial t} - \\lambda\\Delta T &= 0&\\text{on }\\Omega\\\\
-              T &= T_D&\\text{on }\\Gamma_D\\\\
-              \\lambda\\frac{\\partial T}{\\partial n} &= \\Phi_d&\\text{on }\\Gamma_N
-            \\end{align}
+            text={String.raw`
+            \begin{align}
+              \rho C_p \frac{\partial T}{\partial t} - \lambda\Delta T &= 0&\text{on }\Omega\\
+              T &= T_D&\text{on }\Gamma_D\\
+              \lambda\frac{\partial T}{\partial n} &= \Phi_d&\text{on }\Gamma_N
+            \end{align}
           `}
           />
-          with <MathJax.Inline text={'\\rho'} /> the density,{' '}
+          with <MathJax.Inline text={String.raw`\rho`} /> the density,{' '}
           <MathJax.Inline text={'C_{p}'} /> the heat capacity,{' '}
-          <MathJax.Inline text={'\\lambda'} /> the thermal conductivity,{' '}
-          <MathJax.Inline text={'T_{D}'} /> an imposed temperature and{' '}
-          <MathJax.Inline text={'\\Phi_d'} /> an imposed heat flux.
+          <MathJax.Inline text={String.raw`\lambda`} /> the thermal
+          conductivity, <MathJax.Inline text={'T_{D}'} /> an imposed temperature
+          and <MathJax.Inline text={String.raw`\Phi_d`} /> an imposed heat flux.
         </p>
       </section>
       <section>
@@ -117,16 +115,16 @@ const Post: React.FunctionComponent = () => {
           In this example we consider the steady state of the heat equation, and
           we consider a square of dimensions{' '}
           <MathJax.Inline
-            text={'[0 \\, m \\, , 1 \\, m]\\times[0 \\, m \\, , 1 \\, m]'}
+            text={String.raw`[0 \, m \, , 1 \, m]\times[0 \, m \, , 1 \, m]`}
           />
           , see the figure above, with a thermal conductivity{' '}
-          <MathJax.Inline text={'\\lambda=1 \\, W.m^{-1}.K^{-1}'} />.
+          <MathJax.Inline text={String.raw`\lambda=1 \, W.m^{-1}.K^{-1}`} />.
         </p>
         <Carousel
           items={[
             {
               key: 'Geoproblem',
-              src: '/blog/5-thermalDiffusion/squareGeo.jpg',
+              src: '/img/blog/5-thermalDiffusion/squareGeo.jpg',
               caption: 'Geometry of the problem'
             }
           ]}
@@ -137,19 +135,19 @@ const Post: React.FunctionComponent = () => {
           impose temperatures, and on <MathJax.Inline text={'BC'} /> we impose a
           null heat flux, to obtain the following heat equation
           <MathJax.Formula
-            text={`         
-            \\begin{align}
-              - &\\lambda\\Delta T = 0&\\text{on }\\Omega\\\\
-              &T = sin(\\frac{\\pi}{2}x)&\\text{on }AB\\\\
-              &T = sin(\\frac{\\pi}{2}x)e^{\\frac{\\pi}{2}}&\\text{on }CD\\\\
-              &T = 0&\\text{on }DA\\\\
-              &\\lambda\\frac{\\partial T}{\\partial n} = 0&\\text{on } BC
-            \\end{align}
+            text={String.raw`
+            \begin{align}
+              - &\lambda\Delta T = 0&\text{on }\Omega\\
+              &T = sin(\frac{\pi}{2}x)&\text{on }AB\\
+              &T = sin(\frac{\pi}{2}x)e^{\frac{\pi}{2}}&\text{on }CD\\
+              &T = 0&\text{on }DA\\
+              &\lambda\frac{\partial T}{\partial n} = 0&\text{on } BC
+            \end{align}
           `}
           />
           We can easily verify that the analytical solution is{' '}
           <MathJax.Inline
-            text={'T(x,y)=sin(\\frac{\\pi}{2}x)e^{\\frac{\\pi}{2}y}'}
+            text={String.raw`T(x,y)=sin(\frac{\pi}{2}x)e^{\frac{\pi}{2}y}`}
           />
           .
         </p>
@@ -165,12 +163,12 @@ const Post: React.FunctionComponent = () => {
           items={[
             {
               key: 'MeshGeometry',
-              src: '/blog/5-thermalDiffusion/meshSquare.jpg',
+              src: '/img/blog/5-thermalDiffusion/meshSquare.jpg',
               caption: 'Geometry and Mesh'
             },
             {
               key: 'temperature',
-              src: '/blog/5-thermalDiffusion/temperature.jpg',
+              src: '/img/blog/5-thermalDiffusion/temperature.jpg',
               caption: 'Temperature'
             }
           ]}

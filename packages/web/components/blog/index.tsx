@@ -1,7 +1,7 @@
-/** @module Components.Blog */
+'use client'
 
 import { ChangeEvent, useCallback, useMemo, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import {
   Button,
   Card,
@@ -17,16 +17,16 @@ import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons'
 
 import type { SelectProps } from 'antd'
 
-import packageJson from '../../../package.json'
+import { createQueryString } from '@/components/tools/createQueryString'
+import { stringToColor } from '@/components/tools/stringToColor'
 
-import { asyncFunctionExec } from '@/components/utils/asyncFunction'
-
-import Utils from '@/lib/utils'
+import Header from '@/components/assets/header'
+import Footer from '@/components/assets/footer'
+import Image from '@/components/assets/image'
 
 import Posts from './posts'
 
-import style from './index.module.css'
-import globalStyle from '@/styles/index.module.css'
+import './index.css'
 
 /**
  * Post card interface
@@ -59,44 +59,54 @@ const PostCard: React.FunctionComponent<IPostCardProps> = ({
 }) => {
   // Data
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   /**
    * On click
    */
   const onClick = useCallback((): void => {
-    asyncFunctionExec(async () => {
-      await router.push({
-        pathname: '/blog',
-        query: { post: postKey }
-      })
-    })
-  }, [router, postKey])
+    router.push(
+      '/blog?' +
+        createQueryString(searchParams, [{ name: 'post', value: postKey }])
+    )
+  }, [router, searchParams, postKey])
 
   /**
    * Renderer
    */
   return (
     <Card
-      className={style.postCard}
-      title={title}
+      className="blogPostCard"
+      classNames={{
+        cover: 'blogPostCardCover',
+        body: 'blogPostCardBody',
+        extra: 'blogPostCardExtra'
+      }}
+      title={
+        <Typography.Title level={5} ellipsis>
+          {title}
+        </Typography.Title>
+      }
       hoverable
       onClick={onClick}
-      cover={<img src={image} alt={title} />}
+      cover={<Image src={image} width={300} height={300} alt={title} />}
       extra={
         <>
           <Typography.Text>{author.name}</Typography.Text>
           <br />
-          <Typography.Text className={globalStyle.textLight}>
+          <Typography.Text className="textLight">
             {new Date(date).toLocaleDateString()}
           </Typography.Text>
         </>
       }
       actions={[
-        keywords.map((keyword) => (
-          <Tag color={Utils.stringToColor(keyword)} key={keyword}>
-            {keyword}
-          </Tag>
-        ))
+        <div key="tags" className="blogPostCardTags">
+          {keywords.map((keyword) => (
+            <Tag color={stringToColor(keyword)} key={keyword}>
+              {keyword}
+            </Tag>
+          ))}
+        </div>
       ]}
     >
       {description}
@@ -115,8 +125,8 @@ const Blog: React.FunctionComponent = () => {
   const [search, setSearch] = useState<string>()
 
   // Data
-  const router = useRouter()
-  const { post } = router.query
+  const searchParams = useSearchParams()
+  const post = searchParams.get('post')
 
   // Post render
   const postRender = useMemo(() => {
@@ -125,15 +135,6 @@ const Blog: React.FunctionComponent = () => {
       if (Post) return Post.default({}) as React.ReactNode
     } else return
   }, [post])
-
-  /**
-   * On tanatloc
-   */
-  const onTanatloc = useCallback((): void => {
-    asyncFunctionExec(async () => {
-      await router.push('/')
-    })
-  }, [router])
 
   /**
    * On search
@@ -171,7 +172,7 @@ const Blog: React.FunctionComponent = () => {
     }
     return (
       <Tag
-        color={Utils.stringToColor(value)}
+        color={stringToColor(value)}
         onMouseDown={onPreventMouseDown}
         closable={closable}
         onClose={onClose}
@@ -227,24 +228,21 @@ const Blog: React.FunctionComponent = () => {
         author={Post.author}
       />
     )
-  }).filter((p) => p)
+  }).filter(Boolean)
 
   /**
    * Render
    */
   return (
-    <Layout className={globalStyle.noScroll}>
-      <Layout.Header className={style.header}>
-        <Button className={style.logo} onClick={onTanatloc} />
-        <Typography.Title level={1}>Blog</Typography.Title>
-      </Layout.Header>
+    <Layout className="layout">
+      <Header type="blog" />
       {postRender ? (
-        <Layout.Content className={`${globalStyle.scroll} ${style.content}`}>
+        <Layout.Content className="padding50 blogContent">
           {postRender}
         </Layout.Content>
       ) : (
-        <Layout.Content className={`${globalStyle.scroll} ${style.content}`}>
-          <div className={style.contentTools}>
+        <Layout.Content className="padding50 blogContent">
+          <div className="blogContentTools">
             <div>
               Sort by date:
               <Tooltip title="Older to newer">
@@ -266,14 +264,12 @@ const Blog: React.FunctionComponent = () => {
             />
             <Input placeholder="Search" value={search} onChange={onSearch} />
           </div>
-          <div className={style.posts}>
+          <div className="blogPosts">
             {postsList.length ? postsList : <Empty />}
           </div>
         </Layout.Content>
       )}
-      <Layout.Footer className={style.footer}>
-        Copyright© {new Date().getFullYear()} - version {packageJson.version}
-      </Layout.Footer>
+      <Footer type="blog" />
     </Layout>
   )
 }

@@ -1,8 +1,6 @@
-/** @module Components.Doc.Editor */
-
 import { Typography } from 'antd'
 
-import style from '../index.module.css'
+import '../index.css'
 
 /**
  * Editor
@@ -13,7 +11,7 @@ const Editor: React.FunctionComponent = () => {
     <>
       <Typography.Title level={4}>Model Editor</Typography.Title>
 
-      <Typography className={style.text}>
+      <Typography className="docText">
         <Typography.Text>Documentation is coming...</Typography.Text>
       </Typography>
     </>
