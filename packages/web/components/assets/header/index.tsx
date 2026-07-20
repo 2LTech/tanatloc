@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button, Layout, Menu, MenuProps, Popover, Typography } from 'antd'
 import { BarsOutlined } from '@ant-design/icons'
 
@@ -11,8 +12,6 @@ import {
   scrollToDoc,
   scrollToFeatures
 } from '@/components/tools/scrollTo'
-
-import Image from '@/components/assets/image'
 
 import './index.css'
 

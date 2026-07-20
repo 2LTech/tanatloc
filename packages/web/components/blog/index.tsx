@@ -2,6 +2,7 @@
 
 import { ChangeEvent, Suspense, useCallback, useMemo, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import Image from 'next/image'
 import {
   Button,
   Card,
@@ -22,7 +23,6 @@ import { stringToColor } from '@/components/tools/stringToColor'
 
 import Header from '@/components/assets/header'
 import Footer from '@/components/assets/footer'
-import Image from '@/components/assets/image'
 
 import Posts from './posts'
 

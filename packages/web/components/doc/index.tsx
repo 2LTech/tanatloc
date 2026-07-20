@@ -1,6 +1,5 @@
 'use client'
 
-import Link from 'next/link'
 import {
   ReactNode,
   Suspense,
@@ -10,6 +9,8 @@ import {
   useRef,
   useState
 } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Layout, Menu, Typography } from 'antd'
 
@@ -20,7 +21,6 @@ import { createQueryString } from '@/components/tools/createQueryString'
 
 import Header from '@/components/assets/header'
 import Footer from '@/components/assets/footer'
-import Image from '@/components/assets/image'
 
 import Installation from './installation'
 import Changelog from './changelog'

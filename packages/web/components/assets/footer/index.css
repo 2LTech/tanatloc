@@ -32,6 +32,7 @@
 
 .footerFoot img {
   max-height: 30px;
+  width: auto;
 }
 
 @media (max-width: 1100px) {

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
 import { Button, Carousel as AntCarousel } from 'antd'
 import { CarouselRef } from 'antd/es/carousel'
 import {
@@ -7,8 +8,6 @@ import {
   ZoomInOutlined,
   ZoomOutOutlined
 } from '@ant-design/icons'
-
-import Image from '@/components/assets/image'
 
 import './index.css'
 

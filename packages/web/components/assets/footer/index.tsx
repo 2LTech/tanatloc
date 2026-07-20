@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import Link from 'next/link'
-
+import Image from 'next/image'
 import { Button, Card, Divider, Layout, Space, Typography } from 'antd'
 
 import packageJson from '@/package.json'
@@ -14,8 +14,6 @@ import {
   scrollToFeatures,
   scrollToGetStarted
 } from '@/components/tools/scrollTo'
-
-import Image from '@/components/assets/image'
 
 import './index.css'
 

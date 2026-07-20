@@ -1,13 +1,12 @@
 import { useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Tag, Typography } from 'antd'
 
 import { stringToColor } from '@/components/tools/stringToColor'
 
 import { GoBack } from '@/components/assets/button'
-
-import Image from '@/components/assets/image'
 
 import '../../index.css'
 

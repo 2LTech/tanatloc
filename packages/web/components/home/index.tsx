@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import {
   Avatar,
   Button,
@@ -15,7 +16,6 @@ import { SettingOutlined } from '@ant-design/icons'
 import Header from '@/components/assets/header'
 import Footer from '@/components/assets/footer'
 import Side from '@/components/assets/side'
-import Image from '@/components/assets/image'
 import Releases from '@/components/assets/releases'
 
 import './index.css'
