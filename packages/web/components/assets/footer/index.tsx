@@ -104,9 +104,9 @@ const Footer: React.FunctionComponent<Props> = ({ type }) => {
             <Card title="Contact" className="footerCard" variant="borderless">
               <Space orientation="vertical">
                 <div>
-                  <Link href="mailto:contact@airthium.com">
+                  <Link href="mailto:contact@2ltech.fr">
                     <Button type="text">
-                      <strong>contact@airthium.com</strong>
+                      <strong>contact@2ltech.fr</strong>
                     </Button>
                   </Link>
                   <br />
@@ -115,7 +115,7 @@ const Footer: React.FunctionComponent<Props> = ({ type }) => {
 
                 <div>
                   <Link
-                    href="https://github.com/Airthium/tanatloc/issues"
+                    href="https://github.com/2LTech/tanatloc/issues"
                     target="_blank"
                   >
                     <Button type="text">

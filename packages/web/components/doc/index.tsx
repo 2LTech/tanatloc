@@ -362,7 +362,7 @@ const Doc: React.FunctionComponent = () => {
                   You can run Tanatloc locally using the Electron app, download
                   the latest release from the{' '}
                   <Link
-                    href="https://github.com/Airthium/tanatloc-electron"
+                    href="https://github.com/2LTech/tanatloc/tree/main/packages/electron"
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -386,7 +386,7 @@ const Doc: React.FunctionComponent = () => {
                 <Typography.Text>
                   If you want to run Tanatloc on a server, you can use the{' '}
                   <Link
-                    href="https://github.com/Airthium/tanatloc-deploy#readme"
+                    href="https://github.com/2LTech/tanatloc/tree/main/packages/deploy"
                     target="_blank"
                   >
                     tanatloc-deploy script
@@ -396,7 +396,7 @@ const Doc: React.FunctionComponent = () => {
                 <Typography.Text>
                   The Tanatloc-deploy script uses the{' '}
                   <Link
-                    href="https://github.com/Airthium/tanatloc-docker#readme"
+                    href="https://github.com/2LTech/tanatloc/tree/main/packages/docker"
                     target="_blank"
                   >
                     tanatloc-docker repository
@@ -418,7 +418,7 @@ const Doc: React.FunctionComponent = () => {
                 </Typography.Title>
                 <Typography.Text>
                   <Link
-                    href="https://github.com/Airthium/tanatloc/issues/new/choose"
+                    href="https://github.com/2LTech/tanatloc/issues"
                     target="_blank"
                   >
                     Open an issue
@@ -444,7 +444,7 @@ const Doc: React.FunctionComponent = () => {
                 <Typography.Text>
                   See{' '}
                   <Link
-                    href="https://github.com/Airthium/tanatloc/blob/master/.github/CONTRIBUTING.md"
+                    href="https://github.com/2LTech/tanatloc"
                     target="_blank"
                   >
                     CONTRIBUTING.md

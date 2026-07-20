@@ -325,7 +325,7 @@ const Index: React.FunctionComponent = () => {
                 src="/img/home/TanatlocBy2LTech.png"
                 width={2831}
                 height={700}
-                alt="airthium"
+                alt="2LTech"
               />
             }
             sideClassName="homeNewAbout"
