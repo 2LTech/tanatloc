@@ -95,7 +95,7 @@ const Carousel: React.FunctionComponent<IProps> = ({ items }) => {
               <figure className="carouselFigure">
                 <Image
                   src={item.src}
-                  alt={item.alt ?? item.caption}
+                  alt={item.alt ?? item.caption ?? 'carousel-img'}
                   width={1500}
                   height={1500}
                 />
