@@ -50,6 +50,9 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@main
 
+      - name: Corepack
+        run: corepack enable
+
       - name: Install
         run: sudo apt install -y clang-format cppcheck shellcheck
 
