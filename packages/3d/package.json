@@ -4,14 +4,14 @@
   "type": "module",
   "main": "./dist/index.js",
   "scripts": {
-    "depcheck": "node config/depcheck.js",
+    "depcheck": "knip --dependencies",
     "prettier": "prettier -l '**/*.{js,ts,json,md}'",
     "lint": "eslint .",
     "doc": "typedoc --options ./config/typedoc.config.js",
     "testw": "jest --config config/jest.config.js --watch",
     "test": "jest --config config/jest.config.js --silent",
     "build": "swc --config-file config/.swcrc src/ --out-dir dist --strip-leading-paths",
-    "check": "reset && .github/workflows/check.sh"
+    "check": ".github/workflows/check.sh"
   },
   "peerDependencies": {
     "react": ">=19",
@@ -26,11 +26,12 @@
     "zustand": "5.0.14"
   },
   "devDependencies": {
+    "@2ltech/jest-ant-design-icons": "1.0.2",
     "@babel/core": "8.0.1",
     "@eslint/js": "10.0.1",
     "@react-three/test-renderer": "9.1.0",
     "@swc/cli": "0.8.1",
-    "@swc/core": "1.15.43",
+    "@swc/core": "1.15.46",
     "@testing-library/dom": "10.4.1",
     "@testing-library/react": "16.3.2",
     "@types/jest": "30.0.0",
@@ -39,14 +40,12 @@
     "@types/react-dom": "19.2.3",
     "@types/three": "0.185.1",
     "babel-jest": "30.4.1",
-    "depcheck": "1.4.7",
     "eslint": "10.7.0",
-    "eslint-plugin-jest": "29.15.4",
     "eslint-plugin-react": "7.37.5",
-    "eslint-plugin-react-hooks": "7.1.1",
     "jest": "30.4.2",
     "jest-canvas-mock": "2.5.8",
     "jest-environment-jsdom": "30.4.1",
+    "knip": "6.27.0",
     "prettier": "3.9.5",
     "react": "19.2.7",
     "react-dom": "19.2.7",

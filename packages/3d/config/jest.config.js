@@ -1,8 +1,13 @@
 /** @type {import('jest').Config} */
 const config = {
+  silent: true,
   rootDir: '../src',
-  setupFiles: ['jest-canvas-mock', '../config/jest.setup.js'],
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'json'],
+  setupFiles: [
+    'jest-canvas-mock',
+    '@2ltech/jest-ant-design-icons',
+    '../config/jest.setup.js'
+  ],
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
   testEnvironment: 'jest-environment-jsdom',
   collectCoverage: true,
   collectCoverageFrom: ['<rootDir>/**/*.ts', '<rootDir>/**/*.tsx'],
