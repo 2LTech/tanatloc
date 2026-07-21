@@ -2,7 +2,66 @@ name: Check all
 
 on: push
 
+env:
+  NODE_VERSION: 24
+
 jobs:
+  threed:
+    name: 3D
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@main
+
+      - name: Corepack
+        run: corepack enable
+
+      - uses: actions/setup-node@master
+        with:
+          node-version: $NODE_VERSION
+
+      - name: Install
+        run: yarn install
+
+      - name: Depcheck
+        run: yarn workspace @tanatloc/3d run depcheck
+
+      - name: Prettier
+        run: yarn workspace @tanatloc/3d run prettier
+
+      - name: Lint
+        run: yarn workspace @tanatloc/3d run lint
+
+      - name: Doc
+        run: yarn workspace @tanatloc/3d run doc
+
+      - name: Test
+        run: yarn workspace @tanatloc/3d run doc
+
+      - name: Build
+        run: yarn workspace @tanatloc/3d run build
+
+  converters:
+    name: Converters
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@main
+
+      - name: Install
+        run: sudo apt install -y clang-format cppcheck shellcheck
+
+      - name: Format
+        run: yarn workspace @tanatloc/converters format
+
+      - name: CPPCceck
+        run: yarn workspace @tanatloc/converters cppcheck
+
+      - name: Shellcheck
+        run: yarn workspace @tanatloc/converters shellcheck
+
   web:
     name: Web
     runs-on: ubuntu-latest
@@ -16,7 +75,7 @@ jobs:
 
       - uses: actions/setup-node@master
         with:
-          node-version: '24'
+          node-version: $NODE_VERSION
 
       - name: Install
         run: yarn install
