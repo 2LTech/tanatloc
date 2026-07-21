@@ -66,7 +66,7 @@ NEXT_PUBLIC_SERVER_MODE=frontpage runInWorkspace "export" "@tanatloc/core" "buil
 # docker
 echo -e ""
 echo -e "❯❯❯❯ @tanatloc/docker"
-runInWorkspace "format" "@tanatloc/docker" "dockercheck"
+runInWorkspace "dockercheck" "@tanatloc/docker" "dockercheck"
 
 # electron
 echo -e ""
@@ -81,12 +81,13 @@ BUILD_VERSION="test" runInWorkspace "dist" "@tanatloc/electron" "dist"
 echo -e ""
 echo -e "❯❯❯❯ @tanatloc/formula-validator"
 runInWorkspace "depcheck" "@tanatloc/formula-validator" "depcheck"
-runInWorkspace "depcheck" "@tanatloc/formula-validator" "prettier"
-runInWorkspace "depcheck" "@tanatloc/formula-validator" "doc"
-runInWorkspace "depcheck" "@tanatloc/formula-validator" "test"
-runInWorkspace "depcheck" "@tanatloc/formula-validator" "build"
+runInWorkspace "prettier" "@tanatloc/formula-validator" "prettier"
+runInWorkspace "lint" "@tanatloc/formula-validator" "lint"
+runInWorkspace "doc" "@tanatloc/formula-validator" "doc"
+runInWorkspace "test" "@tanatloc/formula-validator" "test"
+runInWorkspace "build" "@tanatloc/formula-validator" "build"
 
 # worker
 echo -e ""
 echo -e "❯❯❯❯ @tanatloc/worker"
-runInWorkspace "depcheck" "@tanatloc/worker" "dockercheck"
+runInWorkspace "dockercheck" "@tanatloc/worker" "dockercheck"

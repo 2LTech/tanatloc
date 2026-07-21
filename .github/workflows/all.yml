@@ -65,6 +65,42 @@ jobs:
       - name: Shellcheck
         run: yarn workspace @tanatloc/converters shellcheck
 
+  formula-validator:
+    name: Formula Validator
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@main
+
+      - name: Corepack
+        run: corepack enable
+
+      - uses: actions/setup-node@master
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install
+        run: yarn install
+
+      - name: Depcheck
+        run: yarn workspace @tanatloc/formula-validator run depcheck
+
+      - name: Prettier
+        run: yarn workspace @tanatloc/formula-validator run prettier
+
+      - name: Lint
+        run: yarn workspace @tanatloc/formula-validator run lint
+
+      - name: Doc
+        run: yarn workspace @tanatloc/formula-validator run lint
+
+      - name: Test
+        run: yarn workspace @tanatloc/formula-validator run lint
+
+      - name: Build
+        run: yarn workspace @tanatloc/formula-validator run build
+
   web:
     name: Web
     runs-on: ubuntu-latest

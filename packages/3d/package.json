@@ -29,6 +29,7 @@
     "@2ltech/jest-ant-design-icons": "1.0.2",
     "@babel/core": "8.0.1",
     "@eslint/js": "10.0.1",
+    "@react-three/eslint-plugin": "0.1.2",
     "@react-three/test-renderer": "9.1.0",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.46",
@@ -46,12 +47,12 @@
     "jest-canvas-mock": "2.5.8",
     "jest-environment-jsdom": "30.4.1",
     "knip": "6.27.0",
-    "prettier": "3.9.5",
-    "react": "19.2.7",
-    "react-dom": "19.2.7",
+    "prettier": "3.9.6",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
     "ts-jest": "29.4.11",
     "typedoc": "0.28.20",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.64.0"
+    "typescript-eslint": "8.65.0"
   }
 }

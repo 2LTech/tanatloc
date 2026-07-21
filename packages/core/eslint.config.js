@@ -34,16 +34,3 @@ const eslintConfig = defineConfig([
 ])
 
 export default eslintConfig
-
-// rules: {
-//       '@typescript-eslint/no-explicit-any': 'off',
-//       '@typescript-eslint/no-empty-object-type': 'off',
-//       '@typescript-eslint/no-unused-vars': [
-//         'error',
-//         {
-//           caughtErrors: 'none',
-//           ignoreRestSiblings: true
-//         }
-//       ],
-//       '@next/next/no-img-element': 'off'
-//     }

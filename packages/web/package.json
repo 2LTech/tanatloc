@@ -11,9 +11,9 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "next": "16.2.10",
-    "react": "19.2.7",
-    "react-dom": "19.2.7"
+    "next": "16.2.11",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
   },
   "devDependencies": {
     "@ant-design/icons": "6.3.2",
@@ -23,10 +23,10 @@
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
     "eslint": "10.7.0",
-    "eslint-config-next": "16.2.10",
+    "eslint-config-next": "16.2.11",
     "html-react-parser": "6.1.5",
     "knip": "6.27.0",
-    "prettier": "3.9.5",
+    "prettier": "3.9.6",
     "tailwindcss": "4.3.3",
     "typescript": "6.0.3"
   }

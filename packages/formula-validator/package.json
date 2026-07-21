@@ -1,6 +1,7 @@
 {
   "name": "@tanatloc/formula-validator",
   "version": "2.0.0",
+  "type": "module",
   "main": "./dist/index.js",
   "repository": "git@github.com:Airthium/tanatloc-formula-validator.git",
   "license": "AGPL-3.0-or-later",
@@ -8,10 +9,10 @@
     "name": "Airthium",
     "url": "https://github.com/orgs/Airthium/people"
   },
-  "type": "module",
   "scripts": {
     "depcheck": "knip --dependencies",
     "prettier": "prettier -l '**/*.{js,ts,json,md}'",
+    "lint": "eslint",
     "doc": "typedoc --options ./config/typedoc.config.js",
     "test": "jest --config config/jest.config.ts --silent --coverage",
     "get-list": "node tools/getList.js",
@@ -22,9 +23,10 @@
     "@swc/core": "1.15.46",
     "@swc/jest": "0.2.39",
     "@types/jest": "30.0.0",
+    "eslint": "10.7.0",
     "jest": "30.4.2",
     "knip": "6.27.0",
-    "prettier": "3.9.5",
+    "prettier": "3.9.6",
     "typedoc": "0.28.20"
   }
 }

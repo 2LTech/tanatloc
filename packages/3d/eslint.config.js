@@ -2,6 +2,7 @@ import config from 'eslint/config'
 import js from '@eslint/js'
 import ts from 'typescript-eslint'
 import react from 'eslint-plugin-react'
+import reactThree from '@react-three/eslint-plugin'
 
 export default config.defineConfig([
   // Non-linted paths
@@ -15,46 +16,17 @@ export default config.defineConfig([
   {
     files: ['**/*.{ts,tsx}'],
     ...react.configs.flat.recommended,
-    settings: { react: { version: '19' } }
-  },
-  {
-    files: ['**/*.{ts,tsx}'],
-    ...react.configs.flat['jsx-runtime']
+    ...react.configs.flat['jsx-runtime'],
+    settings: { react: { version: '19' } },
+    // threeJS properties
+    plugins: {
+      '@react-three': reactThree
+    }
   },
   {
     files: ['**/*.test.{ts,tsx}', '**/jest.setup.js'],
     rules: {
       '@typescript-eslint/no-explicit-any': 'off'
-    }
-  },
-  {
-    files: ['**/*.{ts,tsx}'],
-    rules: {
-      'react/no-unknown-property': [
-        'error',
-        {
-          ignore: [
-            'side',
-            'wireframe',
-            'transparent',
-            'position',
-            'args',
-            'vertexColors',
-            'geometry',
-            'rotation',
-            'intensity',
-            'decay',
-            'userData',
-            'visible',
-            'metalness',
-            'roughness',
-            'uuid',
-            'object',
-            'depthWrite',
-            'clippingPlanes'
-          ]
-        }
-      ]
     }
   }
 ])

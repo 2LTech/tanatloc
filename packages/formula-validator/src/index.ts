@@ -19,7 +19,7 @@ const checkSeparators = (formula: string): void => {
   // Stack
   const stack: string[] = []
   for (const char of formula) {
-    const currentStack = stack[stack.length - 1]
+    const currentStack = stack.at(-1)
     if (map.has(char)) {
       stack.push(char)
     } else if (map.get(currentStack) === char) {
@@ -52,18 +52,18 @@ const checkKeywords = (formula: string, options?: Options): void => {
     ...(options?.additionalKeywords ?? [])
   ]
     .sort((a, b) => b.length - a.length)
-    .map((token) => token.replace(/[-\\^$*+?.()|[\]{}]/g, '\\$&'))
+    .map((token) => token.replace(/[-\\^$*+?.()|[\]{}]/g, String.raw`\$&`))
     .join('|')
 
   const regex = new RegExp(regexPattern, 'g')
 
   // Split
-  let left = formula.replace(regex, ' ')
+  const left = formula.replace(regex, ' ')
 
   // Check lefts are only numbers or spaces.
   left.split(' ').forEach((token) => {
     if (token === "'") return
-    if (token && isNaN(Number(token))) {
+    if (token && Number.isNaN(Number(token))) {
       throw new Error('Wrong keyword "' + token + '"')
     }
   })
