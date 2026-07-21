@@ -6386,15 +6386,18 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@tanatloc/formula-validator@workspace:packages/formula-validator"
   dependencies:
+    "@eslint/js": "npm:10.0.1"
     "@swc/cli": "npm:0.8.1"
     "@swc/core": "npm:1.15.46"
     "@swc/jest": "npm:0.2.39"
     "@types/jest": "npm:30.0.0"
     eslint: "npm:10.7.0"
+    globals: "npm:17.7.0"
     jest: "npm:30.4.2"
     knip: "npm:6.27.0"
     prettier: "npm:3.9.6"
     typedoc: "npm:0.28.20"
+    typescript-eslint: "npm:8.65.0"
   languageName: unknown
   linkType: soft
 
@@ -11343,6 +11346,13 @@ __metadata:
   version: 16.4.0
   resolution: "globals@npm:16.4.0"
   checksum: 10c0/a14b447a78b664b42f6d324e8675fcae6fe5e57924fecc1f6328dce08af9b2ca3a3138501e1b1f244a49814a732dc60cfc1aa24e714e0b64ac8bd18910bfac90
+  languageName: node
+  linkType: hard
+
+"globals@npm:17.7.0":
+  version: 17.7.0
+  resolution: "globals@npm:17.7.0"
+  checksum: 10c0/e83f791acf537b85fa1632ac48a45432a1999a61acd9f955b5c2145f66d6b5000a7945029874b6184fa2dfac8d33af03885a5a7ffa457866f1bcf0b40d0c1291
   languageName: node
   linkType: hard
 
