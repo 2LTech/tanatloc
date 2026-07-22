@@ -66,6 +66,7 @@ NEXT_PUBLIC_SERVER_MODE=frontpage runInWorkspace "export" "@tanatloc/core" "buil
 # docker
 echo -e ""
 echo -e "❯❯❯❯ @tanatloc/docker"
+runInWorkspace "dockercheck" "@tanatloc/docker" "update-dep"
 runInWorkspace "dockercheck" "@tanatloc/docker" "dockercheck"
 
 # electron
