@@ -1,0 +1,11 @@
+# *
+User-agent: *
+Allow: /
+Allow: /blog
+Allow: /doc
+
+# Host
+Host: https://tanatloc.com
+
+# Sitemaps
+Sitemap: https://tanatloc.com/sitemap.xml

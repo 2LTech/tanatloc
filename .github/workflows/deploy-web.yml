@@ -35,6 +35,9 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      - name: Sitemap
+        run: yarn sitemap
+
       - name: Build with Next.js
         run: yarn workspace @tanatloc/web run build
 

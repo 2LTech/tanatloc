@@ -82,6 +82,7 @@ jobs:
       - name: Validate build configuration
         uses: docker/build-push-action@v7
         with:
+          context: ./packages/docker
           call: check
 
   formula-validator:

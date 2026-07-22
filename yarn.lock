@@ -6416,6 +6416,7 @@ __metadata:
     html-react-parser: "npm:6.1.5"
     knip: "npm:6.27.0"
     next: "npm:16.2.11"
+    next-sitemap: "npm:4.2.3"
     prettier: "npm:3.9.6"
     react: "npm:19.2.8"
     react-dom: "npm:19.2.8"

@@ -5,10 +5,11 @@
   "scripts": {
     "depcheck": "knip --dependencies",
     "prettier": "prettier  -l '**/*.{js,jsx,ts,tsx,json,md,css}'",
+    "lint": "eslint",
     "dev": "next dev",
+    "sitemap": "next-sitemap --config sitemap.config.mjs",
     "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "start": "next start"
   },
   "dependencies": {
     "next": "16.2.11",
@@ -26,6 +27,7 @@
     "eslint-config-next": "16.2.11",
     "html-react-parser": "6.1.5",
     "knip": "6.27.0",
+    "next-sitemap": "4.2.3",
     "prettier": "3.9.6",
     "tailwindcss": "4.3.3",
     "typescript": "6.0.3"
