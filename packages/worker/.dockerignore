@@ -1,5 +1,4 @@
-format.sh
 build.sh
-local.sonarcloud.sh
 *.build.Dockerfile
+
 build

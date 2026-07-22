@@ -1,7 +1,9 @@
 {
   "name": "@tanatloc/docker",
   "version": "2.0.0",
+  "type": "module",
   "scripts": {
+    "update-dep": "node ./tools/updatePackageJson.js",
     "dockercheck": "docker build --check ."
   }
 }
