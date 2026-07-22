@@ -65,6 +65,25 @@ jobs:
       - name: Shellcheck
         run: yarn workspace @tanatloc/converters shellcheck
 
+  docker:
+    name: Docker
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v7
+
+      - name: Corepack
+        run: corepack enable
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Validate build configuration
+        uses: docker/build-push-action@v7
+        with:
+          call: check
+
   formula-validator:
     name: Formula Validator
     runs-on: ubuntu-latest
